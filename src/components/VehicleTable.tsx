@@ -159,7 +159,7 @@ export function VehicleTable() {
               {COLUMNS.map((col) => (
                 <th
                   key={col.key}
-                  className="px-4 py-3 text-left font-semibold tracking-wide"
+                  className="px-4 py-3 text-left font-semibold tracking-wide border-r border-border last:border-r-0"
                 >
                   {col.label}
                 </th>
