@@ -32,6 +32,16 @@ type ColumnKey = (typeof COLUMNS)[number]["key"];
 
 const DATE_COLUMNS: ColumnKey[] = ["entree", "sortie"];
 
+const IMMAT_REGEX = /^[A-Za-z]{2}\s?\d{4}\s?[A-Za-z]{2}$/;
+
+function formatImmatriculation(value: string): string {
+  const clean = value.replace(/\s/g, "").toUpperCase();
+  if (clean.length === 8) {
+    return `${clean.slice(0, 2)} ${clean.slice(2, 6)} ${clean.slice(6, 8)}`;
+  }
+  return value.toUpperCase();
+}
+
 function parseDate(value: string): Date | undefined {
   if (!value) return undefined;
   const d = parse(value, "dd/MM/yyyy", new Date());
@@ -221,6 +231,25 @@ export function VehicleTable() {
                           value={row[col.key]}
                           onChange={(v) => updateCell(row.id, col.key, v)}
                           placeholder={col.label}
+                        />
+                      ) : col.key === "immatriculation" ? (
+                        <input
+                          className="w-full rounded-md border-0 bg-transparent px-3 py-2.5 text-sm font-bold uppercase tracking-wider text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 placeholder:font-normal placeholder:normal-case placeholder:tracking-normal hover:bg-primary/5 focus:bg-primary/5 focus:ring-2 focus:ring-ring"
+                          defaultValue={row[col.key]}
+                          maxLength={10}
+                          onBlur={(e) => {
+                            const val = e.target.value.trim();
+                            if (!val) { updateCell(row.id, col.key, ""); return; }
+                            if (!IMMAT_REGEX.test(val)) {
+                              toast.error("Format invalide — utilisez : XX 1234 XX");
+                              e.target.focus();
+                              return;
+                            }
+                            const formatted = formatImmatriculation(val);
+                            e.target.value = formatted;
+                            updateCell(row.id, col.key, formatted);
+                          }}
+                          placeholder="AB 1234 CD"
                         />
                       ) : (
                         <input
