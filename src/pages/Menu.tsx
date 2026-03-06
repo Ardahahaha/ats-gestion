@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Car, Wrench, Package, ClipboardList, ChevronRight } from "lucide-react";
+import { Car, Brush, Package, ClipboardList, ChevronRight } from "lucide-react";
 
 const SECTIONS = [
   {
