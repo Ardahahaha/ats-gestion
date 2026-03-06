@@ -126,6 +126,33 @@ export type Database = {
         }
         Relationships: []
       }
+      gestion_vehicules: {
+        Row: {
+          created_at: string
+          etat: string
+          id: string
+          immatriculation: string
+          marque: string
+          modele: string
+        }
+        Insert: {
+          created_at?: string
+          etat?: string
+          id?: string
+          immatriculation?: string
+          marque?: string
+          modele?: string
+        }
+        Update: {
+          created_at?: string
+          etat?: string
+          id?: string
+          immatriculation?: string
+          marque?: string
+          modele?: string
+        }
+        Relationships: []
+      }
       vehicules: {
         Row: {
           client: string | null

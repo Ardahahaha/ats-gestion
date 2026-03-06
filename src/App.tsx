@@ -7,6 +7,7 @@ import { Layout } from "@/components/Layout";
 import Menu from "./pages/Menu";
 import Vehicules from "./pages/Vehicules";
 import Atelier from "./pages/Atelier";
+import GestionVehicules from "./pages/GestionVehicules";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Menu />} />
             <Route path="/vehicules" element={<Vehicules />} />
             <Route path="/atelier" element={<Atelier />} />
+            <Route path="/gestion-vehicules" element={<GestionVehicules />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
