@@ -32,12 +32,12 @@ type ColumnKey = (typeof COLUMNS)[number]["key"];
 
 const DATE_COLUMNS: ColumnKey[] = ["entree", "sortie"];
 
-const IMMAT_REGEX = /^[A-Za-z]{2}\s?\d{4}\s?[A-Za-z]{2}$/;
+const IMMAT_REGEX = /^[A-Za-z]{2}\s?\d{3}\s?[A-Za-z]{2}$/;
 
 function formatImmatriculation(value: string): string {
   const clean = value.replace(/\s/g, "").toUpperCase();
-  if (clean.length === 8) {
-    return `${clean.slice(0, 2)} ${clean.slice(2, 6)} ${clean.slice(6, 8)}`;
+  if (clean.length === 7) {
+    return `${clean.slice(0, 2)} ${clean.slice(2, 5)} ${clean.slice(5, 7)}`;
   }
   return value.toUpperCase();
 }
@@ -236,21 +236,20 @@ export function VehicleTable() {
                         <input
                           className="w-full rounded-md border-0 bg-transparent px-3 py-2.5 text-sm font-bold uppercase tracking-wider text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 placeholder:font-normal placeholder:normal-case placeholder:tracking-normal hover:bg-primary/5 focus:bg-primary/5 focus:ring-2 focus:ring-ring"
                           defaultValue={row[col.key]}
-                          maxLength={12}
+                          maxLength={9}
                           onChange={(e) => {
-                            // Auto-format as user types: strip non-alphanumeric, then insert spaces
                             let raw = e.target.value.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-                            if (raw.length > 8) raw = raw.slice(0, 8);
+                            if (raw.length > 7) raw = raw.slice(0, 7);
                             let formatted = raw;
                             if (raw.length > 2) formatted = raw.slice(0, 2) + " " + raw.slice(2);
-                            if (raw.length > 6) formatted = raw.slice(0, 2) + " " + raw.slice(2, 6) + " " + raw.slice(6);
+                            if (raw.length > 5) formatted = raw.slice(0, 2) + " " + raw.slice(2, 5) + " " + raw.slice(5);
                             e.target.value = formatted;
                           }}
                           onBlur={(e) => {
                             const val = e.target.value.trim();
                             if (!val) { updateCell(row.id, col.key, ""); return; }
                             if (!IMMAT_REGEX.test(val)) {
-                              toast.error("Format invalide — utilisez : XX 1234 XX");
+                              toast.error("Format invalide — utilisez : XX 123 XX");
                               e.target.focus();
                               return;
                             }
