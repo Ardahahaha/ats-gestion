@@ -232,6 +232,25 @@ export function VehicleTable() {
                           onChange={(v) => updateCell(row.id, col.key, v)}
                           placeholder={col.label}
                         />
+                      ) : col.key === "immatriculation" ? (
+                        <input
+                          className="w-full rounded-md border-0 bg-transparent px-3 py-2.5 text-sm font-bold uppercase tracking-wider text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 placeholder:font-normal placeholder:normal-case placeholder:tracking-normal hover:bg-primary/5 focus:bg-primary/5 focus:ring-2 focus:ring-ring"
+                          defaultValue={row[col.key]}
+                          maxLength={10}
+                          onBlur={(e) => {
+                            const val = e.target.value.trim();
+                            if (!val) { updateCell(row.id, col.key, ""); return; }
+                            if (!IMMAT_REGEX.test(val)) {
+                              toast.error("Format invalide — utilisez : XX 1234 XX");
+                              e.target.focus();
+                              return;
+                            }
+                            const formatted = formatImmatriculation(val);
+                            e.target.value = formatted;
+                            updateCell(row.id, col.key, formatted);
+                          }}
+                          placeholder="AB 1234 CD"
+                        />
                       ) : (
                         <input
                           className="w-full rounded-md border-0 bg-transparent px-3 py-2.5 text-sm font-medium text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-primary/5 focus:bg-primary/5 focus:ring-2 focus:ring-ring"
