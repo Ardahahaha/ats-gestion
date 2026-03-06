@@ -32,12 +32,12 @@ type ColumnKey = (typeof COLUMNS)[number]["key"];
 
 const DATE_COLUMNS: ColumnKey[] = ["entree", "sortie"];
 
-const IMMAT_REGEX = /^[A-Za-z]{2}\s?\d{4}\s?[A-Za-z]{2}$/;
+const IMMAT_REGEX = /^[A-Za-z]{2}\s?\d{3}\s?[A-Za-z]{2}$/;
 
 function formatImmatriculation(value: string): string {
   const clean = value.replace(/\s/g, "").toUpperCase();
-  if (clean.length === 8) {
-    return `${clean.slice(0, 2)} ${clean.slice(2, 6)} ${clean.slice(6, 8)}`;
+  if (clean.length === 7) {
+    return `${clean.slice(0, 2)} ${clean.slice(2, 5)} ${clean.slice(5, 7)}`;
   }
   return value.toUpperCase();
 }
