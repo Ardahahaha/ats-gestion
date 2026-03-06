@@ -1,107 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 220 30% 10%;
+    --background: 220 15% 96%;
+    --foreground: 220 25% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 30% 10%;
+    --card-foreground: 220 25% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 30% 10%;
+    --popover-foreground: 220 25% 12%;
 
-    --primary: 220 70% 50%;
+    --primary: 0 85% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 15% 92%;
-    --secondary-foreground: 220 30% 15%;
+    --secondary: 220 12% 90%;
+    --secondary-foreground: 220 25% 15%;
 
-    --muted: 220 15% 94%;
+    --muted: 220 12% 92%;
     --muted-foreground: 220 10% 45%;
 
-    --accent: 160 60% 45%;
+    --accent: 0 85% 50%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 88%;
-    --input: 220 15% 88%;
-    --ring: 220 70% 50%;
+    --border: 220 12% 85%;
+    --input: 220 12% 85%;
+    --ring: 0 85% 50%;
 
-    --table-header: 220 30% 15%;
+    --table-header: 220 20% 14%;
     --table-header-foreground: 0 0% 100%;
-    --table-row-hover: 220 30% 95%;
-    --table-row-alt: 220 20% 97%;
+    --table-row-hover: 0 60% 97%;
+    --table-row-alt: 220 15% 97%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 0 85% 50%;
 
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --hero-gradient: linear-gradient(135deg, hsl(220 20% 14%) 0%, hsl(220 30% 8%) 100%);
+    --glow-red: 0 85% 50%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 220 25% 6%;
+    --foreground: 220 15% 92%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 25% 9%;
+    --card-foreground: 220 15% 92%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 25% 9%;
+    --popover-foreground: 220 15% 92%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 0 85% 55%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 220 20% 14%;
+    --secondary-foreground: 220 15% 85%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 220 20% 14%;
+    --muted-foreground: 220 10% 55%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 0 85% 55%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 220 20% 16%;
+    --input: 220 20% 16%;
+    --ring: 0 85% 55%;
 
-    --table-header: 220 30% 12%;
-    --table-header-foreground: 210 40% 98%;
-    --table-row-hover: 217 32% 14%;
-    --table-row-alt: 222 84% 6%;
+    --table-header: 220 30% 8%;
+    --table-header-foreground: 0 0% 95%;
+    --table-row-hover: 0 50% 12%;
+    --table-row-alt: 220 25% 7%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-background: 220 25% 6%;
+    --sidebar-foreground: 220 15% 85%;
+    --sidebar-primary: 0 85% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 220 20% 12%;
+    --sidebar-accent-foreground: 220 15% 85%;
+    --sidebar-border: 220 20% 14%;
+    --sidebar-ring: 0 85% 55%;
+
+    --hero-gradient: linear-gradient(135deg, hsl(220 30% 5%) 0%, hsl(0 60% 8%) 100%);
+    --glow-red: 0 85% 55%;
   }
 }
 
@@ -111,6 +108,43 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Rajdhani', sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: 'Rajdhani', sans-serif;
+  }
+  .font-body {
+    font-family: 'Barlow', sans-serif;
+  }
+  .text-glow {
+    text-shadow: 0 0 20px hsl(var(--glow-red) / 0.4), 0 0 40px hsl(var(--glow-red) / 0.2);
+  }
+  .shadow-automotive {
+    box-shadow: 0 4px 30px -5px hsl(var(--glow-red) / 0.15), 0 10px 60px -10px hsl(220 30% 5% / 0.4);
+  }
+  .carbon-pattern {
+    background-image: 
+      linear-gradient(45deg, hsl(220 20% 10% / 0.03) 25%, transparent 25%),
+      linear-gradient(-45deg, hsl(220 20% 10% / 0.03) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, hsl(220 20% 10% / 0.03) 75%),
+      linear-gradient(-45deg, transparent 75%, hsl(220 20% 10% / 0.03) 75%);
+    background-size: 4px 4px;
+    background-position: 0 0, 0 2px, 2px -2px, -2px 0px;
+  }
+  .dark .carbon-pattern {
+    background-image: 
+      linear-gradient(45deg, hsl(0 0% 100% / 0.02) 25%, transparent 25%),
+      linear-gradient(-45deg, hsl(0 0% 100% / 0.02) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, hsl(0 0% 100% / 0.02) 75%),
+      linear-gradient(-45deg, transparent 75%, hsl(0 0% 100% / 0.02) 75%);
+    background-size: 4px 4px;
+    background-position: 0 0, 0 2px, 2px -2px, -2px 0px;
   }
 }
