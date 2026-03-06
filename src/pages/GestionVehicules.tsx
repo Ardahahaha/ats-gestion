@@ -147,7 +147,7 @@ const GestionVehicules = () => {
       )}
 
       {/* Grille des concessions */}
-      <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-3 xl:grid-cols-2">
         {concessions.map((concession) => {
           const items = getByConc(concession);
           return (
