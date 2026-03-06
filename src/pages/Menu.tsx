@@ -14,7 +14,7 @@ const SECTIONS = [
     description: "Suivi par marque : Peugeot, Automalin, Renault",
     icon: Car,
     path: "/gestion-vehicules",
-    color: "from-emerald-500 to-green-600",
+    color: "from-violet-500 to-blue-600",
   },
   {
     title: "Créer",
