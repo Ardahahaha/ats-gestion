@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Trash2, CalendarIcon } from "lucide-react";
+import { Plus, Trash2, CalendarIcon, Car, Wrench, User, Tag, LogIn, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -20,12 +20,12 @@ type Vehicle = {
 };
 
 const COLUMNS = [
-  { key: "immatriculation", label: "Immatriculation" },
-  { key: "entree", label: "Entrée" },
-  { key: "client", label: "Client" },
-  { key: "travaux", label: "Travaux" },
-  { key: "pieces", label: "Pièces" },
-  { key: "sortie", label: "Sortie" },
+  { key: "immatriculation", label: "Immatriculation", icon: Car },
+  { key: "entree", label: "Entrée", icon: LogIn },
+  { key: "client", label: "Client", icon: User },
+  { key: "travaux", label: "Travaux", icon: Wrench },
+  { key: "pieces", label: "Pièces", icon: Tag },
+  { key: "sortie", label: "Sortie", icon: LogOut },
 ] as const;
 
 type ColumnKey = (typeof COLUMNS)[number]["key"];
@@ -46,15 +46,15 @@ function DateCell({ value, onChange, placeholder }: { value: string; onChange: (
       <PopoverTrigger asChild>
         <button
           className={cn(
-            "flex w-full items-center gap-2 rounded bg-transparent px-3 py-2 text-left text-foreground outline-none focus:ring-2 focus:ring-ring",
+            "flex w-full items-center gap-2 rounded-md bg-transparent px-3 py-2.5 text-left text-sm font-medium text-foreground outline-none transition-all duration-200 hover:bg-primary/5 focus:ring-2 focus:ring-ring",
             !date && "text-muted-foreground"
           )}
         >
-          <CalendarIcon className="h-4 w-4 shrink-0 opacity-50" />
+          <CalendarIcon className="h-4 w-4 shrink-0 text-primary/60" />
           {date ? format(date, "dd/MM/yyyy") : <span>{placeholder}</span>}
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0 border-border shadow-automotive" align="start">
         <Calendar
           mode="single"
           selected={date}
@@ -137,34 +137,54 @@ export function VehicleTable() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 text-muted-foreground">
-        Chargement...
+      <div className="flex flex-col items-center justify-center gap-3 py-20">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <span className="font-display text-sm uppercase tracking-widest text-muted-foreground">Chargement...</span>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button onClick={addRow} className="gap-2">
+    <div className="space-y-6">
+      {/* Stats bar */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-primary/10 px-4 py-2">
+            <span className="font-display text-2xl font-bold text-primary">{rows.length}</span>
+            <span className="ml-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">véhicule{rows.length !== 1 ? "s" : ""}</span>
+          </div>
+        </div>
+        <Button 
+          onClick={addRow} 
+          className="gap-2 bg-primary font-display text-sm font-semibold uppercase tracking-wider shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02]"
+        >
           <Plus className="h-4 w-4" />
-          Ajouter une ligne
+          Ajouter un véhicule
         </Button>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-border shadow-sm">
+      {/* Table */}
+      <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-automotive">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-table-header text-table-header-foreground">
-              {COLUMNS.map((col) => (
-                <th
-                  key={col.key}
-                  className="px-4 py-3 text-left font-semibold tracking-wide border-r border-border last:border-r-0"
-                >
-                  {col.label}
-                </th>
-              ))}
-              <th className="w-12 px-2 py-3" />
+              {COLUMNS.map((col) => {
+                const Icon = col.icon;
+                return (
+                  <th
+                    key={col.key}
+                    className="border-r border-white/10 px-4 py-4 text-left last:border-r-0"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-4 w-4 text-primary" />
+                      <span className="font-display text-xs font-semibold uppercase tracking-widest">
+                        {col.label}
+                      </span>
+                    </div>
+                  </th>
+                );
+              })}
+              <th className="w-14 px-2 py-4" />
             </tr>
           </thead>
           <tbody>
@@ -172,21 +192,30 @@ export function VehicleTable() {
               <tr>
                 <td
                   colSpan={7}
-                  className="py-12 text-center text-muted-foreground"
+                  className="py-16 text-center"
                 >
-                  Aucune entrée — cliquez sur "Ajouter une ligne"
+                  <div className="flex flex-col items-center gap-3">
+                    <Car className="h-10 w-10 text-muted-foreground/30" />
+                    <p className="font-display text-sm uppercase tracking-widest text-muted-foreground">
+                      Aucun véhicule enregistré
+                    </p>
+                    <p className="text-xs text-muted-foreground/60">
+                      Cliquez sur "Ajouter un véhicule" pour commencer
+                    </p>
+                  </div>
                 </td>
               </tr>
             ) : (
               rows.map((row, idx) => (
                 <tr
                   key={row.id}
-                  className={`border-t border-border transition-colors hover:bg-table-row-hover ${
+                  className={cn(
+                    "group border-t border-border transition-all duration-200 hover:bg-table-row-hover",
                     idx % 2 === 1 ? "bg-table-row-alt" : "bg-card"
-                  }`}
+                  )}
                 >
                   {COLUMNS.map((col) => (
-                    <td key={col.key} className="px-1 py-1 border-r border-border last:border-r-0">
+                    <td key={col.key} className="border-r border-border/50 px-1 py-1 last:border-r-0">
                       {DATE_COLUMNS.includes(col.key) ? (
                         <DateCell
                           value={row[col.key]}
@@ -195,7 +224,7 @@ export function VehicleTable() {
                         />
                       ) : (
                         <input
-                          className="w-full rounded border-0 bg-transparent px-3 py-2 text-foreground outline-none focus:ring-2 focus:ring-ring"
+                          className="w-full rounded-md border-0 bg-transparent px-3 py-2.5 text-sm font-medium text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-primary/5 focus:bg-primary/5 focus:ring-2 focus:ring-ring"
                           defaultValue={row[col.key]}
                           onBlur={(e) =>
                             updateCell(row.id, col.key, e.target.value)
@@ -208,7 +237,7 @@ export function VehicleTable() {
                   <td className="px-2 py-1">
                     <button
                       onClick={() => deleteRow(row.id)}
-                      className="rounded p-1.5 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                      className="rounded-lg p-2 text-muted-foreground/50 opacity-0 transition-all duration-200 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive"
                       title="Supprimer"
                     >
                       <Trash2 className="h-4 w-4" />
