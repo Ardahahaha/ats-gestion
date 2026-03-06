@@ -174,8 +174,8 @@ export function VehicleTable() {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-automotive">
-        <table className="w-full text-sm">
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-automotive">
+        <table className="w-full table-fixed text-sm">
           <thead>
             <tr className="bg-table-header text-table-header-foreground">
               {COLUMNS.map((col) => {
@@ -225,7 +225,7 @@ export function VehicleTable() {
                   )}
                 >
                   {COLUMNS.map((col) => (
-                    <td key={col.key} className={cn("border-r border-border/50 px-1 py-1 last:border-r-0", col.key === "travaux" && "min-w-[300px]")}>
+                    <td key={col.key} className={cn("border-r border-border/50 px-1 py-1 last:border-r-0", col.key === "travaux" && "w-[200px]")}>
                       {DATE_COLUMNS.includes(col.key) ? (
                         <DateCell
                           value={row[col.key]}
