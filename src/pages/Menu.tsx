@@ -3,9 +3,9 @@ import { BookA, Brush, Package, ClipboardList, ChevronRight } from "lucide-react
 
 const SECTIONS = [
   {
-    title: "Gestion des Véhicules",
+    title: "GESTION DES ASSURANCES",
     description: "Suivi des entrées, sorties, travaux et pièces",
-    icon: Car,
+    icon: BookA,
     path: "/vehicules",
     color: "from-primary to-red-600",
   },
