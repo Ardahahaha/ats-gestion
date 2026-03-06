@@ -257,7 +257,7 @@ export function VehicleTable() {
                             e.target.value = formatted;
                             updateCell(row.id, col.key, formatted);
                           }}
-                          placeholder="AB 1234 CD"
+                          placeholder="AB 123 CD"
                         />
                       ) : (
                         <input
