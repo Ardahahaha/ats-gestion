@@ -153,7 +153,7 @@ const GestionVehicules = () => {
           return (
             <div key={concession} className="flex flex-col rounded-xl border border-border bg-card shadow-sm overflow-hidden">
               {/* Concession header */}
-              <div className="flex items-center justify-between bg-gradient-to-r from-primary/10 to-primary/5 px-4 py-3">
+              <div className="flex items-center justify-between bg-gradient-to-r from-primary/10 to-primary/5 px-3 py-2">
                 <div className="flex items-center gap-2">
                   <Building2 className="h-4 w-4 text-primary" />
                   <h3 className="font-display text-sm font-bold uppercase tracking-wide text-foreground">
