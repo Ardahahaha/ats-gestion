@@ -21,7 +21,7 @@ const SECTIONS = [
     description: "Créez vos propres tableaux personnalisés",
     icon: Brush,
     path: "/atelier",
-    color: "from-amber-500 to-orange-600",
+    color: "from-lime-400 to-green-400",
   },
 ];
 const Menu = () => {
