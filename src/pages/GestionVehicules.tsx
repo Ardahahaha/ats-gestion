@@ -81,11 +81,12 @@ const GestionVehicules = () => {
   };
 
   const deleteConcession = async (concession: string) => {
-    const ids = vehicles.filter((v) => v.concession === concession).map((v) => v.id);
-    if (ids.length > 0) {
-      const { error } = await supabase.from("gestion_vehicules").delete().in("id", ids);
-      if (error) toast.error("Erreur lors de la suppression");
-    }
+    const { error } = await supabase
+      .from("gestion_vehicules")
+      .delete()
+      .eq("concession", concession);
+    if (error) toast.error("Erreur lors de la suppression");
+    else await fetchVehicles();
   };
 
   const getByConc = (c: string) => vehicles.filter((v) => v.concession === c);
