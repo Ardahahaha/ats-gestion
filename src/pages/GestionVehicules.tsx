@@ -225,8 +225,8 @@ const EditableField = ({ label, value, onSave }: { label: string; value: string;
   };
 
   return (
-    <div className="text-xs">
-      <span className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+    <div className="flex items-center gap-1 text-[11px] min-w-0">
+      <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{label}:</span>
       {editing ? (
         <input
           autoFocus
@@ -234,12 +234,12 @@ const EditableField = ({ label, value, onSave }: { label: string; value: string;
           onChange={(e) => setVal(e.target.value)}
           onBlur={save}
           onKeyDown={(e) => e.key === "Enter" && save()}
-          className="mt-0.5 w-full rounded border border-border bg-background px-2 py-1 text-xs text-foreground outline-none focus:border-primary"
+          className="w-full min-w-0 rounded border border-border bg-background px-1 py-0.5 text-[11px] text-foreground outline-none focus:border-primary"
         />
       ) : (
         <span
           onClick={() => setEditing(true)}
-          className="mt-0.5 block cursor-pointer rounded px-1 py-0.5 text-foreground hover:bg-muted/50"
+          className="cursor-pointer truncate rounded px-1 py-0.5 text-foreground hover:bg-muted/50"
         >
           {value || <span className="italic text-muted-foreground">—</span>}
         </span>
