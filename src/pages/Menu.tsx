@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookA, Brush, Package, ClipboardList, ChevronRight } from "lucide-react";
+import { BookA, Brush, Car, ChevronRight } from "lucide-react";
 
 const SECTIONS = [
   {
@@ -17,23 +17,13 @@ const SECTIONS = [
     color: "from-amber-500 to-orange-600",
   },
   {
-    title: "Stock Pièces",
-    description: "Bientôt disponible",
-    icon: Package,
-    path: "#",
+    title: "Gestion des Véhicules",
+    description: "Suivi par marque : Peugeot, Automalin, Renault",
+    icon: Car,
+    path: "/gestion-vehicules",
     color: "from-emerald-500 to-green-600",
-    disabled: true,
-  },
-  {
-    title: "Rapports",
-    description: "Bientôt disponible",
-    icon: ClipboardList,
-    path: "#",
-    color: "from-blue-500 to-indigo-600",
-    disabled: true,
   },
 ];
-
 const Menu = () => {
   return (
     <div className="space-y-8">
