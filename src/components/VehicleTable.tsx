@@ -236,7 +236,16 @@ export function VehicleTable() {
                         <input
                           className="w-full rounded-md border-0 bg-transparent px-3 py-2.5 text-sm font-bold uppercase tracking-wider text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 placeholder:font-normal placeholder:normal-case placeholder:tracking-normal hover:bg-primary/5 focus:bg-primary/5 focus:ring-2 focus:ring-ring"
                           defaultValue={row[col.key]}
-                          maxLength={10}
+                          maxLength={12}
+                          onChange={(e) => {
+                            // Auto-format as user types: strip non-alphanumeric, then insert spaces
+                            let raw = e.target.value.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+                            if (raw.length > 8) raw = raw.slice(0, 8);
+                            let formatted = raw;
+                            if (raw.length > 2) formatted = raw.slice(0, 2) + " " + raw.slice(2);
+                            if (raw.length > 6) formatted = raw.slice(0, 2) + " " + raw.slice(2, 6) + " " + raw.slice(6);
+                            e.target.value = formatted;
+                          }}
                           onBlur={(e) => {
                             const val = e.target.value.trim();
                             if (!val) { updateCell(row.id, col.key, ""); return; }
