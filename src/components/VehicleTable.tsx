@@ -20,7 +20,7 @@ type Vehicle = {
 };
 
 const COLUMNS = [
-  { key: "immatriculation", label: "Immatriculation", icon: Car },
+  { key: "immatriculation", label: "Immat", icon: Car },
   { key: "entree", label: "Entrée", icon: LogIn },
   { key: "client", label: "Client", icon: User },
   { key: "travaux", label: "Travaux", icon: Wrench },
