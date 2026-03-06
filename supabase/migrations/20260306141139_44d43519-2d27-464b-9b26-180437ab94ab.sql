@@ -1,0 +1,1 @@
+ALTER TABLE public.gestion_vehicules ADD COLUMN concession text NOT NULL DEFAULT ''::text;
