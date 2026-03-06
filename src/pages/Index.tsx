@@ -31,7 +31,7 @@ const Index = () => {
             </div>
             <div>
               <h1 className="font-display text-2xl font-bold uppercase tracking-wider text-foreground">
-                Auto<span className="text-primary">Gestion</span>
+              A.T.S/<span className="text-primary">GESTION DES VÉHICULES</span>
               </h1>
               <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground">
                 <Gauge className="h-3 w-3" />
