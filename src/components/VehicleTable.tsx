@@ -174,8 +174,8 @@ export function VehicleTable() {
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-automotive">
-        <table className="w-full text-sm">
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-automotive">
+        <table className="w-full table-fixed text-sm">
           <thead>
             <tr className="bg-table-header text-table-header-foreground">
               {COLUMNS.map((col) => {
