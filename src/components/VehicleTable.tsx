@@ -1,8 +1,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
+import { format, parse, isValid } from "date-fns";
+import { fr } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 
 type Vehicle = {
   id: string;
@@ -24,6 +29,45 @@ const COLUMNS = [
 ] as const;
 
 type ColumnKey = (typeof COLUMNS)[number]["key"];
+
+const DATE_COLUMNS: ColumnKey[] = ["entree", "sortie"];
+
+function parseDate(value: string): Date | undefined {
+  if (!value) return undefined;
+  const d = parse(value, "dd/MM/yyyy", new Date());
+  return isValid(d) ? d : undefined;
+}
+
+function DateCell({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {
+  const date = parseDate(value);
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          className={cn(
+            "flex w-full items-center gap-2 rounded bg-transparent px-3 py-2 text-left text-foreground outline-none focus:ring-2 focus:ring-ring",
+            !date && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon className="h-4 w-4 shrink-0 opacity-50" />
+          {date ? format(date, "dd/MM/yyyy") : <span>{placeholder}</span>}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={(d) => {
+            if (d) onChange(format(d, "dd/MM/yyyy"));
+          }}
+          locale={fr}
+          className={cn("p-3 pointer-events-auto")}
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 export function VehicleTable() {
   const [rows, setRows] = useState<Vehicle[]>([]);
@@ -143,14 +187,22 @@ export function VehicleTable() {
                 >
                   {COLUMNS.map((col) => (
                     <td key={col.key} className="px-1 py-1">
-                      <input
-                        className="w-full rounded border-0 bg-transparent px-3 py-2 text-foreground outline-none focus:ring-2 focus:ring-ring"
-                        defaultValue={row[col.key]}
-                        onBlur={(e) =>
-                          updateCell(row.id, col.key, e.target.value)
-                        }
-                        placeholder={col.label}
-                      />
+                      {DATE_COLUMNS.includes(col.key) ? (
+                        <DateCell
+                          value={row[col.key]}
+                          onChange={(v) => updateCell(row.id, col.key, v)}
+                          placeholder={col.label}
+                        />
+                      ) : (
+                        <input
+                          className="w-full rounded border-0 bg-transparent px-3 py-2 text-foreground outline-none focus:ring-2 focus:ring-ring"
+                          defaultValue={row[col.key]}
+                          onBlur={(e) =>
+                            updateCell(row.id, col.key, e.target.value)
+                          }
+                          placeholder={col.label}
+                        />
+                      )}
                     </td>
                   ))}
                   <td className="px-2 py-1">
