@@ -214,36 +214,25 @@ const GestionVehicules = () => {
 };
 
 const EditableField = ({ label, value, onSave }: { label: string; value: string; onSave: (v: string) => void }) => {
-  const [editing, setEditing] = useState(false);
   const [val, setVal] = useState(value);
 
   useEffect(() => setVal(value), [value]);
 
   const save = () => {
-    setEditing(false);
     if (val !== value) onSave(val);
   };
 
   return (
     <div className="flex items-center gap-1 text-[11px] min-w-0">
       <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{label}:</span>
-      {editing ? (
-        <input
-          autoFocus
-          value={val}
-          onChange={(e) => setVal(e.target.value)}
-          onBlur={save}
-          onKeyDown={(e) => e.key === "Enter" && save()}
-          className="w-full min-w-0 rounded border border-border bg-background px-1 py-0.5 text-[11px] text-foreground outline-none focus:border-primary"
-        />
-      ) : (
-        <span
-          onClick={() => setEditing(true)}
-          className="cursor-pointer truncate rounded px-1 py-0.5 text-foreground hover:bg-muted/50"
-        >
-          {value || <span className="italic text-muted-foreground">—</span>}
-        </span>
-      )}
+      <input
+        value={val}
+        onChange={(e) => setVal(e.target.value)}
+        onBlur={save}
+        onKeyDown={(e) => e.key === "Enter" && save()}
+        placeholder={label}
+        className="w-full min-w-0 rounded bg-transparent px-1 py-0.5 text-[11px] text-foreground outline-none placeholder:italic placeholder:text-muted-foreground/50 hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring"
+      />
     </div>
   );
 };
