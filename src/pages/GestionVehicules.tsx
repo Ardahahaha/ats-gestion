@@ -188,21 +188,20 @@ const GestionVehicules = () => {
                 {items.length === 0 && (
                   <p className="px-4 py-8 text-center text-xs text-muted-foreground italic">Aucun véhicule</p>
                 )}
-                {items.map((v) => (
-                  <div key={v.id} className="group relative px-4 py-3 transition-colors hover:bg-muted/30">
-                    <button
-                      onClick={() => deleteVehicle(v.id)}
-                      className="absolute right-2 top-2 rounded p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-
-                    <div className="grid grid-cols-2 gap-x-3 gap-y-1.5">
+              {items.map((v) => (
+                  <div key={v.id} className="group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30">
+                    <div className="grid flex-1 grid-cols-4 gap-x-2">
                       <EditableField label="Marque" value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} />
                       <EditableField label="Modèle" value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} />
                       <EditableField label="Immat" value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} />
                       <EditableField label="État" value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} />
                     </div>
+                    <button
+                      onClick={() => deleteVehicle(v.id)}
+                      className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
                   </div>
                 ))}
               </div>
