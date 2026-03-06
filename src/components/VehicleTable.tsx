@@ -72,21 +72,23 @@ export function VehicleTable() {
   }, [fetchRows]);
 
   const addRow = async () => {
+    const tempId = crypto.randomUUID();
+    const newRow: Vehicle = { id: tempId, immatriculation: "", entree: "", client: "", travaux: "", pieces: "", sortie: "" };
+    setRows((prev) => [...prev, newRow]);
     const { error } = await supabase.from("vehicules").insert({});
-    if (error) toast.error("Erreur lors de l'ajout");
+    if (error) { toast.error("Erreur lors de l'ajout"); fetchRows(); }
   };
 
   const deleteRow = async (id: string) => {
+    setRows((prev) => prev.filter((r) => r.id !== id));
     const { error } = await supabase.from("vehicules").delete().eq("id", id);
-    if (error) toast.error("Erreur lors de la suppression");
+    if (error) { toast.error("Erreur lors de la suppression"); fetchRows(); }
   };
 
   const updateCell = async (id: string, column: ColumnKey, value: string) => {
-    const { error } = await supabase
-      .from("vehicules")
-      .update({ [column]: value })
-      .eq("id", id);
-    if (error) toast.error("Erreur lors de la mise à jour");
+    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, [column]: value } : r)));
+    const { error } = await supabase.from("vehicules").update({ [column]: value }).eq("id", id);
+    if (error) { toast.error("Erreur lors de la mise à jour"); fetchRows(); }
   };
 
   if (loading) {
