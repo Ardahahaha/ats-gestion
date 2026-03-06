@@ -47,6 +47,12 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        "table-header": {
+          DEFAULT: "hsl(var(--table-header))",
+          foreground: "hsl(var(--table-header-foreground))",
+        },
+        "table-row-hover": "hsl(var(--table-row-hover))",
+        "table-row-alt": "hsl(var(--table-row-alt))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
