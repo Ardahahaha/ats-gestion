@@ -225,7 +225,7 @@ export function VehicleTable() {
                   )}
                 >
                   {COLUMNS.map((col) => (
-                    <td key={col.key} className={cn("border-r border-border/50 px-1 py-1 last:border-r-0", col.key === "travaux" && "min-w-[300px]")}>
+                    <td key={col.key} className={cn("border-r border-border/50 px-1 py-1 last:border-r-0", col.key === "travaux" && "w-[200px]")}>
                       {DATE_COLUMNS.includes(col.key) ? (
                         <DateCell
                           value={row[col.key]}
