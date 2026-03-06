@@ -147,13 +147,13 @@ const GestionVehicules = () => {
       )}
 
       {/* Grille des concessions */}
-      <div className="grid gap-5 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-3 xl:grid-cols-2">
         {concessions.map((concession) => {
           const items = getByConc(concession);
           return (
             <div key={concession} className="flex flex-col rounded-xl border border-border bg-card shadow-sm overflow-hidden">
               {/* Concession header */}
-              <div className="flex items-center justify-between bg-gradient-to-r from-primary/10 to-primary/5 px-4 py-3">
+              <div className="flex items-center justify-between bg-gradient-to-r from-primary/10 to-primary/5 px-3 py-2">
                 <div className="flex items-center gap-2">
                   <Building2 className="h-4 w-4 text-primary" />
                   <h3 className="font-display text-sm font-bold uppercase tracking-wide text-foreground">
@@ -186,23 +186,22 @@ const GestionVehicules = () => {
               {/* Véhicules */}
               <div className="flex-1 divide-y divide-border">
                 {items.length === 0 && (
-                  <p className="px-4 py-8 text-center text-xs text-muted-foreground italic">Aucun véhicule</p>
+                  <p className="px-3 py-4 text-center text-xs text-muted-foreground italic">Aucun véhicule</p>
                 )}
-                {items.map((v) => (
-                  <div key={v.id} className="group relative px-4 py-3 transition-colors hover:bg-muted/30">
-                    <button
-                      onClick={() => deleteVehicle(v.id)}
-                      className="absolute right-2 top-2 rounded p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-
-                    <div className="grid grid-cols-2 gap-x-3 gap-y-1.5">
+              {items.map((v) => (
+                  <div key={v.id} className="group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30">
+                    <div className="grid flex-1 grid-cols-4 gap-x-2">
                       <EditableField label="Marque" value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} />
                       <EditableField label="Modèle" value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} />
                       <EditableField label="Immat" value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} />
                       <EditableField label="État" value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} />
                     </div>
+                    <button
+                      onClick={() => deleteVehicle(v.id)}
+                      className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
                   </div>
                 ))}
               </div>
@@ -226,8 +225,8 @@ const EditableField = ({ label, value, onSave }: { label: string; value: string;
   };
 
   return (
-    <div className="text-xs">
-      <span className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+    <div className="flex items-center gap-1 text-[11px] min-w-0">
+      <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{label}:</span>
       {editing ? (
         <input
           autoFocus
@@ -235,12 +234,12 @@ const EditableField = ({ label, value, onSave }: { label: string; value: string;
           onChange={(e) => setVal(e.target.value)}
           onBlur={save}
           onKeyDown={(e) => e.key === "Enter" && save()}
-          className="mt-0.5 w-full rounded border border-border bg-background px-2 py-1 text-xs text-foreground outline-none focus:border-primary"
+          className="w-full min-w-0 rounded border border-border bg-background px-1 py-0.5 text-[11px] text-foreground outline-none focus:border-primary"
         />
       ) : (
         <span
           onClick={() => setEditing(true)}
-          className="mt-0.5 block cursor-pointer rounded px-1 py-0.5 text-foreground hover:bg-muted/50"
+          className="cursor-pointer truncate rounded px-1 py-0.5 text-foreground hover:bg-muted/50"
         >
           {value || <span className="italic text-muted-foreground">—</span>}
         </span>
