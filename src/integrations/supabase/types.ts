@@ -128,6 +128,7 @@ export type Database = {
       }
       gestion_vehicules: {
         Row: {
+          concession: string
           created_at: string
           etat: string
           id: string
@@ -136,6 +137,7 @@ export type Database = {
           modele: string
         }
         Insert: {
+          concession?: string
           created_at?: string
           etat?: string
           id?: string
@@ -144,6 +146,7 @@ export type Database = {
           modele?: string
         }
         Update: {
+          concession?: string
           created_at?: string
           etat?: string
           id?: string
