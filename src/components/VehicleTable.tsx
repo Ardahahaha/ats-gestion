@@ -225,7 +225,7 @@ export function VehicleTable() {
                   )}
                 >
                   {COLUMNS.map((col) => (
-                    <td key={col.key} className="border-r border-border/50 px-1 py-1 last:border-r-0">
+                    <td key={col.key} className={cn("border-r border-border/50 px-1 py-1 last:border-r-0", col.key === "travaux" && "min-w-[300px]")}>
                       {DATE_COLUMNS.includes(col.key) ? (
                         <DateCell
                           value={row[col.key]}
@@ -258,6 +258,16 @@ export function VehicleTable() {
                             updateCell(row.id, col.key, formatted);
                           }}
                           placeholder="AB 123 CD"
+                        />
+                      ) : col.key === "travaux" ? (
+                        <textarea
+                          className="w-full resize-none rounded-md border-0 bg-transparent px-3 py-2 text-xs font-normal leading-tight text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-primary/5 focus:bg-primary/5 focus:ring-2 focus:ring-ring"
+                          defaultValue={row[col.key]}
+                          rows={3}
+                          onBlur={(e) =>
+                            updateCell(row.id, col.key, e.target.value)
+                          }
+                          placeholder={col.label}
                         />
                       ) : (
                         <input
