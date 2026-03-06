@@ -7,6 +7,7 @@ import { Layout } from "@/components/Layout";
 import Menu from "./pages/Menu";
 import Vehicules from "./pages/Vehicules";
 import Atelier from "./pages/Atelier";
+import GestionVehicules from "./pages/GestionVehicules";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
