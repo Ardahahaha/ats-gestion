@@ -11,11 +11,10 @@ const SECTIONS = [
   },
   {
     title: "Atelier",
-    description: "Bientôt disponible",
+    description: "Créez vos propres tableaux personnalisés",
     icon: Wrench,
-    path: "#",
+    path: "/atelier",
     color: "from-amber-500 to-orange-600",
-    disabled: true,
   },
   {
     title: "Stock Pièces",

@@ -14,6 +14,118 @@ export type Database = {
   }
   public: {
     Tables: {
+      custom_cells: {
+        Row: {
+          column_id: string
+          id: string
+          row_id: string
+          value: string
+        }
+        Insert: {
+          column_id: string
+          id?: string
+          row_id: string
+          value?: string
+        }
+        Update: {
+          column_id?: string
+          id?: string
+          row_id?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_cells_column_id_fkey"
+            columns: ["column_id"]
+            isOneToOne: false
+            referencedRelation: "custom_columns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "custom_cells_row_id_fkey"
+            columns: ["row_id"]
+            isOneToOne: false
+            referencedRelation: "custom_rows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_columns: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          position: number
+          table_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          table_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          table_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_columns_table_id_fkey"
+            columns: ["table_id"]
+            isOneToOne: false
+            referencedRelation: "custom_tables"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_rows: {
+        Row: {
+          created_at: string
+          id: string
+          table_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          table_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          table_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_rows_table_id_fkey"
+            columns: ["table_id"]
+            isOneToOne: false
+            referencedRelation: "custom_tables"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      custom_tables: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       vehicules: {
         Row: {
           client: string | null
