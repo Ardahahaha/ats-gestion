@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Car, Wrench, Package, ClipboardList, ChevronRight } from "lucide-react";
+import { Car, Brush, Package, ClipboardList, ChevronRight } from "lucide-react";
 
 const SECTIONS = [
   {
@@ -10,9 +10,9 @@ const SECTIONS = [
     color: "from-primary to-red-600",
   },
   {
-    title: "Atelier",
+    title: "Créer",
     description: "Créez vos propres tableaux personnalisés",
-    icon: Wrench,
+    icon: Brush,
     path: "/atelier",
     color: "from-amber-500 to-orange-600",
   },
