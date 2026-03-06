@@ -7,7 +7,7 @@ const SECTIONS = [
     description: "Suivi des entrées, sorties, travaux et pièces",
     icon: BookA,
     path: "/vehicules",
-    color: "from-primary to-red-600",
+    color: "from-red-400 to-rose-300",
   },
   {
     title: "Gestion des Véhicules",
