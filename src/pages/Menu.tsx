@@ -10,18 +10,18 @@ const SECTIONS = [
     color: "from-primary to-red-600",
   },
   {
-    title: "Créer",
-    description: "Créez vos propres tableaux personnalisés",
-    icon: Brush,
-    path: "/atelier",
-    color: "from-amber-500 to-orange-600",
-  },
-  {
     title: "Gestion des Véhicules",
     description: "Suivi par marque : Peugeot, Automalin, Renault",
     icon: Car,
     path: "/gestion-vehicules",
     color: "from-emerald-500 to-green-600",
+  },
+  {
+    title: "Créer",
+    description: "Créez vos propres tableaux personnalisés",
+    icon: Brush,
+    path: "/atelier",
+    color: "from-amber-500 to-orange-600",
   },
 ];
 const Menu = () => {
