@@ -47,6 +47,8 @@ type ServiceRow = {
   carrosserie_notes_meca: string;
   has_mecanique: boolean;
   has_carrosserie: boolean;
+  mecanique_photos: string[];
+  carrosserie_photos: string[];
 };
 
 function toStringArray(val: Json | undefined): string[] {
