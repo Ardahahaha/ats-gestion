@@ -627,8 +627,10 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro }: {
         <Input type="date" value={row.date_sortie} onChange={(e) => onUpdate(row.id, "date_sortie", e.target.value)}
           className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
       </td>
+      <td className="p-1.5 min-w-[70px]">
+        <ProgressBar row={row} />
+      </td>
 
-      {showMeca && (
         <>
           <td className="p-1.5 border-l bg-blue-500/[0.02] min-w-[140px]">
             {row.has_mecanique ? (
