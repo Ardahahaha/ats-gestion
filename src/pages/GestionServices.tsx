@@ -395,7 +395,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
           </Button>
         )}
       </div>
-      <div className="grid grid-cols-2 gap-px bg-border">
+      <div className="grid grid-cols-3 gap-px bg-border">
         <div className="bg-card p-1.5">
           <p className="text-[9px] text-muted-foreground uppercase mb-0.5">Entrée</p>
           <Input type="date" value={row.date_entree} onChange={(e) => onUpdate(row.id, "date_entree", e.target.value)}
@@ -406,7 +406,32 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
           <Input type="date" value={row.date_sortie} onChange={(e) => onUpdate(row.id, "date_sortie", e.target.value)}
             className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
         </div>
+        <div className="bg-card p-1.5">
+          <p className="text-[9px] text-muted-foreground uppercase mb-0.5">Km</p>
+          <Input value={row.kilometrage} onChange={(e) => onUpdate(row.id, "kilometrage", e.target.value)}
+            placeholder="km" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
+        </div>
       </div>
+
+      {/* Pastille vérification */}
+      {isAdmin && (
+        <div className="px-2 py-1 border-t bg-muted/10 flex items-center gap-1.5">
+          <button
+            onClick={() => onUpdate(row.id, "a_verifier", !row.a_verifier)}
+            className={`h-3 w-3 rounded-full border-2 transition-colors ${
+              row.a_verifier ? "bg-green-500 border-green-600" : "bg-destructive border-destructive"
+            }`}
+            title={row.a_verifier ? "Service vérifié" : "Non vérifié"}
+          />
+          <span className="text-[9px] text-muted-foreground">{row.a_verifier ? "Vérifié" : "À vérifier"}</span>
+        </div>
+      )}
+      {!isAdmin && (
+        <div className="px-2 py-1 border-t bg-muted/10 flex items-center gap-1.5">
+          <div className={`h-3 w-3 rounded-full ${row.a_verifier ? "bg-green-500" : "bg-destructive"}`} />
+          <span className="text-[9px] text-muted-foreground">{row.a_verifier ? "Vérifié" : "À vérifier"}</span>
+        </div>
+      )}
 
       <div className="px-2 py-1 border-t bg-muted/10">
         <ProgressBar row={row} />
