@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { role, logout } = useAuth();
+  const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("theme") === "dark" ||
         (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -54,15 +55,33 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </Link>
           </div>
 
-          <button
-            onClick={() => setDark((d) => !d)}
-            className="group relative rounded-full border border-border bg-secondary p-3 text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-foreground hover:shadow-lg hover:shadow-primary/10"
-            title={dark ? "Mode jour" : "Mode nuit"}
-          >
-            <div className="transition-transform duration-300 group-hover:rotate-12">
-              {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          <div className="flex items-center gap-2">
+            {/* Role badge */}
+            <div className={`hidden sm:flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium ${
+              role === "admin" ? "bg-primary/10 text-primary" : "bg-blue-500/10 text-blue-500"
+            }`}>
+              {role === "admin" ? <Shield className="h-3 w-3" /> : <Wrench className="h-3 w-3" />}
+              {role === "admin" ? "Admin" : "Technicien"}
             </div>
-          </button>
+
+            <button
+              onClick={() => setDark((d) => !d)}
+              className="group relative rounded-full border border-border bg-secondary p-3 text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-foreground hover:shadow-lg hover:shadow-primary/10"
+              title={dark ? "Mode jour" : "Mode nuit"}
+            >
+              <div className="transition-transform duration-300 group-hover:rotate-12">
+                {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </div>
+            </button>
+
+            <button
+              onClick={logout}
+              className="rounded-full border border-border bg-secondary p-3 text-muted-foreground transition-all duration-300 hover:border-destructive/50 hover:text-destructive hover:shadow-lg"
+              title="Se déconnecter"
+            >
+              <LogOut className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </header>
 
