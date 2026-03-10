@@ -609,51 +609,11 @@ export default function GestionServices() {
         </div>
       ) : (
         <>
-          {/* Desktop */}
-          <div className="hidden lg:block overflow-auto rounded-xl border">
-            <table className="w-full text-[11px]">
-              <thead>
-                <tr className="bg-muted/50">
-                  <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[80px]">Modèle</th>
-                  <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Immat</th>
-                  <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[80px]">Prénom</th>
-                  <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[60px]">Km</th>
-                  <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Entrée</th>
-                  <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Sortie</th>
-                  <th className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] w-[80px]">Avancement</th>
-                  <th className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] w-[30px]">✓</th>
-                  {rows.some(r => r.has_mecanique) && (
-                    <th colSpan={2} className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] border-l bg-blue-500/5">🔧 Mécanique</th>
-                  )}
-                  {rows.some(r => r.has_carrosserie) && (
-                    <th colSpan={2} className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] border-l bg-orange-500/5">🎨 Carrosserie</th>
-                  )}
-                  {isAdmin && <th className="p-1 w-[32px]"></th>}
-                </tr>
-                <tr className="bg-muted/30 text-[9px]">
-                  <th colSpan={8}></th>
-                  {rows.some(r => r.has_mecanique) && (
-                    <>
-                      <th className="p-1 text-center border-l bg-blue-500/5">Chef</th>
-                      <th className="p-1 text-center bg-blue-500/5">Technicien</th>
-                    </>
-                  )}
-                  {rows.some(r => r.has_carrosserie) && (
-                    <>
-                      <th className="p-1 text-center border-l bg-orange-500/5">Chef</th>
-                      <th className="p-1 text-center bg-orange-500/5">Technicien</th>
-                    </>
-                  )}
-                  {isAdmin && <th></th>}
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row) => (
-                  <DesktopRow key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow}
-                    showMeca={rows.some(r => r.has_mecanique)} showCarro={rows.some(r => r.has_carrosserie)} isAdmin={isAdmin} />
-                ))}
-              </tbody>
-            </table>
+          {/* Desktop - Grid of 4 cards */}
+          <div className="hidden lg:grid lg:grid-cols-4 gap-3">
+            {rows.map((row) => (
+              <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} />
+            ))}
           </div>
 
           {/* Mobile */}
