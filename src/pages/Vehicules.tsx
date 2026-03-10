@@ -6,19 +6,17 @@ const Vehicules = () => {
   const { role } = useAuth();
   const isAdmin = role === "admin";
 
-  if (!isAdmin) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 space-y-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
-          <Lock className="h-8 w-8 text-destructive" />
+  return (
+    <div>
+      {!isAdmin && (
+        <div className="mb-4 flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-4 py-2 text-xs text-muted-foreground">
+          <Lock className="h-3.5 w-3.5" />
+          Mode lecture seule — accès technicien
         </div>
-        <h2 className="font-display text-xl font-bold uppercase tracking-wider text-foreground">Accès restreint</h2>
-        <p className="text-sm text-muted-foreground">Ce module est réservé aux administrateurs.</p>
-      </div>
-    );
-  }
-
-  return <VehicleTable />;
+      )}
+      <VehicleTable readOnly={!isAdmin} />
+    </div>
+  );
 };
 
 export default Vehicules;
