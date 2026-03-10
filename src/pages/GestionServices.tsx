@@ -30,6 +30,44 @@ const CARROSSERIE_SERVICES = [
 // validees is now Record<string, "ok"|"nok"> stored as jsonb object
 type ValidationMap = Record<string, "ok" | "nok">;
 
+/* ────────── Progress calculation ────────── */
+function calcProgress(row: ServiceRow): { done: number; total: number; percent: number } {
+  const allTasks: string[] = [];
+  const allValidations: ValidationMap = {};
+  if (row.has_mecanique) {
+    allTasks.push(...row.mecanique_taches);
+    Object.assign(allValidations, row.mecanique_validees);
+  }
+  if (row.has_carrosserie) {
+    allTasks.push(...row.carrosserie_taches);
+    Object.assign(allValidations, row.carrosserie_validees);
+  }
+  const total = allTasks.length;
+  if (total === 0) return { done: 0, total: 0, percent: 0 };
+  const done = allTasks.filter((t) => allValidations[t] === "ok").length;
+  return { done, total, percent: Math.round((done / total) * 100) };
+}
+
+/* ────────── Progress Bar ────────── */
+function ProgressBar({ row }: { row: ServiceRow }) {
+  const { done, total, percent } = calcProgress(row);
+  if (total === 0) return null;
+
+  const color = percent === 100 ? "bg-green-500" : percent >= 50 ? "bg-amber-500" : "bg-blue-500";
+
+  return (
+    <div className="flex items-center gap-1.5">
+      <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+        <div className={`h-full rounded-full transition-all duration-500 ${color}`} style={{ width: `${percent}%` }} />
+      </div>
+      <span className={`text-[9px] font-bold tabular-nums ${percent === 100 ? "text-green-600" : "text-muted-foreground"}`}>
+        {percent}%
+      </span>
+      <span className="text-[8px] text-muted-foreground">({done}/{total})</span>
+    </div>
+  );
+}
+
 type ServiceRow = {
   id: string;
   modele: string;
