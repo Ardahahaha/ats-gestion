@@ -325,6 +325,8 @@ function PhotoUpload({ photos, serviceId, field, onUpdate, readOnly }: {
 }) {
   const [uploading, setUploading] = useState(false);
   const [viewPhoto, setViewPhoto] = useState<string | null>(null);
+  const galleryRef = React.useRef<HTMLInputElement>(null);
+  const cameraRef = React.useRef<HTMLInputElement>(null);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (readOnly) return;
@@ -381,11 +383,28 @@ function PhotoUpload({ photos, serviceId, field, onUpdate, readOnly }: {
           </div>
         )}
         {!readOnly && (
-          <label className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded border border-dashed cursor-pointer hover:bg-muted/30 transition-colors ${uploading ? "opacity-50 pointer-events-none" : "text-muted-foreground"}`}>
-            <Camera className="h-3 w-3" />
-            {uploading ? "Envoi…" : "Photo"}
-            <input type="file" accept="image/*" capture="environment" multiple className="hidden" onChange={handleUpload} />
-          </label>
+          <div className="flex gap-1">
+            <button
+              type="button"
+              disabled={uploading}
+              onClick={() => galleryRef.current?.click()}
+              className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded border border-dashed cursor-pointer hover:bg-muted/30 transition-colors ${uploading ? "opacity-50 pointer-events-none" : "text-muted-foreground"}`}
+            >
+              <Image className="h-3 w-3" />
+              {uploading ? "Envoi…" : "Galerie"}
+            </button>
+            <button
+              type="button"
+              disabled={uploading}
+              onClick={() => cameraRef.current?.click()}
+              className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded border border-dashed cursor-pointer hover:bg-muted/30 transition-colors ${uploading ? "opacity-50 pointer-events-none" : "text-muted-foreground"}`}
+            >
+              <Camera className="h-3 w-3" />
+              Caméra
+            </button>
+            <input ref={galleryRef} type="file" accept="image/*" multiple className="hidden" onChange={handleUpload} />
+            <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleUpload} />
+          </div>
         )}
       </div>
     </>
