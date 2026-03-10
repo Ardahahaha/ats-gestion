@@ -424,6 +424,8 @@ export default function GestionServices() {
         mecanique_validees: toValidationMap(d.mecanique_validees as Json),
         carrosserie_taches: toStringArray(d.carrosserie_taches as Json),
         carrosserie_validees: toValidationMap(d.carrosserie_validees as Json),
+        mecanique_photos: toStringArray(d.mecanique_photos as Json),
+        carrosserie_photos: toStringArray(d.carrosserie_photos as Json),
         has_mecanique: (d as Record<string, unknown>).has_mecanique !== false,
         has_carrosserie: (d as Record<string, unknown>).has_carrosserie !== false,
       }))
