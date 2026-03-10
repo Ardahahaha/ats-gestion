@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BookA, Brush, Car, ChevronRight } from "lucide-react";
+import { BookA, Brush, Car, ChevronRight, Wrench } from "lucide-react";
 
 const SECTIONS = [
   {
@@ -15,6 +15,13 @@ const SECTIONS = [
     icon: Car,
     path: "/gestion-vehicules",
     color: "from-violet-500 to-blue-600",
+  },
+  {
+    title: "Gestion des Services",
+    description: "Suivi mécanique et carrosserie des véhicules",
+    icon: Wrench,
+    path: "/gestion-services",
+    color: "from-amber-400 to-orange-500",
   },
   {
     title: "Créer",
