@@ -705,17 +705,7 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
         <ProgressBar row={row} />
       </td>
       <td className="p-1.5 text-center">
-        {isAdmin ? (
-          <button
-            onClick={() => onUpdate(row.id, "a_verifier", !row.a_verifier)}
-            className={`inline-block h-3.5 w-3.5 rounded-full border-2 transition-colors ${
-              row.a_verifier ? "bg-green-500 border-green-600" : "bg-destructive border-destructive"
-            }`}
-            title={row.a_verifier ? "Vérifié" : "À vérifier"}
-          />
-        ) : (
-          <div className={`inline-block h-3.5 w-3.5 rounded-full ${row.a_verifier ? "bg-green-500" : "bg-destructive"}`} title={row.a_verifier ? "Vérifié" : "À vérifier"} />
-        )}
+        <StatusPastille row={row} isAdmin={isAdmin} onUpdate={onUpdate} />
       </td>
 
       {showMeca && (
