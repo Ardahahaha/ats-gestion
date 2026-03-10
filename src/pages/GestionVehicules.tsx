@@ -104,6 +104,12 @@ const GestionVehicules = () => {
 
   return (
     <div className="space-y-6">
+      {!isAdmin && (
+        <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-4 py-2 text-xs text-muted-foreground">
+          <Lock className="h-3.5 w-3.5" />
+          Mode lecture seule — accès technicien
+        </div>
+      )}
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -115,29 +121,31 @@ const GestionVehicules = () => {
           </p>
         </div>
 
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Building2 className="h-4 w-4" />
-              Nouvelle concession
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Ajouter une concession</DialogTitle>
-            </DialogHeader>
-            <div className="flex gap-2 pt-2">
-              <Input
-                placeholder="Nom de la concession…"
-                value={newConcession}
-                onChange={(e) => setNewConcession(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && addConcession()}
-                autoFocus
-              />
-              <Button onClick={addConcession}>Ajouter</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        {isAdmin && (
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Building2 className="h-4 w-4" />
+                Nouvelle concession
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Ajouter une concession</DialogTitle>
+              </DialogHeader>
+              <div className="flex gap-2 pt-2">
+                <Input
+                  placeholder="Nom de la concession…"
+                  value={newConcession}
+                  onChange={(e) => setNewConcession(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && addConcession()}
+                  autoFocus
+                />
+                <Button onClick={addConcession}>Ajouter</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       {/* Concessions vides */}
