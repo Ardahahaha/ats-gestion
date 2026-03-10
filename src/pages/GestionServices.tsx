@@ -746,6 +746,7 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
             {row.has_carrosserie ? (
               <ChefSection allServices={CARROSSERIE_SERVICES} selected={row.carrosserie_taches}
                 onToggle={(s) => toggleTask("carrosserie_taches", row.carrosserie_taches, s)}
+                onAddCustom={isAdmin ? (t) => addCustomTask("carrosserie_taches", row.carrosserie_taches, t) : undefined}
                 notes={row.carrosserie_notes_chef} onNotesChange={(v) => onUpdate(row.id, "carrosserie_notes_chef", v)}
                 onSave={() => {}} label="Carrosserie" readOnly={!isAdmin} />
             ) : <span className="text-[10px] text-muted-foreground italic">—</span>}
