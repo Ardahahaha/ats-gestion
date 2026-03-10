@@ -479,6 +479,8 @@ export default function GestionServices() {
     setRows(
       (data || []).map((d) => ({
         ...d,
+        kilometrage: (d as Record<string, unknown>).kilometrage as string ?? "",
+        a_verifier: (d as Record<string, unknown>).a_verifier === true,
         mecanique_taches: toStringArray(d.mecanique_taches as Json),
         mecanique_validees: toValidationMap(d.mecanique_validees as Json),
         carrosserie_taches: toStringArray(d.carrosserie_taches as Json),
