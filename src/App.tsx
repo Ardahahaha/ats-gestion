@@ -16,7 +16,11 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 function AppRoutes() {
-  const { role } = useAuth();
+  const { role, loading } = useAuth();
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Chargement…</div>;
+  }
 
   if (!role) return <Login />;
 
