@@ -1,0 +1,2 @@
+ALTER TABLE public.services ADD COLUMN IF NOT EXISTS modele text NOT NULL DEFAULT '';
+ALTER TABLE public.services ADD COLUMN IF NOT EXISTS prenom text NOT NULL DEFAULT '';
