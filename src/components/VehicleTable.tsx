@@ -167,13 +167,15 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
             <span className="ml-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">véhicule{rows.length !== 1 ? "s" : ""}</span>
           </div>
         </div>
-        <Button 
-          onClick={addRow} 
-          className="gap-2 bg-primary font-display text-sm font-semibold uppercase tracking-wider shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02]"
-        >
-          <Plus className="h-4 w-4" />
-          Ajouter un véhicule
-        </Button>
+        {!readOnly && (
+          <Button 
+            onClick={addRow} 
+            className="gap-2 bg-primary font-display text-sm font-semibold uppercase tracking-wider shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02]"
+          >
+            <Plus className="h-4 w-4" />
+            Ajouter un véhicule
+          </Button>
+        )}
       </div>
 
       {/* Table */}
