@@ -30,6 +30,44 @@ const CARROSSERIE_SERVICES = [
 // validees is now Record<string, "ok"|"nok"> stored as jsonb object
 type ValidationMap = Record<string, "ok" | "nok">;
 
+/* ────────── Progress calculation ────────── */
+function calcProgress(row: ServiceRow): { done: number; total: number; percent: number } {
+  const allTasks: string[] = [];
+  const allValidations: ValidationMap = {};
+  if (row.has_mecanique) {
+    allTasks.push(...row.mecanique_taches);
+    Object.assign(allValidations, row.mecanique_validees);
+  }
+  if (row.has_carrosserie) {
+    allTasks.push(...row.carrosserie_taches);
+    Object.assign(allValidations, row.carrosserie_validees);
+  }
+  const total = allTasks.length;
+  if (total === 0) return { done: 0, total: 0, percent: 0 };
+  const done = allTasks.filter((t) => allValidations[t] === "ok").length;
+  return { done, total, percent: Math.round((done / total) * 100) };
+}
+
+/* ────────── Progress Bar ────────── */
+function ProgressBar({ row }: { row: ServiceRow }) {
+  const { done, total, percent } = calcProgress(row);
+  if (total === 0) return null;
+
+  const color = percent === 100 ? "bg-green-500" : percent >= 50 ? "bg-amber-500" : "bg-blue-500";
+
+  return (
+    <div className="flex items-center gap-1.5">
+      <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+        <div className={`h-full rounded-full transition-all duration-500 ${color}`} style={{ width: `${percent}%` }} />
+      </div>
+      <span className={`text-[9px] font-bold tabular-nums ${percent === 100 ? "text-green-600" : "text-muted-foreground"}`}>
+        {percent}%
+      </span>
+      <span className="text-[8px] text-muted-foreground">({done}/{total})</span>
+    </div>
+  );
+}
+
 type ServiceRow = {
   id: string;
   modele: string;
@@ -357,6 +395,11 @@ function ServiceCardMobile({ row, onUpdate, onDelete }: { row: ServiceRow; onUpd
         </div>
       </div>
 
+      {/* Progress bar */}
+      <div className="px-2 py-1 border-t bg-muted/10">
+        <ProgressBar row={row} />
+      </div>
+
       {row.has_mecanique && (
         <div className="border-t">
           <div className="px-3 py-1 bg-blue-500/10">
@@ -500,6 +543,7 @@ export default function GestionServices() {
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[80px]">Prénom</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Entrée</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Sortie</th>
+                  <th className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] w-[80px]">Avancement</th>
                   {rows.some(r => r.has_mecanique) && (
                     <th colSpan={2} className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] border-l bg-blue-500/5">🔧 Mécanique</th>
                   )}
@@ -509,7 +553,7 @@ export default function GestionServices() {
                   <th className="p-1 w-[32px]"></th>
                 </tr>
                 <tr className="bg-muted/30 text-[9px]">
-                  <th colSpan={5}></th>
+                  <th colSpan={6}></th>
                   {rows.some(r => r.has_mecanique) && (
                     <>
                       <th className="p-1 text-center border-l bg-blue-500/5">Chef</th>
@@ -582,6 +626,9 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro }: {
       <td className="p-1.5">
         <Input type="date" value={row.date_sortie} onChange={(e) => onUpdate(row.id, "date_sortie", e.target.value)}
           className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
+      </td>
+      <td className="p-1.5 min-w-[70px]">
+        <ProgressBar row={row} />
       </td>
 
       {showMeca && (
