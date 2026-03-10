@@ -375,7 +375,8 @@ function ServiceCardMobile({ row, onUpdate, onDelete }: { row: ServiceRow; onUpd
               <TechSection tasks={row.mecanique_taches} validations={row.mecanique_validees}
                 onSetStatus={(t, s) => setValidation("mecanique_validees", row.mecanique_validees, t, s)}
                 notes={row.mecanique_notes_meca} onNotesChange={(v) => onUpdate(row.id, "mecanique_notes_meca", v)}
-                onSave={() => {}} label="Mécanique" />
+                onSave={() => {}} label="Mécanique"
+                photos={row.mecanique_photos} serviceId={row.id} photosField="mecanique_photos" onUpdate={onUpdate} />
             </div>
           </div>
         </div>
