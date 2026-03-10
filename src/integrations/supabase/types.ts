@@ -158,6 +158,7 @@ export type Database = {
       }
       services: {
         Row: {
+          a_verifier: boolean
           carrosserie_notes_chef: string
           carrosserie_notes_meca: string
           carrosserie_photos: Json
@@ -170,6 +171,7 @@ export type Database = {
           has_mecanique: boolean
           id: string
           immatriculation: string
+          kilometrage: string
           mecanique_notes_chef: string
           mecanique_notes_meca: string
           mecanique_photos: Json
@@ -179,6 +181,7 @@ export type Database = {
           prenom: string
         }
         Insert: {
+          a_verifier?: boolean
           carrosserie_notes_chef?: string
           carrosserie_notes_meca?: string
           carrosserie_photos?: Json
@@ -191,6 +194,7 @@ export type Database = {
           has_mecanique?: boolean
           id?: string
           immatriculation?: string
+          kilometrage?: string
           mecanique_notes_chef?: string
           mecanique_notes_meca?: string
           mecanique_photos?: Json
@@ -200,6 +204,7 @@ export type Database = {
           prenom?: string
         }
         Update: {
+          a_verifier?: boolean
           carrosserie_notes_chef?: string
           carrosserie_notes_meca?: string
           carrosserie_photos?: Json
@@ -212,6 +217,7 @@ export type Database = {
           has_mecanique?: boolean
           id?: string
           immatriculation?: string
+          kilometrage?: string
           mecanique_notes_chef?: string
           mecanique_notes_meca?: string
           mecanique_photos?: Json
