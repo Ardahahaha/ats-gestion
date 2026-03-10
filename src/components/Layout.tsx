@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Moon, Sun, Car, Gauge } from "lucide-react";
+import { Moon, Sun, Car, Gauge, LogOut, Shield, Wrench } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [dark, setDark] = useState(() => {
