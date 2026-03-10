@@ -142,6 +142,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
   };
 
   const updateCell = async (id: string, column: ColumnKey, value: string) => {
+    if (readOnly) return;
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, [column]: value } : r)));
     const { error } = await supabase.from("vehicules").update({ [column]: value }).eq("id", id);
     if (error) { toast.error("Erreur lors de la mise à jour"); fetchRows(); }
