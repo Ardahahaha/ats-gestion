@@ -400,7 +400,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete }: { row: ServiceRow; onUpd
         <ProgressBar row={row} />
       </div>
 
-
+      {row.has_mecanique && (
         <div className="border-t">
           <div className="px-3 py-1 bg-blue-500/10">
             <p className="text-[10px] font-bold uppercase tracking-wider text-blue-600">🔧 Mécanique</p>
