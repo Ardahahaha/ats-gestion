@@ -541,11 +541,20 @@ export default function GestionServices() {
     setLoading(false);
   }, []);
 
+  const skipNextRefetch = useRef(false);
+  const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+
   useEffect(() => {
     fetchRows();
     const channel = supabase
       .channel("services-realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "services" }, () => fetchRows())
+      .on("postgres_changes", { event: "*", schema: "public", table: "services" }, () => {
+        if (skipNextRefetch.current) {
+          skipNextRefetch.current = false;
+          return;
+        }
+        fetchRows();
+      })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [fetchRows]);
