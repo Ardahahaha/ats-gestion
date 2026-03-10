@@ -206,17 +206,19 @@ const GestionVehicules = () => {
               {items.map((v) => (
                   <div key={v.id} className="group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30">
                     <div className="grid flex-1 grid-cols-4 gap-x-2">
-                      <EditableField label="Marque" value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} />
-                      <EditableField label="Modèle" value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} />
-                      <EditableField label="Immat" value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} />
-                      <EditableField label="État" value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} />
+                      <EditableField label="Marque" value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
+                      <EditableField label="Modèle" value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
+                      <EditableField label="Immat" value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
+                      <EditableField label="État" value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} />
                     </div>
-                    <button
-                      onClick={() => deleteVehicle(v.id)}
-                      className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </button>
+                    {isAdmin && (
+                      <button
+                        onClick={() => deleteVehicle(v.id)}
+                        className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
