@@ -609,7 +609,7 @@ export default function GestionServices() {
                   {isAdmin && <th className="p-1 w-[32px]"></th>}
                 </tr>
                 <tr className="bg-muted/30 text-[9px]">
-                  <th colSpan={6}></th>
+                  <th colSpan={8}></th>
                   {rows.some(r => r.has_mecanique) && (
                     <>
                       <th className="p-1 text-center border-l bg-blue-500/5">Chef</th>
