@@ -675,6 +675,9 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
     const next = current.includes(item) ? current.filter((s) => s !== item) : [...current, item];
     onUpdate(row.id, field, next);
   };
+  const addCustomTask = (field: string, current: string[], task: string) => {
+    if (!current.includes(task)) onUpdate(row.id, field, [...current, task]);
+  };
   const setValidation = (field: string, current: ValidationMap, task: string, status: "ok" | "nok" | null) => {
     const next = { ...current };
     if (status === null) delete next[task]; else next[task] = status;
