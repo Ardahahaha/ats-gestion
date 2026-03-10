@@ -53,12 +53,16 @@ function ProgressBar({ row }: { row: ServiceRow }) {
   const { done, total, percent } = calcProgress(row);
   if (total === 0) return null;
 
-  const color = percent === 100 ? "bg-green-500" : percent >= 50 ? "bg-amber-500" : "bg-blue-500";
-
   return (
     <div className="flex items-center gap-1.5">
       <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
-        <div className={`h-full rounded-full transition-all duration-500 ${color}`} style={{ width: `${percent}%` }} />
+        <div
+          className="h-full rounded-full bg-green-500 transition-all duration-500"
+          style={{
+            width: `${percent}%`,
+            boxShadow: percent > 0 ? "0 0 6px 1px rgba(34,197,94,0.5), 0 0 12px 2px rgba(34,197,94,0.25)" : "none",
+          }}
+        />
       </div>
       <span className={`text-[9px] font-bold tabular-nums ${percent === 100 ? "text-green-600" : "text-muted-foreground"}`}>
         {percent}%
