@@ -447,7 +447,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
         <Input value={row.immatriculation} onChange={(e) => onUpdate(row.id, "immatriculation", e.target.value)}
           placeholder="Immat" className="h-7 text-[11px] font-bold flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
         <Input value={row.prenom} onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
-          placeholder="Prénom" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" />
+          placeholder="Prénom" className="h-7 text-[11px] flex-1 min-w-0 border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent" />
         {isAdmin && (
           <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => onDelete(row.id)}>
             <Trash2 className="h-3.5 w-3.5 text-destructive" />
