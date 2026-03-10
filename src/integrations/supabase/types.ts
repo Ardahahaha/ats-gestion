@@ -156,6 +156,54 @@ export type Database = {
         }
         Relationships: []
       }
+      services: {
+        Row: {
+          carrosserie_notes_chef: string
+          carrosserie_notes_meca: string
+          carrosserie_taches: Json
+          carrosserie_validees: Json
+          created_at: string
+          date_entree: string
+          date_sortie: string
+          id: string
+          immatriculation: string
+          mecanique_notes_chef: string
+          mecanique_notes_meca: string
+          mecanique_taches: Json
+          mecanique_validees: Json
+        }
+        Insert: {
+          carrosserie_notes_chef?: string
+          carrosserie_notes_meca?: string
+          carrosserie_taches?: Json
+          carrosserie_validees?: Json
+          created_at?: string
+          date_entree?: string
+          date_sortie?: string
+          id?: string
+          immatriculation?: string
+          mecanique_notes_chef?: string
+          mecanique_notes_meca?: string
+          mecanique_taches?: Json
+          mecanique_validees?: Json
+        }
+        Update: {
+          carrosserie_notes_chef?: string
+          carrosserie_notes_meca?: string
+          carrosserie_taches?: Json
+          carrosserie_validees?: Json
+          created_at?: string
+          date_entree?: string
+          date_sortie?: string
+          id?: string
+          immatriculation?: string
+          mecanique_notes_chef?: string
+          mecanique_notes_meca?: string
+          mecanique_taches?: Json
+          mecanique_validees?: Json
+        }
+        Relationships: []
+      }
       vehicules: {
         Row: {
           client: string | null
