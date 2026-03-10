@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -541,11 +541,20 @@ export default function GestionServices() {
     setLoading(false);
   }, []);
 
+  const skipNextRefetch = useRef(false);
+  const debounceTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+
   useEffect(() => {
     fetchRows();
     const channel = supabase
       .channel("services-realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "services" }, () => fetchRows())
+      .on("postgres_changes", { event: "*", schema: "public", table: "services" }, () => {
+        if (skipNextRefetch.current) {
+          skipNextRefetch.current = false;
+          return;
+        }
+        fetchRows();
+      })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [fetchRows]);
@@ -581,7 +590,15 @@ export default function GestionServices() {
   const updateField = useCallback(async (id: string, field: string, value: unknown) => {
     if (!isAdmin && !TECH_ALLOWED_FIELDS.includes(field)) return;
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: value } : r)));
-    await supabase.from("services").update({ [field]: value } as Record<string, unknown>).eq("id", id);
+    
+    // Debounce DB save for text fields to avoid resetting input on every keystroke
+    const key = `${id}-${field}`;
+    if (debounceTimers.current[key]) clearTimeout(debounceTimers.current[key]);
+    debounceTimers.current[key] = setTimeout(async () => {
+      skipNextRefetch.current = true;
+      await supabase.from("services").update({ [field]: value } as Record<string, unknown>).eq("id", id);
+      delete debounceTimers.current[key];
+    }, 500);
   }, [isAdmin]);
 
   if (loading) return <div className="flex items-center justify-center py-20 text-muted-foreground">Chargement…</div>;
