@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Trash2, Car, Building2, X } from "lucide-react";
+import { Plus, Trash2, Car, Building2, X, Lock } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -22,6 +23,8 @@ type GestionVehicule = {
 };
 
 const GestionVehicules = () => {
+  const { role } = useAuth();
+  const isAdmin = role === "admin";
   const [vehicles, setVehicles] = useState<GestionVehicule[]>([]);
   const [loading, setLoading] = useState(true);
   const [newConcession, setNewConcession] = useState("");
@@ -101,6 +104,12 @@ const GestionVehicules = () => {
 
   return (
     <div className="space-y-6">
+      {!isAdmin && (
+        <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-4 py-2 text-xs text-muted-foreground">
+          <Lock className="h-3.5 w-3.5" />
+          Mode lecture seule — accès technicien
+        </div>
+      )}
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -112,29 +121,31 @@ const GestionVehicules = () => {
           </p>
         </div>
 
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Building2 className="h-4 w-4" />
-              Nouvelle concession
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Ajouter une concession</DialogTitle>
-            </DialogHeader>
-            <div className="flex gap-2 pt-2">
-              <Input
-                placeholder="Nom de la concession…"
-                value={newConcession}
-                onChange={(e) => setNewConcession(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && addConcession()}
-                autoFocus
-              />
-              <Button onClick={addConcession}>Ajouter</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        {isAdmin && (
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Building2 className="h-4 w-4" />
+                Nouvelle concession
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Ajouter une concession</DialogTitle>
+              </DialogHeader>
+              <div className="flex gap-2 pt-2">
+                <Input
+                  placeholder="Nom de la concession…"
+                  value={newConcession}
+                  onChange={(e) => setNewConcession(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && addConcession()}
+                  autoFocus
+                />
+                <Button onClick={addConcession}>Ajouter</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       {/* Concessions vides */}
@@ -164,22 +175,26 @@ const GestionVehicules = () => {
                   </span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Button size="sm" variant="ghost" onClick={() => addVehicle(concession)} className="h-7 w-7 p-0" title="Ajouter un véhicule">
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => {
-                      if (confirm(`Supprimer la concession « ${concession} » et tous ses véhicules ?`)) {
-                        deleteConcession(concession);
-                      }
-                    }}
-                    className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
-                    title="Supprimer la concession"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </Button>
+                  {isAdmin && (
+                    <>
+                      <Button size="sm" variant="ghost" onClick={() => addVehicle(concession)} className="h-7 w-7 p-0" title="Ajouter un véhicule">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          if (confirm(`Supprimer la concession « ${concession} » et tous ses véhicules ?`)) {
+                            deleteConcession(concession);
+                          }
+                        }}
+                        className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                        title="Supprimer la concession"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -191,17 +206,19 @@ const GestionVehicules = () => {
               {items.map((v) => (
                   <div key={v.id} className="group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30">
                     <div className="grid flex-1 grid-cols-4 gap-x-2">
-                      <EditableField label="Marque" value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} />
-                      <EditableField label="Modèle" value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} />
-                      <EditableField label="Immat" value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} />
-                      <EditableField label="État" value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} />
+                      <EditableField label="Marque" value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
+                      <EditableField label="Modèle" value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
+                      <EditableField label="Immat" value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
+                      <EditableField label="État" value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} />
                     </div>
-                    <button
-                      onClick={() => deleteVehicle(v.id)}
-                      className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </button>
+                    {isAdmin && (
+                      <button
+                        onClick={() => deleteVehicle(v.id)}
+                        className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -213,13 +230,13 @@ const GestionVehicules = () => {
   );
 };
 
-const EditableField = ({ label, value, onSave }: { label: string; value: string; onSave: (v: string) => void }) => {
+const EditableField = ({ label, value, onSave, readOnly }: { label: string; value: string; onSave: (v: string) => void; readOnly?: boolean }) => {
   const [val, setVal] = useState(value);
 
   useEffect(() => setVal(value), [value]);
 
   const save = () => {
-    if (val !== value) onSave(val);
+    if (!readOnly && val !== value) onSave(val);
   };
 
   return (
@@ -227,10 +244,11 @@ const EditableField = ({ label, value, onSave }: { label: string; value: string;
       <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{label}:</span>
       <input
         value={val}
-        onChange={(e) => setVal(e.target.value)}
+        onChange={(e) => !readOnly && setVal(e.target.value)}
         onBlur={save}
         onKeyDown={(e) => e.key === "Enter" && save()}
         placeholder={label}
+        readOnly={readOnly}
         className="w-full min-w-0 rounded bg-transparent px-1 py-0.5 text-[11px] text-foreground outline-none placeholder:italic placeholder:text-muted-foreground/50 hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring"
       />
     </div>

@@ -79,7 +79,7 @@ function DateCell({ value, onChange, placeholder }: { value: string; onChange: (
   );
 }
 
-export function VehicleTable() {
+export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
   const [rows, setRows] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -126,6 +126,7 @@ export function VehicleTable() {
   }, [fetchRows]);
 
   const addRow = async () => {
+    if (readOnly) return;
     const tempId = crypto.randomUUID();
     const newRow: Vehicle = { id: tempId, immatriculation: "", entree: "", client: "", travaux: "", pieces: "", sortie: "" };
     setRows((prev) => [...prev, newRow]);
@@ -134,12 +135,14 @@ export function VehicleTable() {
   };
 
   const deleteRow = async (id: string) => {
+    if (readOnly) return;
     setRows((prev) => prev.filter((r) => r.id !== id));
     const { error } = await supabase.from("vehicules").delete().eq("id", id);
     if (error) { toast.error("Erreur lors de la suppression"); fetchRows(); }
   };
 
   const updateCell = async (id: string, column: ColumnKey, value: string) => {
+    if (readOnly) return;
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, [column]: value } : r)));
     const { error } = await supabase.from("vehicules").update({ [column]: value }).eq("id", id);
     if (error) { toast.error("Erreur lors de la mise à jour"); fetchRows(); }
@@ -164,13 +167,15 @@ export function VehicleTable() {
             <span className="ml-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">véhicule{rows.length !== 1 ? "s" : ""}</span>
           </div>
         </div>
-        <Button 
-          onClick={addRow} 
-          className="gap-2 bg-primary font-display text-sm font-semibold uppercase tracking-wider shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02]"
-        >
-          <Plus className="h-4 w-4" />
-          Ajouter un véhicule
-        </Button>
+        {!readOnly && (
+          <Button 
+            onClick={addRow} 
+            className="gap-2 bg-primary font-display text-sm font-semibold uppercase tracking-wider shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02]"
+          >
+            <Plus className="h-4 w-4" />
+            Ajouter un véhicule
+          </Button>
+        )}
       </div>
 
       {/* Table */}
@@ -281,15 +286,17 @@ export function VehicleTable() {
                       )}
                     </td>
                   ))}
-                  <td className="px-2 py-1">
-                    <button
-                      onClick={() => deleteRow(row.id)}
-                      className="rounded-lg p-2 text-muted-foreground/50 opacity-0 transition-all duration-200 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive"
-                      title="Supprimer"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </td>
+                  {!readOnly && (
+                    <td className="px-2 py-1">
+                      <button
+                        onClick={() => deleteRow(row.id)}
+                        className="rounded-lg p-2 text-muted-foreground/50 opacity-0 transition-all duration-200 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive"
+                        title="Supprimer"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             )}
