@@ -328,8 +328,8 @@ function NotesField({ value, onChange, onSave, placeholder, fullscreenTitle, rea
 }
 
 /* ────────── Chef section ────────── */
-function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, onSave, label, readOnly }: {
-  allServices: string[]; selected: string[]; onToggle: (s: string) => void;
+function ChefSection({ allServices, selected, onToggle, onAddCustom, notes, onNotesChange, onSave, label, readOnly }: {
+  allServices: string[]; selected: string[]; onToggle: (s: string) => void; onAddCustom?: (task: string) => void;
   notes: string; onNotesChange: (v: string) => void; onSave: () => void; label: string; readOnly?: boolean;
 }) {
   return (
@@ -337,7 +337,7 @@ function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, on
       {readOnly ? (
         selected.length > 0 ? null : <p className="text-[10px] text-muted-foreground italic">—</p>
       ) : (
-        <TaskDropdown allServices={allServices} selected={selected} onToggle={onToggle} label={label} />
+        <TaskDropdown allServices={allServices} selected={selected} onToggle={onToggle} onAddCustom={onAddCustom} label={label} />
       )}
       {selected.length > 0 && (
         <div className="flex flex-wrap gap-0.5">
