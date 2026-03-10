@@ -487,8 +487,16 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro }: {
   return (
     <tr className="border-b align-top hover:bg-muted/20">
       <td className="p-1.5">
+        <Input value={row.modele} onChange={(e) => onUpdate(row.id, "modele", e.target.value)}
+          placeholder="Modèle" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
+      </td>
+      <td className="p-1.5">
         <Input value={row.immatriculation} onChange={(e) => onUpdate(row.id, "immatriculation", e.target.value)}
           placeholder="XX-000-XX" className="h-6 text-[11px] font-bold border-none shadow-none bg-transparent p-0" />
+      </td>
+      <td className="p-1.5">
+        <Input value={row.prenom} onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
+          placeholder="Prénom" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
       </td>
       <td className="p-1.5">
         <Input type="date" value={row.date_entree} onChange={(e) => onUpdate(row.id, "date_entree", e.target.value)}
