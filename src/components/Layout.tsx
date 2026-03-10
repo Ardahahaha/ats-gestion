@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const [dark, setDark] = useState(() => {
+  const { role, logout } = useAuth();
     if (typeof window !== "undefined") {
       return localStorage.getItem("theme") === "dark" ||
         (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
