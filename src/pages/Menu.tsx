@@ -3,6 +3,13 @@ import { BookA, Brush, Car, ChevronRight, Wrench } from "lucide-react";
 
 const SECTIONS = [
   {
+    title: "Gestion des Services",
+    description: "Suivi mécanique et carrosserie des véhicules",
+    icon: Wrench,
+    path: "/gestion-services",
+    color: "from-amber-400 to-orange-500",
+  },
+  {
     title: "GESTION DES ASSURANCES",
     description: "Suivi des entrées, sorties, travaux et pièces",
     icon: BookA,
@@ -15,13 +22,6 @@ const SECTIONS = [
     icon: Car,
     path: "/gestion-vehicules",
     color: "from-violet-500 to-blue-600",
-  },
-  {
-    title: "Gestion des Services",
-    description: "Suivi mécanique et carrosserie des véhicules",
-    icon: Wrench,
-    path: "/gestion-services",
-    color: "from-amber-400 to-orange-500",
   },
   {
     title: "Créer",
