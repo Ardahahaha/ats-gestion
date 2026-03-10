@@ -165,6 +165,8 @@ export type Database = {
           created_at: string
           date_entree: string
           date_sortie: string
+          has_carrosserie: boolean
+          has_mecanique: boolean
           id: string
           immatriculation: string
           mecanique_notes_chef: string
@@ -180,6 +182,8 @@ export type Database = {
           created_at?: string
           date_entree?: string
           date_sortie?: string
+          has_carrosserie?: boolean
+          has_mecanique?: boolean
           id?: string
           immatriculation?: string
           mecanique_notes_chef?: string
@@ -195,6 +199,8 @@ export type Database = {
           created_at?: string
           date_entree?: string
           date_sortie?: string
+          has_carrosserie?: boolean
+          has_mecanique?: boolean
           id?: string
           immatriculation?: string
           mecanique_notes_chef?: string
