@@ -175,22 +175,26 @@ const GestionVehicules = () => {
                   </span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Button size="sm" variant="ghost" onClick={() => addVehicle(concession)} className="h-7 w-7 p-0" title="Ajouter un véhicule">
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => {
-                      if (confirm(`Supprimer la concession « ${concession} » et tous ses véhicules ?`)) {
-                        deleteConcession(concession);
-                      }
-                    }}
-                    className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
-                    title="Supprimer la concession"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </Button>
+                  {isAdmin && (
+                    <>
+                      <Button size="sm" variant="ghost" onClick={() => addVehicle(concession)} className="h-7 w-7 p-0" title="Ajouter un véhicule">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          if (confirm(`Supprimer la concession « ${concession} » et tous ses véhicules ?`)) {
+                            deleteConcession(concession);
+                          }
+                        }}
+                        className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                        title="Supprimer la concession"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
 
