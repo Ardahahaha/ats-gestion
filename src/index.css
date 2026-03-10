@@ -156,3 +156,11 @@
 .animate-pulse-glow-amber {
   animation: pulse-glow-amber 1.5s ease-in-out infinite;
 }
+
+@keyframes pulse-glow-red {
+  0%, 100% { box-shadow: 0 0 4px 1px rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 10px 3px rgba(239, 68, 68, 0.7); }
+}
+.animate-pulse-glow-red {
+  animation: pulse-glow-red 1s ease-in-out infinite;
+}

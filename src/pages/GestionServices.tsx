@@ -70,17 +70,25 @@ function ProgressBar({ row }: { row: ServiceRow }) {
 }
 
 /* ────────── Status Pastille ────────── */
+function hasNok(row: ServiceRow): boolean {
+  const check = (validations: ValidationMap) => Object.values(validations).some((v) => v === "nok");
+  return (row.has_mecanique && check(row.mecanique_validees)) || (row.has_carrosserie && check(row.carrosserie_validees));
+}
+
 function StatusPastille({ row, isAdmin, onUpdate }: { row: ServiceRow; isAdmin: boolean; onUpdate: (id: string, field: string, value: unknown) => void }) {
   const { percent } = calcProgress(row);
-  // 3 states: en cours (<100%), à vérifier (100% + !a_verifier), fait (a_verifier)
-  const state = row.a_verifier ? "fait" : percent >= 100 ? "a_verifier" : "en_cours";
+  const problem = hasNok(row);
+
+  // 4 states: probleme, en cours, à vérifier, fait
+  const state = problem ? "probleme" : row.a_verifier ? "fait" : percent >= 100 ? "a_verifier" : "en_cours";
 
   const colors = {
+    probleme: "bg-red-500 border-red-600 animate-pulse-glow-red",
     en_cours: "bg-amber-500 border-amber-600",
     a_verifier: "bg-amber-400 border-amber-500 animate-pulse-glow-amber",
     fait: "bg-green-500 border-green-600 shadow-[0_0_8px_2px_rgba(34,197,94,0.5)]",
   };
-  const labels = { en_cours: "En cours", a_verifier: "À vérifier", fait: "Fait ✓" };
+  const labels = { probleme: "Problème !", en_cours: "En cours", a_verifier: "À vérifier", fait: "Fait ✓" };
 
   const canToggle = isAdmin && (state === "a_verifier" || state === "fait");
 
@@ -96,7 +104,7 @@ function StatusPastille({ row, isAdmin, onUpdate }: { row: ServiceRow; isAdmin: 
         <div className={`h-3.5 w-3.5 rounded-full border-2 ${colors[state]}`} />
       )}
       <span className={`text-[9px] font-medium ${
-        state === "fait" ? "text-green-600" : state === "a_verifier" ? "text-amber-500" : "text-muted-foreground"
+        state === "probleme" ? "text-red-500" : state === "fait" ? "text-green-600" : state === "a_verifier" ? "text-amber-500" : "text-muted-foreground"
       }`}>{labels[state]}</span>
     </div>
   );
