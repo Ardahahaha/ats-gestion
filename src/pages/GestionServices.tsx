@@ -676,6 +676,10 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
           placeholder="Prénom" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
       </td>
       <td className="p-1.5">
+        <Input value={row.kilometrage} onChange={(e) => onUpdate(row.id, "kilometrage", e.target.value)}
+          placeholder="km" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
+      </td>
+      <td className="p-1.5">
         <Input type="date" value={row.date_entree} onChange={(e) => onUpdate(row.id, "date_entree", e.target.value)}
           className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
       </td>
@@ -685,6 +689,19 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
       </td>
       <td className="p-1.5 min-w-[70px]">
         <ProgressBar row={row} />
+      </td>
+      <td className="p-1.5 text-center">
+        {isAdmin ? (
+          <button
+            onClick={() => onUpdate(row.id, "a_verifier", !row.a_verifier)}
+            className={`inline-block h-3.5 w-3.5 rounded-full border-2 transition-colors ${
+              row.a_verifier ? "bg-green-500 border-green-600" : "bg-destructive border-destructive"
+            }`}
+            title={row.a_verifier ? "Vérifié" : "À vérifier"}
+          />
+        ) : (
+          <div className={`inline-block h-3.5 w-3.5 rounded-full ${row.a_verifier ? "bg-green-500" : "bg-destructive"}`} title={row.a_verifier ? "Vérifié" : "À vérifier"} />
+        )}
       </td>
 
       {showMeca && (
