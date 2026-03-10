@@ -286,15 +286,17 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
                       )}
                     </td>
                   ))}
-                  <td className="px-2 py-1">
-                    <button
-                      onClick={() => deleteRow(row.id)}
-                      className="rounded-lg p-2 text-muted-foreground/50 opacity-0 transition-all duration-200 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive"
-                      title="Supprimer"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </td>
+                  {!readOnly && (
+                    <td className="px-2 py-1">
+                      <button
+                        onClick={() => deleteRow(row.id)}
+                        className="rounded-lg p-2 text-muted-foreground/50 opacity-0 transition-all duration-200 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive"
+                        title="Supprimer"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             )}
