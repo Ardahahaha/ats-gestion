@@ -631,6 +631,7 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro }: {
         <ProgressBar row={row} />
       </td>
 
+      {showMeca && (
         <>
           <td className="p-1.5 border-l bg-blue-500/[0.02] min-w-[140px]">
             {row.has_mecanique ? (
