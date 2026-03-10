@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Trash2, Maximize2, X, ChevronDown, Check, Ban } from "lucide-react";
+import { Plus, Trash2, Maximize2, X, ChevronDown, Check, Camera, Image } from "lucide-react";
 import { toast } from "sonner";
 import { Json } from "@/integrations/supabase/types";
 import {
