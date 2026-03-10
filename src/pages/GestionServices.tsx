@@ -69,6 +69,38 @@ function ProgressBar({ row }: { row: ServiceRow }) {
   );
 }
 
+/* ────────── Status Pastille ────────── */
+function StatusPastille({ row, isAdmin, onUpdate }: { row: ServiceRow; isAdmin: boolean; onUpdate: (id: string, field: string, value: unknown) => void }) {
+  const { percent } = calcProgress(row);
+  // 3 states: en cours (<100%), à vérifier (100% + !a_verifier), fait (a_verifier)
+  const state = row.a_verifier ? "fait" : percent >= 100 ? "a_verifier" : "en_cours";
+
+  const colors = {
+    en_cours: "bg-amber-500 border-amber-600",
+    a_verifier: "bg-amber-400 border-amber-500 animate-pulse-glow-amber",
+    fait: "bg-green-500 border-green-600 shadow-[0_0_8px_2px_rgba(34,197,94,0.5)]",
+  };
+  const labels = { en_cours: "En cours", a_verifier: "À vérifier", fait: "Fait ✓" };
+
+  const canToggle = isAdmin && (state === "a_verifier" || state === "fait");
+
+  return (
+    <div className="flex items-center gap-1.5">
+      {canToggle ? (
+        <button
+          onClick={() => onUpdate(row.id, "a_verifier", !row.a_verifier)}
+          className={`h-3.5 w-3.5 rounded-full border-2 transition-all ${colors[state]}`}
+          title={state === "a_verifier" ? "Marquer comme fait" : "Remettre à vérifier"}
+        />
+      ) : (
+        <div className={`h-3.5 w-3.5 rounded-full border-2 ${colors[state]}`} />
+      )}
+      <span className={`text-[9px] font-medium ${
+        state === "fait" ? "text-green-600" : state === "a_verifier" ? "text-amber-500" : "text-muted-foreground"
+      }`}>{labels[state]}</span>
+    </div>
+  );
+}
 type ServiceRow = {
   id: string;
   modele: string;
@@ -413,28 +445,10 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
         </div>
       </div>
 
-      {/* Pastille vérification */}
-      {isAdmin && (
-        <div className="px-2 py-1 border-t bg-muted/10 flex items-center gap-1.5">
-          <button
-            onClick={() => onUpdate(row.id, "a_verifier", !row.a_verifier)}
-            className={`h-3 w-3 rounded-full border-2 transition-colors ${
-              row.a_verifier ? "bg-green-500 border-green-600" : "bg-destructive border-destructive"
-            }`}
-            title={row.a_verifier ? "Service vérifié" : "Non vérifié"}
-          />
-          <span className="text-[9px] text-muted-foreground">{row.a_verifier ? "Vérifié" : "À vérifier"}</span>
-        </div>
-      )}
-      {!isAdmin && (
-        <div className="px-2 py-1 border-t bg-muted/10 flex items-center gap-1.5">
-          <div className={`h-3 w-3 rounded-full ${row.a_verifier ? "bg-green-500" : "bg-destructive"}`} />
-          <span className="text-[9px] text-muted-foreground">{row.a_verifier ? "Vérifié" : "À vérifier"}</span>
-        </div>
-      )}
-
-      <div className="px-2 py-1 border-t bg-muted/10">
-        <ProgressBar row={row} />
+      {/* Pastille + Progress */}
+      <div className="px-2 py-1 border-t bg-muted/10 flex items-center gap-3">
+        <StatusPastille row={row} isAdmin={isAdmin} onUpdate={onUpdate} />
+        <div className="flex-1"><ProgressBar row={row} /></div>
       </div>
 
       {row.has_mecanique && (
@@ -691,17 +705,7 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
         <ProgressBar row={row} />
       </td>
       <td className="p-1.5 text-center">
-        {isAdmin ? (
-          <button
-            onClick={() => onUpdate(row.id, "a_verifier", !row.a_verifier)}
-            className={`inline-block h-3.5 w-3.5 rounded-full border-2 transition-colors ${
-              row.a_verifier ? "bg-green-500 border-green-600" : "bg-destructive border-destructive"
-            }`}
-            title={row.a_verifier ? "Vérifié" : "À vérifier"}
-          />
-        ) : (
-          <div className={`inline-block h-3.5 w-3.5 rounded-full ${row.a_verifier ? "bg-green-500" : "bg-destructive"}`} title={row.a_verifier ? "Vérifié" : "À vérifier"} />
-        )}
+        <StatusPastille row={row} isAdmin={isAdmin} onUpdate={onUpdate} />
       </td>
 
       {showMeca && (

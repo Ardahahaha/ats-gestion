@@ -148,3 +148,11 @@
     background-position: 0 0, 0 2px, 2px -2px, -2px 0px;
   }
 }
+
+@keyframes pulse-glow-amber {
+  0%, 100% { box-shadow: 0 0 4px 1px rgba(245, 158, 11, 0.4); }
+  50% { box-shadow: 0 0 10px 3px rgba(245, 158, 11, 0.7); }
+}
+.animate-pulse-glow-amber {
+  animation: pulse-glow-amber 1.5s ease-in-out infinite;
+}
