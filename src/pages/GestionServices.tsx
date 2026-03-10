@@ -445,28 +445,10 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
         </div>
       </div>
 
-      {/* Pastille vérification */}
-      {isAdmin && (
-        <div className="px-2 py-1 border-t bg-muted/10 flex items-center gap-1.5">
-          <button
-            onClick={() => onUpdate(row.id, "a_verifier", !row.a_verifier)}
-            className={`h-3 w-3 rounded-full border-2 transition-colors ${
-              row.a_verifier ? "bg-green-500 border-green-600" : "bg-destructive border-destructive"
-            }`}
-            title={row.a_verifier ? "Service vérifié" : "Non vérifié"}
-          />
-          <span className="text-[9px] text-muted-foreground">{row.a_verifier ? "Vérifié" : "À vérifier"}</span>
-        </div>
-      )}
-      {!isAdmin && (
-        <div className="px-2 py-1 border-t bg-muted/10 flex items-center gap-1.5">
-          <div className={`h-3 w-3 rounded-full ${row.a_verifier ? "bg-green-500" : "bg-destructive"}`} />
-          <span className="text-[9px] text-muted-foreground">{row.a_verifier ? "Vérifié" : "À vérifier"}</span>
-        </div>
-      )}
-
-      <div className="px-2 py-1 border-t bg-muted/10">
-        <ProgressBar row={row} />
+      {/* Pastille + Progress */}
+      <div className="px-2 py-1 border-t bg-muted/10 flex items-center gap-3">
+        <StatusPastille row={row} isAdmin={isAdmin} onUpdate={onUpdate} />
+        <div className="flex-1"><ProgressBar row={row} /></div>
       </div>
 
       {row.has_mecanique && (
