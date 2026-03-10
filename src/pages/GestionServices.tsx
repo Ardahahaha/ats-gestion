@@ -590,7 +590,15 @@ export default function GestionServices() {
   const updateField = useCallback(async (id: string, field: string, value: unknown) => {
     if (!isAdmin && !TECH_ALLOWED_FIELDS.includes(field)) return;
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: value } : r)));
-    await supabase.from("services").update({ [field]: value } as Record<string, unknown>).eq("id", id);
+    
+    // Debounce DB save for text fields to avoid resetting input on every keystroke
+    const key = `${id}-${field}`;
+    if (debounceTimers.current[key]) clearTimeout(debounceTimers.current[key]);
+    debounceTimers.current[key] = setTimeout(async () => {
+      skipNextRefetch.current = true;
+      await supabase.from("services").update({ [field]: value } as Record<string, unknown>).eq("id", id);
+      delete debounceTimers.current[key];
+    }, 500);
   }, [isAdmin]);
 
   if (loading) return <div className="flex items-center justify-center py-20 text-muted-foreground">Chargement…</div>;
