@@ -126,6 +126,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
   }, [fetchRows]);
 
   const addRow = async () => {
+    if (readOnly) return;
     const tempId = crypto.randomUUID();
     const newRow: Vehicle = { id: tempId, immatriculation: "", entree: "", client: "", travaux: "", pieces: "", sortie: "" };
     setRows((prev) => [...prev, newRow]);
