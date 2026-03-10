@@ -230,13 +230,13 @@ const GestionVehicules = () => {
   );
 };
 
-const EditableField = ({ label, value, onSave }: { label: string; value: string; onSave: (v: string) => void }) => {
+const EditableField = ({ label, value, onSave, readOnly }: { label: string; value: string; onSave: (v: string) => void; readOnly?: boolean }) => {
   const [val, setVal] = useState(value);
 
   useEffect(() => setVal(value), [value]);
 
   const save = () => {
-    if (val !== value) onSave(val);
+    if (!readOnly && val !== value) onSave(val);
   };
 
   return (
@@ -244,10 +244,11 @@ const EditableField = ({ label, value, onSave }: { label: string; value: string;
       <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{label}:</span>
       <input
         value={val}
-        onChange={(e) => setVal(e.target.value)}
+        onChange={(e) => !readOnly && setVal(e.target.value)}
         onBlur={save}
         onKeyDown={(e) => e.key === "Enter" && save()}
         placeholder={label}
+        readOnly={readOnly}
         className="w-full min-w-0 rounded bg-transparent px-1 py-0.5 text-[11px] text-foreground outline-none placeholder:italic placeholder:text-muted-foreground/50 hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring"
       />
     </div>
