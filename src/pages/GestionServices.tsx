@@ -418,7 +418,9 @@ export default function GestionServices() {
             <table className="w-full text-[11px]">
               <thead>
                 <tr className="bg-muted/50">
+                  <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[80px]">Modèle</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Immat</th>
+                  <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[80px]">Prénom</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Entrée</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Sortie</th>
                   {rows.some(r => r.has_mecanique) && (
