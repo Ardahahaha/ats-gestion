@@ -76,6 +76,8 @@ type ServiceRow = {
   prenom: string;
   date_entree: string;
   date_sortie: string;
+  kilometrage: string;
+  a_verifier: boolean;
   mecanique_taches: string[];
   mecanique_validees: ValidationMap;
   mecanique_notes_chef: string;
@@ -393,7 +395,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
           </Button>
         )}
       </div>
-      <div className="grid grid-cols-2 gap-px bg-border">
+      <div className="grid grid-cols-3 gap-px bg-border">
         <div className="bg-card p-1.5">
           <p className="text-[9px] text-muted-foreground uppercase mb-0.5">Entrée</p>
           <Input type="date" value={row.date_entree} onChange={(e) => onUpdate(row.id, "date_entree", e.target.value)}
@@ -404,7 +406,32 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
           <Input type="date" value={row.date_sortie} onChange={(e) => onUpdate(row.id, "date_sortie", e.target.value)}
             className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
         </div>
+        <div className="bg-card p-1.5">
+          <p className="text-[9px] text-muted-foreground uppercase mb-0.5">Km</p>
+          <Input value={row.kilometrage} onChange={(e) => onUpdate(row.id, "kilometrage", e.target.value)}
+            placeholder="km" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
+        </div>
       </div>
+
+      {/* Pastille vérification */}
+      {isAdmin && (
+        <div className="px-2 py-1 border-t bg-muted/10 flex items-center gap-1.5">
+          <button
+            onClick={() => onUpdate(row.id, "a_verifier", !row.a_verifier)}
+            className={`h-3 w-3 rounded-full border-2 transition-colors ${
+              row.a_verifier ? "bg-green-500 border-green-600" : "bg-destructive border-destructive"
+            }`}
+            title={row.a_verifier ? "Service vérifié" : "Non vérifié"}
+          />
+          <span className="text-[9px] text-muted-foreground">{row.a_verifier ? "Vérifié" : "À vérifier"}</span>
+        </div>
+      )}
+      {!isAdmin && (
+        <div className="px-2 py-1 border-t bg-muted/10 flex items-center gap-1.5">
+          <div className={`h-3 w-3 rounded-full ${row.a_verifier ? "bg-green-500" : "bg-destructive"}`} />
+          <span className="text-[9px] text-muted-foreground">{row.a_verifier ? "Vérifié" : "À vérifier"}</span>
+        </div>
+      )}
 
       <div className="px-2 py-1 border-t bg-muted/10">
         <ProgressBar row={row} />
@@ -477,6 +504,8 @@ export default function GestionServices() {
     setRows(
       (data || []).map((d) => ({
         ...d,
+        kilometrage: (d as Record<string, unknown>).kilometrage as string ?? "",
+        a_verifier: (d as Record<string, unknown>).a_verifier === true,
         mecanique_taches: toStringArray(d.mecanique_taches as Json),
         mecanique_validees: toValidationMap(d.mecanique_validees as Json),
         carrosserie_taches: toStringArray(d.carrosserie_taches as Json),
@@ -566,9 +595,11 @@ export default function GestionServices() {
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[80px]">Modèle</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Immat</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[80px]">Prénom</th>
+                  <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[60px]">Km</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Entrée</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Sortie</th>
                   <th className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] w-[80px]">Avancement</th>
+                  <th className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] w-[30px]">✓</th>
                   {rows.some(r => r.has_mecanique) && (
                     <th colSpan={2} className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] border-l bg-blue-500/5">🔧 Mécanique</th>
                   )}
@@ -578,7 +609,7 @@ export default function GestionServices() {
                   {isAdmin && <th className="p-1 w-[32px]"></th>}
                 </tr>
                 <tr className="bg-muted/30 text-[9px]">
-                  <th colSpan={6}></th>
+                  <th colSpan={8}></th>
                   {rows.some(r => r.has_mecanique) && (
                     <>
                       <th className="p-1 text-center border-l bg-blue-500/5">Chef</th>
@@ -645,6 +676,10 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
           placeholder="Prénom" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
       </td>
       <td className="p-1.5">
+        <Input value={row.kilometrage} onChange={(e) => onUpdate(row.id, "kilometrage", e.target.value)}
+          placeholder="km" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
+      </td>
+      <td className="p-1.5">
         <Input type="date" value={row.date_entree} onChange={(e) => onUpdate(row.id, "date_entree", e.target.value)}
           className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
       </td>
@@ -654,6 +689,19 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
       </td>
       <td className="p-1.5 min-w-[70px]">
         <ProgressBar row={row} />
+      </td>
+      <td className="p-1.5 text-center">
+        {isAdmin ? (
+          <button
+            onClick={() => onUpdate(row.id, "a_verifier", !row.a_verifier)}
+            className={`inline-block h-3.5 w-3.5 rounded-full border-2 transition-colors ${
+              row.a_verifier ? "bg-green-500 border-green-600" : "bg-destructive border-destructive"
+            }`}
+            title={row.a_verifier ? "Vérifié" : "À vérifier"}
+          />
+        ) : (
+          <div className={`inline-block h-3.5 w-3.5 rounded-full ${row.a_verifier ? "bg-green-500" : "bg-destructive"}`} title={row.a_verifier ? "Vérifié" : "À vérifier"} />
+        )}
       </td>
 
       {showMeca && (
