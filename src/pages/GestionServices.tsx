@@ -691,7 +691,7 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
       </td>
       <td className="p-1.5">
         <Input value={row.prenom} onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
-          placeholder="Prénom" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
+          placeholder="Prénom" className="h-6 text-[11px] border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent p-0" />
       </td>
       <td className="p-1.5">
         <Input value={row.kilometrage} onChange={(e) => onUpdate(row.id, "kilometrage", e.target.value)}
