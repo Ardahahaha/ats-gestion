@@ -260,9 +260,13 @@ function ServiceCardMobile({ row, onUpdate, onDelete }: { row: ServiceRow; onUpd
 
   return (
     <div className="rounded-lg border bg-card overflow-hidden">
-      <div className="flex items-center gap-2 bg-muted/30 px-3 py-1.5">
+      <div className="flex items-center gap-1 bg-muted/30 px-2 py-1.5">
+        <Input value={row.modele} onChange={(e) => onUpdate(row.id, "modele", e.target.value)}
+          placeholder="Modèle" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" />
         <Input value={row.immatriculation} onChange={(e) => onUpdate(row.id, "immatriculation", e.target.value)}
-          placeholder="Immat" className="h-7 text-xs font-bold flex-1 bg-transparent border-none shadow-none" />
+          placeholder="Immat" className="h-7 text-[11px] font-bold flex-1 bg-transparent border-none shadow-none min-w-0" />
+        <Input value={row.prenom} onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
+          placeholder="Prénom" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" />
         <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => onDelete(row.id)}>
           <Trash2 className="h-3.5 w-3.5 text-destructive" />
         </Button>
