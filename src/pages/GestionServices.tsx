@@ -32,7 +32,9 @@ type ValidationMap = Record<string, "ok" | "nok">;
 
 type ServiceRow = {
   id: string;
+  modele: string;
   immatriculation: string;
+  prenom: string;
   date_entree: string;
   date_sortie: string;
   mecanique_taches: string[];
