@@ -76,6 +76,8 @@ type ServiceRow = {
   prenom: string;
   date_entree: string;
   date_sortie: string;
+  kilometrage: string;
+  a_verifier: boolean;
   mecanique_taches: string[];
   mecanique_validees: ValidationMap;
   mecanique_notes_chef: string;
