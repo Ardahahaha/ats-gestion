@@ -101,6 +101,7 @@ function StatusPastille({ row, isAdmin, onUpdate }: { row: ServiceRow; isAdmin: 
     </div>
   );
 }
+type ServiceRow = {
   id: string;
   modele: string;
   immatriculation: string;
