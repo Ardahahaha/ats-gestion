@@ -362,20 +362,15 @@ export default function GestionServices() {
   }, [fetchRows]);
 
   const addRow = async (hasMeca: boolean, hasCarro: boolean) => {
-    const insertData: Record<string, unknown> = { mecanique_validees: {}, carrosserie_validees: {} };
-    if (hasMeca) insertData.mecanique_notes_chef = " ";
-    if (hasCarro) insertData.carrosserie_notes_chef = " ";
+    const insertData: Record<string, unknown> = {
+      mecanique_validees: {},
+      carrosserie_validees: {},
+      has_mecanique: hasMeca,
+      has_carrosserie: hasCarro,
+    };
     const { error } = await supabase.from("services").insert(insertData);
     if (error) toast.error("Erreur ajout");
-    else {
-      fetchRows().then(() => {
-        setRows(prev => {
-          if (prev.length === 0) return prev;
-          const last = prev[prev.length - 1];
-          return [...prev.slice(0, -1), { ...last, has_mecanique: hasMeca, has_carrosserie: hasCarro, mecanique_notes_chef: hasMeca ? "" : last.mecanique_notes_chef, carrosserie_notes_chef: hasCarro ? "" : last.carrosserie_notes_chef }];
-        });
-      });
-    }
+    else fetchRows();
   };
 
   const deleteRow = async (id: string) => {
