@@ -23,6 +23,8 @@ type GestionVehicule = {
 };
 
 const GestionVehicules = () => {
+  const { role } = useAuth();
+  const isAdmin = role === "admin";
   const [vehicles, setVehicles] = useState<GestionVehicule[]>([]);
   const [loading, setLoading] = useState(true);
   const [newConcession, setNewConcession] = useState("");
