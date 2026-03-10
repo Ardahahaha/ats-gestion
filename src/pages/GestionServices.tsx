@@ -69,7 +69,38 @@ function ProgressBar({ row }: { row: ServiceRow }) {
   );
 }
 
-type ServiceRow = {
+/* ────────── Status Pastille ────────── */
+function StatusPastille({ row, isAdmin, onUpdate }: { row: ServiceRow; isAdmin: boolean; onUpdate: (id: string, field: string, value: unknown) => void }) {
+  const { percent } = calcProgress(row);
+  // 3 states: en cours (<100%), à vérifier (100% + !a_verifier), fait (a_verifier)
+  const state = row.a_verifier ? "fait" : percent >= 100 ? "a_verifier" : "en_cours";
+
+  const colors = {
+    en_cours: "bg-amber-500 border-amber-600",
+    a_verifier: "bg-amber-400 border-amber-500 animate-pulse-glow-amber",
+    fait: "bg-green-500 border-green-600 shadow-[0_0_8px_2px_rgba(34,197,94,0.5)]",
+  };
+  const labels = { en_cours: "En cours", a_verifier: "À vérifier", fait: "Fait ✓" };
+
+  const canToggle = isAdmin && (state === "a_verifier" || state === "fait");
+
+  return (
+    <div className="flex items-center gap-1.5">
+      {canToggle ? (
+        <button
+          onClick={() => onUpdate(row.id, "a_verifier", !row.a_verifier)}
+          className={`h-3.5 w-3.5 rounded-full border-2 transition-all ${colors[state]}`}
+          title={state === "a_verifier" ? "Marquer comme fait" : "Remettre à vérifier"}
+        />
+      ) : (
+        <div className={`h-3.5 w-3.5 rounded-full border-2 ${colors[state]}`} />
+      )}
+      <span className={`text-[9px] font-medium ${
+        state === "fait" ? "text-green-600" : state === "a_verifier" ? "text-amber-500" : "text-muted-foreground"
+      }`}>{labels[state]}</span>
+    </div>
+  );
+}
   id: string;
   modele: string;
   immatriculation: string;
