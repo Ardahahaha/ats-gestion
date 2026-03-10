@@ -505,6 +505,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
               <p className="text-[8px] text-muted-foreground uppercase mb-0.5 font-semibold">Chef</p>
               <ChefSection allServices={MECANIQUE_SERVICES} selected={row.mecanique_taches}
                 onToggle={(s) => toggleTask("mecanique_taches", row.mecanique_taches, s)}
+                onAddCustom={isAdmin ? (t) => addCustomTask("mecanique_taches", row.mecanique_taches, t) : undefined}
                 notes={row.mecanique_notes_chef} onNotesChange={(v) => onUpdate(row.id, "mecanique_notes_chef", v)}
                 onSave={() => {}} label="Mécanique" readOnly={!isAdmin} />
             </div>
