@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Plus, Trash2, Maximize2, X, ChevronDown, Check, Camera, Image } from "lucide-react";
 import { toast } from "sonner";
 import { Json } from "@/integrations/supabase/types";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -27,10 +28,8 @@ const CARROSSERIE_SERVICES = [
   "Portière", "Lustrage", "Vitrage", "Phares", "Rétroviseur",
 ];
 
-// validees is now Record<string, "ok"|"nok"> stored as jsonb object
 type ValidationMap = Record<string, "ok" | "nok">;
 
-/* ────────── Progress calculation ────────── */
 function calcProgress(row: ServiceRow): { done: number; total: number; percent: number } {
   const allTasks: string[] = [];
   const allValidations: ValidationMap = {};
@@ -48,11 +47,9 @@ function calcProgress(row: ServiceRow): { done: number; total: number; percent: 
   return { done, total, percent: Math.round((done / total) * 100) };
 }
 
-/* ────────── Progress Bar ────────── */
 function ProgressBar({ row }: { row: ServiceRow }) {
   const { done, total, percent } = calcProgress(row);
   if (total === 0) return null;
-
   return (
     <div className="flex items-center gap-1.5">
       <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
@@ -99,7 +96,6 @@ function toStringArray(val: Json | undefined): string[] {
 }
 
 function toValidationMap(val: Json | undefined): ValidationMap {
-  // Support old format (string[]) and new format (object)
   if (val && typeof val === "object" && !Array.isArray(val)) {
     const map: ValidationMap = {};
     for (const [k, v] of Object.entries(val)) {
@@ -107,7 +103,6 @@ function toValidationMap(val: Json | undefined): ValidationMap {
     }
     return map;
   }
-  // Migrate old array format: treat as all "ok"
   if (Array.isArray(val)) {
     const map: ValidationMap = {};
     for (const v of val) {
@@ -122,7 +117,6 @@ function toValidationMap(val: Json | undefined): ValidationMap {
 function AddServiceDialog({ onAdd, onClose }: { onAdd: (meca: boolean, carro: boolean) => void; onClose: () => void }) {
   const [meca, setMeca] = useState(true);
   const [carro, setCarro] = useState(true);
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
       <div className="relative w-full max-w-sm rounded-xl border bg-card p-6 shadow-2xl">
@@ -157,7 +151,7 @@ function AddServiceDialog({ onAdd, onClose }: { onAdd: (meca: boolean, carro: bo
 }
 
 /* ────────── Fullscreen Modal ────────── */
-function FullscreenModal({ title, value, onChange, onClose }: { title: string; value: string; onChange: (v: string) => void; onClose: () => void }) {
+function FullscreenModal({ title, value, onChange, onClose, readOnly }: { title: string; value: string; onChange: (v: string) => void; onClose: () => void; readOnly?: boolean }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
       <div className="relative w-full max-w-2xl rounded-xl border bg-card p-6 shadow-2xl">
@@ -165,7 +159,7 @@ function FullscreenModal({ title, value, onChange, onClose }: { title: string; v
           <h3 className="text-lg font-bold text-foreground">{title}</h3>
           <Button variant="ghost" size="icon" onClick={onClose}><X className="h-5 w-5" /></Button>
         </div>
-        <Textarea className="min-h-[300px] text-sm" value={value} onChange={(e) => onChange(e.target.value)} placeholder="Notes…" />
+        <Textarea className="min-h-[300px] text-sm" value={value} onChange={(e) => onChange(e.target.value)} placeholder="Notes…" readOnly={readOnly} />
       </div>
     </div>
   );
@@ -197,10 +191,9 @@ function TaskDropdown({ allServices, selected, onToggle, label }: { allServices:
 
 /* ────────── Validation buttons for technician ────────── */
 function ValidationTaskList({
-  tasks, validations, onSetStatus,
-}: { tasks: string[]; validations: ValidationMap; onSetStatus: (task: string, status: "ok" | "nok" | null) => void }) {
+  tasks, validations, onSetStatus, readOnly,
+}: { tasks: string[]; validations: ValidationMap; onSetStatus: (task: string, status: "ok" | "nok" | null) => void; readOnly?: boolean }) {
   if (tasks.length === 0) return <p className="text-[10px] text-muted-foreground italic">—</p>;
-
   return (
     <div className="space-y-px">
       {tasks.map((s) => {
@@ -208,23 +201,25 @@ function ValidationTaskList({
         return (
           <div key={s} className="flex items-center gap-1 py-px">
             <button
-              onClick={() => onSetStatus(s, status === "ok" ? null : "ok")}
+              onClick={() => !readOnly && onSetStatus(s, status === "ok" ? null : "ok")}
+              disabled={readOnly}
               className={`flex-shrink-0 h-4 w-4 rounded-sm flex items-center justify-center border transition-colors ${
                 status === "ok"
                   ? "bg-green-500 border-green-600 text-white"
                   : "border-muted-foreground/30 hover:border-green-400 text-transparent hover:text-green-400"
-              }`}
+              } ${readOnly ? "opacity-50 cursor-not-allowed" : ""}`}
               title="Validé"
             >
               <Check className="h-2.5 w-2.5" />
             </button>
             <button
-              onClick={() => onSetStatus(s, status === "nok" ? null : "nok")}
+              onClick={() => !readOnly && onSetStatus(s, status === "nok" ? null : "nok")}
+              disabled={readOnly}
               className={`flex-shrink-0 h-4 w-4 rounded-sm flex items-center justify-center border transition-colors ${
                 status === "nok"
                   ? "bg-destructive border-destructive text-white"
                   : "border-muted-foreground/30 hover:border-destructive text-transparent hover:text-destructive"
-              }`}
+              } ${readOnly ? "opacity-50 cursor-not-allowed" : ""}`}
               title="Impossible"
             >
               <X className="h-2.5 w-2.5" />
@@ -242,13 +237,13 @@ function ValidationTaskList({
 }
 
 /* ────────── Notes with fullscreen ────────── */
-function NotesField({ value, onChange, onSave, placeholder, fullscreenTitle }: { value: string; onChange: (v: string) => void; onSave: () => void; placeholder: string; fullscreenTitle: string }) {
+function NotesField({ value, onChange, onSave, placeholder, fullscreenTitle, readOnly }: { value: string; onChange: (v: string) => void; onSave: () => void; placeholder: string; fullscreenTitle: string; readOnly?: boolean }) {
   const [fs, setFs] = useState(false);
   return (
     <>
-      {fs && <FullscreenModal title={fullscreenTitle} value={value} onChange={onChange} onClose={() => { setFs(false); onSave(); }} />}
+      {fs && <FullscreenModal title={fullscreenTitle} value={value} onChange={onChange} onClose={() => { setFs(false); onSave(); }} readOnly={readOnly} />}
       <div className="relative">
-        <Textarea value={value} onChange={(e) => onChange(e.target.value)} onBlur={onSave} placeholder={placeholder} className="min-h-[28px] text-[10px] pr-6 resize-none" />
+        <Textarea value={value} onChange={(e) => onChange(e.target.value)} onBlur={onSave} placeholder={placeholder} className="min-h-[28px] text-[10px] pr-6 resize-none" readOnly={readOnly} />
         <button onClick={() => setFs(true)} className="absolute right-0.5 top-0.5 p-0.5 rounded hover:bg-muted">
           <Maximize2 className="h-3 w-3 text-muted-foreground" />
         </button>
@@ -257,14 +252,18 @@ function NotesField({ value, onChange, onSave, placeholder, fullscreenTitle }: {
   );
 }
 
-/* ────────── Chef section (dropdown + badges + notes) ────────── */
-function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, onSave, label }: {
+/* ────────── Chef section ────────── */
+function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, onSave, label, readOnly }: {
   allServices: string[]; selected: string[]; onToggle: (s: string) => void;
-  notes: string; onNotesChange: (v: string) => void; onSave: () => void; label: string;
+  notes: string; onNotesChange: (v: string) => void; onSave: () => void; label: string; readOnly?: boolean;
 }) {
   return (
     <div className="space-y-1">
-      <TaskDropdown allServices={allServices} selected={selected} onToggle={onToggle} label={label} />
+      {readOnly ? (
+        selected.length > 0 ? null : <p className="text-[10px] text-muted-foreground italic">—</p>
+      ) : (
+        <TaskDropdown allServices={allServices} selected={selected} onToggle={onToggle} label={label} />
+      )}
       {selected.length > 0 && (
         <div className="flex flex-wrap gap-0.5">
           {selected.map((s) => (
@@ -272,20 +271,21 @@ function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, on
           ))}
         </div>
       )}
-      <NotesField value={notes} onChange={onNotesChange} onSave={onSave} placeholder="Notes chef…" fullscreenTitle={`${label} – Notes Chef`} />
+      <NotesField value={notes} onChange={onNotesChange} onSave={onSave} placeholder="Notes chef…" fullscreenTitle={`${label} – Notes Chef`} readOnly={readOnly} />
     </div>
   );
 }
 
 /* ────────── Photo Upload ────────── */
-function PhotoUpload({ photos, serviceId, field, onUpdate }: {
+function PhotoUpload({ photos, serviceId, field, onUpdate, readOnly }: {
   photos: string[]; serviceId: string; field: string;
-  onUpdate: (id: string, field: string, value: unknown) => void;
+  onUpdate: (id: string, field: string, value: unknown) => void; readOnly?: boolean;
 }) {
   const [uploading, setUploading] = useState(false);
   const [viewPhoto, setViewPhoto] = useState<string | null>(null);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (readOnly) return;
     const files = e.target.files;
     if (!files || files.length === 0) return;
     setUploading(true);
@@ -304,6 +304,7 @@ function PhotoUpload({ photos, serviceId, field, onUpdate }: {
   };
 
   const removePhoto = async (url: string) => {
+    if (readOnly) return;
     const path = url.split("/service-photos/")[1];
     if (path) await supabase.storage.from("service-photos").remove([path]);
     onUpdate(serviceId, field, photos.filter((p) => p !== url));
@@ -327,42 +328,46 @@ function PhotoUpload({ photos, serviceId, field, onUpdate }: {
             {photos.map((url, i) => (
               <div key={i} className="relative group">
                 <img src={url} alt="" className="h-10 w-10 rounded object-cover cursor-pointer border" onClick={() => setViewPhoto(url)} />
-                <button onClick={() => removePhoto(url)}
-                  className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-destructive text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <X className="h-2 w-2" />
-                </button>
+                {!readOnly && (
+                  <button onClick={() => removePhoto(url)}
+                    className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-destructive text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <X className="h-2 w-2" />
+                  </button>
+                )}
               </div>
             ))}
           </div>
         )}
-        <label className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded border border-dashed cursor-pointer hover:bg-muted/30 transition-colors ${uploading ? "opacity-50 pointer-events-none" : "text-muted-foreground"}`}>
-          <Camera className="h-3 w-3" />
-          {uploading ? "Envoi…" : "Photo"}
-          <input type="file" accept="image/*" capture="environment" multiple className="hidden" onChange={handleUpload} />
-        </label>
+        {!readOnly && (
+          <label className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded border border-dashed cursor-pointer hover:bg-muted/30 transition-colors ${uploading ? "opacity-50 pointer-events-none" : "text-muted-foreground"}`}>
+            <Camera className="h-3 w-3" />
+            {uploading ? "Envoi…" : "Photo"}
+            <input type="file" accept="image/*" capture="environment" multiple className="hidden" onChange={handleUpload} />
+          </label>
+        )}
       </div>
     </>
   );
 }
 
-/* ────────── Technicien section (validate/reject + notes + photos) ────────── */
-function TechSection({ tasks, validations, onSetStatus, notes, onNotesChange, onSave, label, photos, serviceId, photosField, onUpdate }: {
+/* ────────── Technicien section ────────── */
+function TechSection({ tasks, validations, onSetStatus, notes, onNotesChange, onSave, label, photos, serviceId, photosField, onUpdate, readOnly }: {
   tasks: string[]; validations: ValidationMap; onSetStatus: (task: string, status: "ok" | "nok" | null) => void;
   notes: string; onNotesChange: (v: string) => void; onSave: () => void; label: string;
   photos: string[]; serviceId: string; photosField: string;
-  onUpdate: (id: string, field: string, value: unknown) => void;
+  onUpdate: (id: string, field: string, value: unknown) => void; readOnly?: boolean;
 }) {
   return (
     <div className="space-y-1">
-      <ValidationTaskList tasks={tasks} validations={validations} onSetStatus={onSetStatus} />
-      <NotesField value={notes} onChange={onNotesChange} onSave={onSave} placeholder="Notes technicien…" fullscreenTitle={`${label} – Notes Technicien`} />
-      <PhotoUpload photos={photos} serviceId={serviceId} field={photosField} onUpdate={onUpdate} />
+      <ValidationTaskList tasks={tasks} validations={validations} onSetStatus={onSetStatus} readOnly={readOnly} />
+      <NotesField value={notes} onChange={onNotesChange} onSave={onSave} placeholder="Notes technicien…" fullscreenTitle={`${label} – Notes Technicien`} readOnly={readOnly} />
+      <PhotoUpload photos={photos} serviceId={serviceId} field={photosField} onUpdate={onUpdate} readOnly={readOnly} />
     </div>
   );
 }
 
 /* ────────── Service Card (mobile) ────────── */
-function ServiceCardMobile({ row, onUpdate, onDelete }: { row: ServiceRow; onUpdate: (id: string, field: string, value: unknown) => void; onDelete: (id: string) => void }) {
+function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceRow; onUpdate: (id: string, field: string, value: unknown) => void; onDelete: (id: string) => void; isAdmin: boolean }) {
   const toggleTask = (field: string, current: string[], item: string) => {
     const next = current.includes(item) ? current.filter((s) => s !== item) : [...current, item];
     onUpdate(row.id, field, next);
@@ -377,29 +382,30 @@ function ServiceCardMobile({ row, onUpdate, onDelete }: { row: ServiceRow; onUpd
     <div className="rounded-lg border bg-card overflow-hidden">
       <div className="flex items-center gap-1 bg-muted/30 px-2 py-1.5">
         <Input value={row.modele} onChange={(e) => onUpdate(row.id, "modele", e.target.value)}
-          placeholder="Modèle" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" />
+          placeholder="Modèle" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
         <Input value={row.immatriculation} onChange={(e) => onUpdate(row.id, "immatriculation", e.target.value)}
-          placeholder="Immat" className="h-7 text-[11px] font-bold flex-1 bg-transparent border-none shadow-none min-w-0" />
+          placeholder="Immat" className="h-7 text-[11px] font-bold flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
         <Input value={row.prenom} onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
           placeholder="Prénom" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" />
-        <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => onDelete(row.id)}>
-          <Trash2 className="h-3.5 w-3.5 text-destructive" />
-        </Button>
+        {isAdmin && (
+          <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => onDelete(row.id)}>
+            <Trash2 className="h-3.5 w-3.5 text-destructive" />
+          </Button>
+        )}
       </div>
       <div className="grid grid-cols-2 gap-px bg-border">
         <div className="bg-card p-1.5">
           <p className="text-[9px] text-muted-foreground uppercase mb-0.5">Entrée</p>
           <Input type="date" value={row.date_entree} onChange={(e) => onUpdate(row.id, "date_entree", e.target.value)}
-            className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
+            className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
         </div>
         <div className="bg-card p-1.5">
           <p className="text-[9px] text-muted-foreground uppercase mb-0.5">Sortie</p>
           <Input type="date" value={row.date_sortie} onChange={(e) => onUpdate(row.id, "date_sortie", e.target.value)}
-            className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
+            className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
         </div>
       </div>
 
-      {/* Progress bar */}
       <div className="px-2 py-1 border-t bg-muted/10">
         <ProgressBar row={row} />
       </div>
@@ -415,7 +421,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete }: { row: ServiceRow; onUpd
               <ChefSection allServices={MECANIQUE_SERVICES} selected={row.mecanique_taches}
                 onToggle={(s) => toggleTask("mecanique_taches", row.mecanique_taches, s)}
                 notes={row.mecanique_notes_chef} onNotesChange={(v) => onUpdate(row.id, "mecanique_notes_chef", v)}
-                onSave={() => {}} label="Mécanique" />
+                onSave={() => {}} label="Mécanique" readOnly={!isAdmin} />
             </div>
             <div className="bg-card p-1.5">
               <p className="text-[8px] text-muted-foreground uppercase mb-0.5 font-semibold">Technicien</p>
@@ -440,7 +446,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete }: { row: ServiceRow; onUpd
               <ChefSection allServices={CARROSSERIE_SERVICES} selected={row.carrosserie_taches}
                 onToggle={(s) => toggleTask("carrosserie_taches", row.carrosserie_taches, s)}
                 notes={row.carrosserie_notes_chef} onNotesChange={(v) => onUpdate(row.id, "carrosserie_notes_chef", v)}
-                onSave={() => {}} label="Carrosserie" />
+                onSave={() => {}} label="Carrosserie" readOnly={!isAdmin} />
             </div>
             <div className="bg-card p-1.5">
               <p className="text-[8px] text-muted-foreground uppercase mb-0.5 font-semibold">Technicien</p>
@@ -459,6 +465,8 @@ function ServiceCardMobile({ row, onUpdate, onDelete }: { row: ServiceRow; onUpd
 
 /* ────────── Main Page ────────── */
 export default function GestionServices() {
+  const { role } = useAuth();
+  const isAdmin = role === "admin";
   const [rows, setRows] = useState<ServiceRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -492,6 +500,7 @@ export default function GestionServices() {
   }, [fetchRows]);
 
   const addRow = async (hasMeca: boolean, hasCarro: boolean) => {
+    if (!isAdmin) return;
     const insertData: Record<string, unknown> = {
       mecanique_validees: {},
       carrosserie_validees: {},
@@ -504,15 +513,25 @@ export default function GestionServices() {
   };
 
   const deleteRow = async (id: string) => {
+    if (!isAdmin) return;
     if (!confirm("Supprimer cette ligne ?")) return;
     await supabase.from("services").delete().eq("id", id);
     fetchRows();
   };
 
+  // Technicien can only update: prenom, *_validees, *_notes_meca, *_photos
+  const TECH_ALLOWED_FIELDS = [
+    "prenom",
+    "mecanique_validees", "carrosserie_validees",
+    "mecanique_notes_meca", "carrosserie_notes_meca",
+    "mecanique_photos", "carrosserie_photos",
+  ];
+
   const updateField = useCallback(async (id: string, field: string, value: unknown) => {
+    if (!isAdmin && !TECH_ALLOWED_FIELDS.includes(field)) return;
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: value } : r)));
     await supabase.from("services").update({ [field]: value } as Record<string, unknown>).eq("id", id);
-  }, []);
+  }, [isAdmin]);
 
   if (loading) return <div className="flex items-center justify-center py-20 text-muted-foreground">Chargement…</div>;
 
@@ -526,14 +545,16 @@ export default function GestionServices() {
           </h2>
           <p className="text-xs text-muted-foreground">{rows.length} véhicule(s)</p>
         </div>
-        <Button onClick={() => setShowAddDialog(true)} size="sm" className="gap-1">
-          <Plus className="h-4 w-4" /> Ajouter
-        </Button>
+        {isAdmin && (
+          <Button onClick={() => setShowAddDialog(true)} size="sm" className="gap-1">
+            <Plus className="h-4 w-4" /> Ajouter
+          </Button>
+        )}
       </div>
 
       {rows.length === 0 ? (
         <div className="rounded-xl border border-dashed p-12 text-center text-muted-foreground">
-          Aucun véhicule en service. Cliquez sur "Ajouter" pour commencer.
+          Aucun véhicule en service.{isAdmin ? ' Cliquez sur "Ajouter" pour commencer.' : ""}
         </div>
       ) : (
         <>
@@ -554,7 +575,7 @@ export default function GestionServices() {
                   {rows.some(r => r.has_carrosserie) && (
                     <th colSpan={2} className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] border-l bg-orange-500/5">🎨 Carrosserie</th>
                   )}
-                  <th className="p-1 w-[32px]"></th>
+                  {isAdmin && <th className="p-1 w-[32px]"></th>}
                 </tr>
                 <tr className="bg-muted/30 text-[9px]">
                   <th colSpan={6}></th>
@@ -570,13 +591,13 @@ export default function GestionServices() {
                       <th className="p-1 text-center bg-orange-500/5">Technicien</th>
                     </>
                   )}
-                  <th></th>
+                  {isAdmin && <th></th>}
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row) => (
                   <DesktopRow key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow}
-                    showMeca={rows.some(r => r.has_mecanique)} showCarro={rows.some(r => r.has_carrosserie)} />
+                    showMeca={rows.some(r => r.has_mecanique)} showCarro={rows.some(r => r.has_carrosserie)} isAdmin={isAdmin} />
                 ))}
               </tbody>
             </table>
@@ -585,7 +606,7 @@ export default function GestionServices() {
           {/* Mobile */}
           <div className="lg:hidden space-y-3">
             {rows.map((row) => (
-              <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} />
+              <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} />
             ))}
           </div>
         </>
@@ -595,9 +616,9 @@ export default function GestionServices() {
 }
 
 /* ────────── Desktop Row ────────── */
-function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro }: {
+function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
   row: ServiceRow; onUpdate: (id: string, field: string, value: unknown) => void; onDelete: (id: string) => void;
-  showMeca: boolean; showCarro: boolean;
+  showMeca: boolean; showCarro: boolean; isAdmin: boolean;
 }) {
   const toggleTask = (field: string, current: string[], item: string) => {
     const next = current.includes(item) ? current.filter((s) => s !== item) : [...current, item];
@@ -613,11 +634,11 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro }: {
     <tr className="border-b align-top hover:bg-muted/20">
       <td className="p-1.5">
         <Input value={row.modele} onChange={(e) => onUpdate(row.id, "modele", e.target.value)}
-          placeholder="Modèle" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
+          placeholder="Modèle" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
       </td>
       <td className="p-1.5">
         <Input value={row.immatriculation} onChange={(e) => onUpdate(row.id, "immatriculation", e.target.value)}
-          placeholder="XX-000-XX" className="h-6 text-[11px] font-bold border-none shadow-none bg-transparent p-0" />
+          placeholder="XX-000-XX" className="h-6 text-[11px] font-bold border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
       </td>
       <td className="p-1.5">
         <Input value={row.prenom} onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
@@ -625,11 +646,11 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro }: {
       </td>
       <td className="p-1.5">
         <Input type="date" value={row.date_entree} onChange={(e) => onUpdate(row.id, "date_entree", e.target.value)}
-          className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
+          className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
       </td>
       <td className="p-1.5">
         <Input type="date" value={row.date_sortie} onChange={(e) => onUpdate(row.id, "date_sortie", e.target.value)}
-          className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
+          className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
       </td>
       <td className="p-1.5 min-w-[70px]">
         <ProgressBar row={row} />
@@ -642,7 +663,7 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro }: {
               <ChefSection allServices={MECANIQUE_SERVICES} selected={row.mecanique_taches}
                 onToggle={(s) => toggleTask("mecanique_taches", row.mecanique_taches, s)}
                 notes={row.mecanique_notes_chef} onNotesChange={(v) => onUpdate(row.id, "mecanique_notes_chef", v)}
-                onSave={() => {}} label="Mécanique" />
+                onSave={() => {}} label="Mécanique" readOnly={!isAdmin} />
             ) : <span className="text-[10px] text-muted-foreground italic">—</span>}
           </td>
           <td className="p-1.5 bg-blue-500/[0.02] min-w-[140px]">
@@ -664,7 +685,7 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro }: {
               <ChefSection allServices={CARROSSERIE_SERVICES} selected={row.carrosserie_taches}
                 onToggle={(s) => toggleTask("carrosserie_taches", row.carrosserie_taches, s)}
                 notes={row.carrosserie_notes_chef} onNotesChange={(v) => onUpdate(row.id, "carrosserie_notes_chef", v)}
-                onSave={() => {}} label="Carrosserie" />
+                onSave={() => {}} label="Carrosserie" readOnly={!isAdmin} />
             ) : <span className="text-[10px] text-muted-foreground italic">—</span>}
           </td>
           <td className="p-1.5 bg-orange-500/[0.02] min-w-[140px]">
@@ -679,11 +700,13 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro }: {
         </>
       )}
 
-      <td className="p-1.5">
-        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => onDelete(row.id)}>
-          <Trash2 className="h-3.5 w-3.5 text-destructive" />
-        </Button>
-      </td>
+      {isAdmin && (
+        <td className="p-1.5">
+          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => onDelete(row.id)}>
+            <Trash2 className="h-3.5 w-3.5 text-destructive" />
+          </Button>
+        </td>
+      )}
     </tr>
   );
 }
