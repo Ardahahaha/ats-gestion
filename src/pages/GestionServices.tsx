@@ -339,21 +339,15 @@ export default function GestionServices() {
     const { data, error } = await supabase.from("services").select("*").order("created_at", { ascending: true });
     if (error) { toast.error("Erreur chargement services"); return; }
     setRows(
-      (data || []).map((d) => {
-        const mecaTaches = toStringArray(d.mecanique_taches as Json);
-        const carroTaches = toStringArray(d.carrosserie_taches as Json);
-        const hasMeca = mecaTaches.length > 0 || (d.mecanique_notes_chef || "").trim().length > 0 || (d.mecanique_notes_meca || "").trim().length > 0;
-        const hasCarro = carroTaches.length > 0 || (d.carrosserie_notes_chef || "").trim().length > 0 || (d.carrosserie_notes_meca || "").trim().length > 0;
-        return {
-          ...d,
-          mecanique_taches: mecaTaches,
-          mecanique_validees: toValidationMap(d.mecanique_validees as Json),
-          carrosserie_taches: carroTaches,
-          carrosserie_validees: toValidationMap(d.carrosserie_validees as Json),
-          has_mecanique: hasMeca || (!hasMeca && !hasCarro),
-          has_carrosserie: hasCarro || (!hasMeca && !hasCarro),
-        };
-      })
+      (data || []).map((d) => ({
+        ...d,
+        mecanique_taches: toStringArray(d.mecanique_taches as Json),
+        mecanique_validees: toValidationMap(d.mecanique_validees as Json),
+        carrosserie_taches: toStringArray(d.carrosserie_taches as Json),
+        carrosserie_validees: toValidationMap(d.carrosserie_validees as Json),
+        has_mecanique: (d as Record<string, unknown>).has_mecanique !== false,
+        has_carrosserie: (d as Record<string, unknown>).has_carrosserie !== false,
+      }))
     );
     setLoading(false);
   }, []);
