@@ -235,15 +235,86 @@ function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, on
   );
 }
 
-/* ────────── Technicien section (validate/reject + notes) ────────── */
-function TechSection({ tasks, validations, onSetStatus, notes, onNotesChange, onSave, label }: {
+/* ────────── Photo Upload ────────── */
+function PhotoUpload({ photos, serviceId, field, onUpdate }: {
+  photos: string[]; serviceId: string; field: string;
+  onUpdate: (id: string, field: string, value: unknown) => void;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [viewPhoto, setViewPhoto] = useState<string | null>(null);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    const newPhotos = [...photos];
+    for (const file of Array.from(files)) {
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${serviceId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error } = await supabase.storage.from("service-photos").upload(path, file);
+      if (error) { toast.error("Erreur upload photo"); continue; }
+      const { data } = supabase.storage.from("service-photos").getPublicUrl(path);
+      newPhotos.push(data.publicUrl);
+    }
+    onUpdate(serviceId, field, newPhotos);
+    setUploading(false);
+    e.target.value = "";
+  };
+
+  const removePhoto = async (url: string) => {
+    const path = url.split("/service-photos/")[1];
+    if (path) await supabase.storage.from("service-photos").remove([path]);
+    onUpdate(serviceId, field, photos.filter((p) => p !== url));
+  };
+
+  return (
+    <>
+      {viewPhoto && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4" onClick={() => setViewPhoto(null)}>
+          <div className="relative max-w-3xl max-h-[90vh]">
+            <button onClick={() => setViewPhoto(null)} className="absolute -top-3 -right-3 bg-card rounded-full p-1 shadow border">
+              <X className="h-4 w-4" />
+            </button>
+            <img src={viewPhoto} alt="Photo" className="max-h-[85vh] rounded-lg object-contain" />
+          </div>
+        </div>
+      )}
+      <div className="space-y-1">
+        {photos.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {photos.map((url, i) => (
+              <div key={i} className="relative group">
+                <img src={url} alt="" className="h-10 w-10 rounded object-cover cursor-pointer border" onClick={() => setViewPhoto(url)} />
+                <button onClick={() => removePhoto(url)}
+                  className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-destructive text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <X className="h-2 w-2" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <label className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded border border-dashed cursor-pointer hover:bg-muted/30 transition-colors ${uploading ? "opacity-50 pointer-events-none" : "text-muted-foreground"}`}>
+          <Camera className="h-3 w-3" />
+          {uploading ? "Envoi…" : "Photo"}
+          <input type="file" accept="image/*" capture="environment" multiple className="hidden" onChange={handleUpload} />
+        </label>
+      </div>
+    </>
+  );
+}
+
+/* ────────── Technicien section (validate/reject + notes + photos) ────────── */
+function TechSection({ tasks, validations, onSetStatus, notes, onNotesChange, onSave, label, photos, serviceId, photosField, onUpdate }: {
   tasks: string[]; validations: ValidationMap; onSetStatus: (task: string, status: "ok" | "nok" | null) => void;
   notes: string; onNotesChange: (v: string) => void; onSave: () => void; label: string;
+  photos: string[]; serviceId: string; photosField: string;
+  onUpdate: (id: string, field: string, value: unknown) => void;
 }) {
   return (
     <div className="space-y-1">
       <ValidationTaskList tasks={tasks} validations={validations} onSetStatus={onSetStatus} />
       <NotesField value={notes} onChange={onNotesChange} onSave={onSave} placeholder="Notes technicien…" fullscreenTitle={`${label} – Notes Technicien`} />
+      <PhotoUpload photos={photos} serviceId={serviceId} field={photosField} onUpdate={onUpdate} />
     </div>
   );
 }
