@@ -595,9 +595,11 @@ export default function GestionServices() {
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[80px]">Modèle</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Immat</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[80px]">Prénom</th>
+                  <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[60px]">Km</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Entrée</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Sortie</th>
                   <th className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] w-[80px]">Avancement</th>
+                  <th className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] w-[30px]">✓</th>
                   {rows.some(r => r.has_mecanique) && (
                     <th colSpan={2} className="p-1.5 text-center font-bold uppercase tracking-wide text-[10px] border-l bg-blue-500/5">🔧 Mécanique</th>
                   )}
