@@ -32,7 +32,9 @@ type ValidationMap = Record<string, "ok" | "nok">;
 
 type ServiceRow = {
   id: string;
+  modele: string;
   immatriculation: string;
+  prenom: string;
   date_entree: string;
   date_sortie: string;
   mecanique_taches: string[];
@@ -258,9 +260,13 @@ function ServiceCardMobile({ row, onUpdate, onDelete }: { row: ServiceRow; onUpd
 
   return (
     <div className="rounded-lg border bg-card overflow-hidden">
-      <div className="flex items-center gap-2 bg-muted/30 px-3 py-1.5">
+      <div className="flex items-center gap-1 bg-muted/30 px-2 py-1.5">
+        <Input value={row.modele} onChange={(e) => onUpdate(row.id, "modele", e.target.value)}
+          placeholder="Modèle" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" />
         <Input value={row.immatriculation} onChange={(e) => onUpdate(row.id, "immatriculation", e.target.value)}
-          placeholder="Immat" className="h-7 text-xs font-bold flex-1 bg-transparent border-none shadow-none" />
+          placeholder="Immat" className="h-7 text-[11px] font-bold flex-1 bg-transparent border-none shadow-none min-w-0" />
+        <Input value={row.prenom} onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
+          placeholder="Prénom" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" />
         <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => onDelete(row.id)}>
           <Trash2 className="h-3.5 w-3.5 text-destructive" />
         </Button>
@@ -412,7 +418,9 @@ export default function GestionServices() {
             <table className="w-full text-[11px]">
               <thead>
                 <tr className="bg-muted/50">
+                  <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[80px]">Modèle</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Immat</th>
+                  <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[80px]">Prénom</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Entrée</th>
                   <th className="p-1.5 text-left font-bold uppercase tracking-wide text-[10px] w-[90px]">Sortie</th>
                   {rows.some(r => r.has_mecanique) && (
@@ -424,7 +432,7 @@ export default function GestionServices() {
                   <th className="p-1 w-[32px]"></th>
                 </tr>
                 <tr className="bg-muted/30 text-[9px]">
-                  <th colSpan={3}></th>
+                  <th colSpan={5}></th>
                   {rows.some(r => r.has_mecanique) && (
                     <>
                       <th className="p-1 text-center border-l bg-blue-500/5">Chef</th>
@@ -479,8 +487,16 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro }: {
   return (
     <tr className="border-b align-top hover:bg-muted/20">
       <td className="p-1.5">
+        <Input value={row.modele} onChange={(e) => onUpdate(row.id, "modele", e.target.value)}
+          placeholder="Modèle" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
+      </td>
+      <td className="p-1.5">
         <Input value={row.immatriculation} onChange={(e) => onUpdate(row.id, "immatriculation", e.target.value)}
           placeholder="XX-000-XX" className="h-6 text-[11px] font-bold border-none shadow-none bg-transparent p-0" />
+      </td>
+      <td className="p-1.5">
+        <Input value={row.prenom} onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
+          placeholder="Prénom" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" />
       </td>
       <td className="p-1.5">
         <Input type="date" value={row.date_entree} onChange={(e) => onUpdate(row.id, "date_entree", e.target.value)}

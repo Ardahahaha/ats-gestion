@@ -173,6 +173,8 @@ export type Database = {
           mecanique_notes_meca: string
           mecanique_taches: Json
           mecanique_validees: Json
+          modele: string
+          prenom: string
         }
         Insert: {
           carrosserie_notes_chef?: string
@@ -190,6 +192,8 @@ export type Database = {
           mecanique_notes_meca?: string
           mecanique_taches?: Json
           mecanique_validees?: Json
+          modele?: string
+          prenom?: string
         }
         Update: {
           carrosserie_notes_chef?: string
@@ -207,6 +211,8 @@ export type Database = {
           mecanique_notes_meca?: string
           mecanique_taches?: Json
           mecanique_validees?: Json
+          modele?: string
+          prenom?: string
         }
         Relationships: []
       }
