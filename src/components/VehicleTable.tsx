@@ -135,6 +135,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
   };
 
   const deleteRow = async (id: string) => {
+    if (readOnly) return;
     setRows((prev) => prev.filter((r) => r.id !== id));
     const { error } = await supabase.from("vehicules").delete().eq("id", id);
     if (error) { toast.error("Erreur lors de la suppression"); fetchRows(); }
