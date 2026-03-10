@@ -208,8 +208,18 @@ function FullscreenModal({ title, value, onChange, onClose, readOnly }: { title:
 }
 
 /* ────────── Dropdown Task Selector (Chef) ────────── */
-function TaskDropdown({ allServices, selected, onToggle, label }: { allServices: string[]; selected: string[]; onToggle: (s: string) => void; label: string }) {
+function TaskDropdown({ allServices, selected, onToggle, onAddCustom, label }: { allServices: string[]; selected: string[]; onToggle: (s: string) => void; onAddCustom?: (task: string) => void; label: string }) {
+  const [customTask, setCustomTask] = useState("");
   const count = selected.length;
+
+  const handleAddCustom = () => {
+    const trimmed = customTask.trim();
+    if (trimmed && onAddCustom) {
+      onAddCustom(trimmed);
+      setCustomTask("");
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -218,7 +228,7 @@ function TaskDropdown({ allServices, selected, onToggle, label }: { allServices:
           <ChevronDown className="h-3 w-3 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-48 max-h-64 overflow-auto">
+      <DropdownMenuContent className="w-52 max-h-72 overflow-auto">
         <DropdownMenuLabel className="text-[10px]">{label}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {allServices.map((s) => (
@@ -226,6 +236,29 @@ function TaskDropdown({ allServices, selected, onToggle, label }: { allServices:
             {s}
           </DropdownMenuCheckboxItem>
         ))}
+        {/* Custom tasks already added but not in default list */}
+        {selected.filter((s) => !allServices.includes(s)).map((s) => (
+          <DropdownMenuCheckboxItem key={s} checked={true} onCheckedChange={() => onToggle(s)} className="text-[11px] italic">
+            {s}
+          </DropdownMenuCheckboxItem>
+        ))}
+        {onAddCustom && (
+          <>
+            <DropdownMenuSeparator />
+            <div className="px-2 py-1.5 flex gap-1">
+              <Input
+                value={customTask}
+                onChange={(e) => setCustomTask(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleAddCustom(); } }}
+                placeholder="Tâche perso…"
+                className="h-6 text-[10px] flex-1"
+              />
+              <Button size="sm" className="h-6 px-2 text-[10px]" onClick={handleAddCustom} disabled={!customTask.trim()}>
+                <Plus className="h-3 w-3" />
+              </Button>
+            </div>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -295,8 +328,8 @@ function NotesField({ value, onChange, onSave, placeholder, fullscreenTitle, rea
 }
 
 /* ────────── Chef section ────────── */
-function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, onSave, label, readOnly }: {
-  allServices: string[]; selected: string[]; onToggle: (s: string) => void;
+function ChefSection({ allServices, selected, onToggle, onAddCustom, notes, onNotesChange, onSave, label, readOnly }: {
+  allServices: string[]; selected: string[]; onToggle: (s: string) => void; onAddCustom?: (task: string) => void;
   notes: string; onNotesChange: (v: string) => void; onSave: () => void; label: string; readOnly?: boolean;
 }) {
   return (
@@ -304,7 +337,7 @@ function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, on
       {readOnly ? (
         selected.length > 0 ? null : <p className="text-[10px] text-muted-foreground italic">—</p>
       ) : (
-        <TaskDropdown allServices={allServices} selected={selected} onToggle={onToggle} label={label} />
+        <TaskDropdown allServices={allServices} selected={selected} onToggle={onToggle} onAddCustom={onAddCustom} label={label} />
       )}
       {selected.length > 0 && (
         <div className="flex flex-wrap gap-0.5">
@@ -414,6 +447,9 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
     const next = current.includes(item) ? current.filter((s) => s !== item) : [...current, item];
     onUpdate(row.id, field, next);
   };
+  const addCustomTask = (field: string, current: string[], task: string) => {
+    if (!current.includes(task)) onUpdate(row.id, field, [...current, task]);
+  };
   const setValidation = (field: string, current: ValidationMap, task: string, status: "ok" | "nok" | null) => {
     const next = { ...current };
     if (status === null) delete next[task]; else next[task] = status;
@@ -469,6 +505,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
               <p className="text-[8px] text-muted-foreground uppercase mb-0.5 font-semibold">Chef</p>
               <ChefSection allServices={MECANIQUE_SERVICES} selected={row.mecanique_taches}
                 onToggle={(s) => toggleTask("mecanique_taches", row.mecanique_taches, s)}
+                onAddCustom={isAdmin ? (t) => addCustomTask("mecanique_taches", row.mecanique_taches, t) : undefined}
                 notes={row.mecanique_notes_chef} onNotesChange={(v) => onUpdate(row.id, "mecanique_notes_chef", v)}
                 onSave={() => {}} label="Mécanique" readOnly={!isAdmin} />
             </div>
@@ -494,6 +531,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
               <p className="text-[8px] text-muted-foreground uppercase mb-0.5 font-semibold">Chef</p>
               <ChefSection allServices={CARROSSERIE_SERVICES} selected={row.carrosserie_taches}
                 onToggle={(s) => toggleTask("carrosserie_taches", row.carrosserie_taches, s)}
+                onAddCustom={isAdmin ? (t) => addCustomTask("carrosserie_taches", row.carrosserie_taches, t) : undefined}
                 notes={row.carrosserie_notes_chef} onNotesChange={(v) => onUpdate(row.id, "carrosserie_notes_chef", v)}
                 onSave={() => {}} label="Carrosserie" readOnly={!isAdmin} />
             </div>
@@ -637,6 +675,9 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
     const next = current.includes(item) ? current.filter((s) => s !== item) : [...current, item];
     onUpdate(row.id, field, next);
   };
+  const addCustomTask = (field: string, current: string[], task: string) => {
+    if (!current.includes(task)) onUpdate(row.id, field, [...current, task]);
+  };
   const setValidation = (field: string, current: ValidationMap, task: string, status: "ok" | "nok" | null) => {
     const next = { ...current };
     if (status === null) delete next[task]; else next[task] = status;
@@ -682,6 +723,7 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
             {row.has_mecanique ? (
               <ChefSection allServices={MECANIQUE_SERVICES} selected={row.mecanique_taches}
                 onToggle={(s) => toggleTask("mecanique_taches", row.mecanique_taches, s)}
+                onAddCustom={isAdmin ? (t) => addCustomTask("mecanique_taches", row.mecanique_taches, t) : undefined}
                 notes={row.mecanique_notes_chef} onNotesChange={(v) => onUpdate(row.id, "mecanique_notes_chef", v)}
                 onSave={() => {}} label="Mécanique" readOnly={!isAdmin} />
             ) : <span className="text-[10px] text-muted-foreground italic">—</span>}
@@ -704,6 +746,7 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
             {row.has_carrosserie ? (
               <ChefSection allServices={CARROSSERIE_SERVICES} selected={row.carrosserie_taches}
                 onToggle={(s) => toggleTask("carrosserie_taches", row.carrosserie_taches, s)}
+                onAddCustom={isAdmin ? (t) => addCustomTask("carrosserie_taches", row.carrosserie_taches, t) : undefined}
                 notes={row.carrosserie_notes_chef} onNotesChange={(v) => onUpdate(row.id, "carrosserie_notes_chef", v)}
                 onSave={() => {}} label="Carrosserie" readOnly={!isAdmin} />
             ) : <span className="text-[10px] text-muted-foreground italic">—</span>}
