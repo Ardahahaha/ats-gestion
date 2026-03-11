@@ -849,10 +849,11 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
         <>
           <td className="p-1.5 border-l bg-orange-500/[0.02] min-w-[140px]">
             {row.has_carrosserie ? (
-              <ChefSection allServices={CARROSSERIE_SERVICES} selected={row.carrosserie_taches}
-                onToggle={(s) => toggleTask("carrosserie_taches", row.carrosserie_taches, s)}
+              <CarrosserieChefSection selected={row.carrosserie_taches}
+                onAddTask={(task) => { const next = [...row.carrosserie_taches, task]; onUpdate(row.id, "carrosserie_taches", next); }}
+                onRemoveTask={(task) => { const next = row.carrosserie_taches.filter((t) => t !== task); onUpdate(row.id, "carrosserie_taches", next); }}
                 notes={row.carrosserie_notes_chef} onNotesChange={(v) => onUpdate(row.id, "carrosserie_notes_chef", v)}
-                onSave={() => {}} label="Carrosserie" readOnly={!isAdmin} />
+                onSave={() => {}} readOnly={!isAdmin} />
             ) : <span className="text-[10px] text-muted-foreground italic">—</span>}
           </td>
           <td className="p-1.5 bg-orange-500/[0.02] min-w-[140px]">
