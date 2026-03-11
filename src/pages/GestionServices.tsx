@@ -298,7 +298,7 @@ function NotesField({ value, onChange, onSave, placeholder, fullscreenTitle, rea
   );
 }
 
-/* ────────── Chef section ────────── */
+/* ────────── Chef section (Mécanique) ────────── */
 function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, onSave, label, readOnly }: {
   allServices: string[]; selected: string[]; onToggle: (s: string) => void;
   notes: string; onNotesChange: (v: string) => void; onSave: () => void; label: string; readOnly?: boolean;
@@ -318,6 +318,112 @@ function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, on
         </div>
       )}
       <NotesField value={notes} onChange={onNotesChange} onSave={onSave} placeholder="Notes chef…" fullscreenTitle={`${label} – Notes Chef`} readOnly={readOnly} />
+    </div>
+  );
+}
+
+/* ────────── Carrosserie Chef Section (two-step: Part → Work Type) ────────── */
+function CarrosserieChefSection({ selected, onAddTask, onRemoveTask, notes, onNotesChange, onSave, readOnly }: {
+  selected: string[]; onAddTask: (task: string) => void; onRemoveTask: (task: string) => void;
+  notes: string; onNotesChange: (v: string) => void; onSave: () => void; readOnly?: boolean;
+}) {
+  const [selectedPart, setSelectedPart] = useState<string | null>(null);
+
+  const handlePartSelect = (part: string) => {
+    setSelectedPart(part);
+  };
+
+  const handleWorkTypeSelect = (workType: string) => {
+    if (!selectedPart) return;
+    const task = `${selectedPart} – ${workType}`;
+    if (!selected.includes(task)) {
+      onAddTask(task);
+    }
+    setSelectedPart(null);
+  };
+
+  return (
+    <div className="space-y-1.5">
+      {!readOnly && (
+        <div className="space-y-1">
+          {/* Step 1: Part selection */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-7 text-[10px] gap-1 w-full justify-between px-2 border-orange-400/50 hover:border-orange-400">
+                <span className="truncate">{selectedPart ? `📍 ${selectedPart}` : "① Choisir un élément…"}</span>
+                <ChevronDown className="h-3 w-3 opacity-50 shrink-0" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-52 max-h-72 overflow-auto">
+              <DropdownMenuLabel className="text-[10px] text-orange-600">Élément du véhicule</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {CARROSSERIE_PARTS.map((part) => (
+                <DropdownMenuCheckboxItem
+                  key={part}
+                  checked={selectedPart === part}
+                  onCheckedChange={() => handlePartSelect(part)}
+                  className="text-[11px] cursor-pointer"
+                >
+                  {part}
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Step 2: Work type (only visible after part selected) */}
+          {selectedPart && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-7 text-[10px] gap-1 w-full justify-between px-2 border-orange-500 bg-orange-500/5 hover:bg-orange-500/10 animate-pulse">
+                  <span className="truncate">② Tâche pour <b>{selectedPart}</b></span>
+                  <ChevronDown className="h-3 w-3 opacity-50 shrink-0" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48">
+                <DropdownMenuLabel className="text-[10px] text-orange-600">{selectedPart}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {CARROSSERIE_WORK_TYPES.map((wt) => {
+                  const task = `${selectedPart} – ${wt}`;
+                  const alreadyAdded = selected.includes(task);
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={wt}
+                      checked={alreadyAdded}
+                      onCheckedChange={() => {
+                        if (alreadyAdded) onRemoveTask(task);
+                        else handleWorkTypeSelect(wt);
+                      }}
+                      className="text-[11px] cursor-pointer"
+                    >
+                      {wt}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
+      )}
+
+      {/* Display selected tasks as chips */}
+      {selected.length > 0 ? (
+        <div className="flex flex-wrap gap-0.5">
+          {selected.map((s) => (
+            <span key={s} className="inline-flex items-center gap-0.5 rounded bg-orange-500/10 px-1.5 py-0.5 text-[8px] font-medium text-orange-700">
+              {s}
+              {!readOnly && (
+                <button onClick={() => onRemoveTask(s)} className="ml-0.5 hover:text-destructive">
+                  <X className="h-2.5 w-2.5" />
+                </button>
+              )}
+            </span>
+          ))}
+        </div>
+      ) : (
+        readOnly && <p className="text-[10px] text-muted-foreground italic">—</p>
+      )}
+
+      <NotesField value={notes} onChange={onNotesChange} onSave={onSave} placeholder="Notes chef…" fullscreenTitle="Carrosserie – Notes Chef" readOnly={readOnly} />
     </div>
   );
 }
