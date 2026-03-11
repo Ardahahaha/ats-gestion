@@ -23,10 +23,14 @@ const MECANIQUE_SERVICES = [
   "Courroie", "Démarreur", "Alternateur", "Batterie",
 ];
 
-const CARROSSERIE_SERVICES = [
-  "Peinture", "Débosselage", "Pare-chocs", "Aile", "Capot",
-  "Portière", "Lustrage", "Vitrage", "Phares", "Rétroviseur",
+const CARROSSERIE_PARTS = [
+  "PC Avant", "Capot", "Aile AV G", "Aile AV D", "Toit",
+  "Porte AV G", "Porte AV D", "Porte Arr G", "Porte Arr D",
+  "Hayon", "Aile Arr G", "Aile Arr D", "PC Arr", "Pare Brise",
+  "Bas de Caisse D", "Bas de Caisse G", "Rétros", "Jantes",
 ];
+
+const CARROSSERIE_WORK_TYPES = ["Peint.", "Tolerie", "MO", "DSP", "Lust."];
 
 type ValidationMap = Record<string, "ok" | "nok">;
 
