@@ -211,9 +211,19 @@ function FullscreenModal({ title, value, onChange, onClose, readOnly }: { title:
   );
 }
 
-/* ────────── Dropdown Task Selector (Chef) ────────── */
+/* ────────── Dropdown Task Selector (Chef) with custom task ────────── */
 function TaskDropdown({ allServices, selected, onToggle, label }: { allServices: string[]; selected: string[]; onToggle: (s: string) => void; label: string }) {
+  const [customTask, setCustomTask] = useState("");
   const count = selected.length;
+
+  const handleAddCustom = () => {
+    const trimmed = customTask.trim();
+    if (trimmed && !selected.includes(trimmed)) {
+      onToggle(trimmed);
+      setCustomTask("");
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -222,7 +232,7 @@ function TaskDropdown({ allServices, selected, onToggle, label }: { allServices:
           <ChevronDown className="h-3 w-3 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-48 max-h-64 overflow-auto">
+      <DropdownMenuContent className="w-52 max-h-72 overflow-auto">
         <DropdownMenuLabel className="text-[10px]">{label}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {allServices.map((s) => (
@@ -230,6 +240,25 @@ function TaskDropdown({ allServices, selected, onToggle, label }: { allServices:
             {s}
           </DropdownMenuCheckboxItem>
         ))}
+        {/* Custom tasks already added that aren't in the predefined list */}
+        {selected.filter((s) => !allServices.includes(s)).map((s) => (
+          <DropdownMenuCheckboxItem key={s} checked onCheckedChange={() => onToggle(s)} className="text-[11px] italic">
+            {s}
+          </DropdownMenuCheckboxItem>
+        ))}
+        <DropdownMenuSeparator />
+        <div className="px-2 py-1.5 flex gap-1" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+          <Input
+            value={customTask}
+            onChange={(e) => setCustomTask(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleAddCustom(); } }}
+            placeholder="Tâche perso…"
+            className="h-6 text-[10px] flex-1"
+          />
+          <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" onClick={handleAddCustom} disabled={!customTask.trim()}>
+            <Plus className="h-3 w-3" />
+          </Button>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
