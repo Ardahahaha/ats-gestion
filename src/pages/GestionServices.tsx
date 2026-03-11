@@ -621,10 +621,11 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
           <div className="grid grid-cols-2 gap-px bg-border">
             <div className="bg-card p-1.5">
               <p className="text-[8px] text-muted-foreground uppercase mb-0.5 font-semibold">Chef</p>
-              <ChefSection allServices={CARROSSERIE_SERVICES} selected={row.carrosserie_taches}
-                onToggle={(s) => toggleTask("carrosserie_taches", row.carrosserie_taches, s)}
+              <CarrosserieChefSection selected={row.carrosserie_taches}
+                onAddTask={(task) => { const next = [...row.carrosserie_taches, task]; onUpdate(row.id, "carrosserie_taches", next); }}
+                onRemoveTask={(task) => { const next = row.carrosserie_taches.filter((t) => t !== task); onUpdate(row.id, "carrosserie_taches", next); }}
                 notes={row.carrosserie_notes_chef} onNotesChange={(v) => onUpdate(row.id, "carrosserie_notes_chef", v)}
-                onSave={() => {}} label="Carrosserie" readOnly={!isAdmin} />
+                onSave={() => {}} readOnly={!isAdmin} />
             </div>
             <div className="bg-card p-1.5">
               <p className="text-[8px] text-muted-foreground uppercase mb-0.5 font-semibold">Technicien</p>
