@@ -10,6 +10,7 @@ type Tab = "login" | "signup";
 
 export default function Login() {
   const { login, signup } = useAuth();
+  const { t } = useI18n();
   const [tab, setTab] = useState<Tab>("login");
 
   // Login state
