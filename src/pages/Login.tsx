@@ -92,7 +92,7 @@ export default function Login() {
                   : "bg-card text-muted-foreground hover:text-foreground"
               }`}
             >
-              <LogIn className="h-4 w-4" /> Connexion
+              <LogIn className="h-4 w-4" /> {t("login.connection")}
             </button>
             <button
               onClick={() => setTab("signup")}
