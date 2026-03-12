@@ -81,6 +81,7 @@ function DateCell({ value, onChange, placeholder }: { value: string; onChange: (
 }
 
 export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
+  const { t } = useI18n();
   const [rows, setRows] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
 
