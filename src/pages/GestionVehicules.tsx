@@ -83,7 +83,7 @@ const GestionVehicules = () => {
     const name = newConcession.trim();
     if (!name) return;
     if (concessions.includes(name)) {
-      toast.error("Cette concession existe déjà");
+      toast.error(t("vehicles.alreadyExists"));
       return;
     }
     // On ajoute un véhicule vide pour créer la concession
