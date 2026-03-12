@@ -1,0 +1,1 @@
+ALTER TABLE public.gestion_vehicules ADD COLUMN technicien text NOT NULL DEFAULT '';

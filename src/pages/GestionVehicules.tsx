@@ -20,6 +20,7 @@ type GestionVehicule = {
   immatriculation: string;
   etat: string;
   concession: string;
+  technicien: string;
 };
 
 const GestionVehicules = () => {
@@ -29,6 +30,27 @@ const GestionVehicules = () => {
   const [loading, setLoading] = useState(true);
   const [newConcession, setNewConcession] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [techniciens, setTechniciens] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchTechniciens = async () => {
+      const { data } = await supabase
+        .from("user_roles")
+        .select("user_id")
+        .eq("role", "technicien");
+      if (data && data.length > 0) {
+        const userIds = data.map((d) => d.user_id);
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("pseudo")
+          .in("user_id", userIds);
+        if (profiles) {
+          setTechniciens(profiles.map((p) => p.pseudo).filter(Boolean));
+        }
+      }
+    };
+    fetchTechniciens();
+  }, []);
 
   const fetchVehicles = useCallback(async () => {
     const { data, error } = await supabase
@@ -205,11 +227,25 @@ const GestionVehicules = () => {
                 )}
               {items.map((v) => (
                   <div key={v.id} className="group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30">
-                    <div className="grid flex-1 grid-cols-4 gap-x-2">
+                    <div className="grid flex-1 grid-cols-5 gap-x-2">
                       <EditableField label="Marque" value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
                       <EditableField label="Modèle" value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
                       <EditableField label="Immat" value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
                       <EditableField label="État" value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} />
+                      <div className="flex items-center gap-1 text-[11px] min-w-0">
+                        <span className="shrink-0 text-[10px] font-medium text-muted-foreground">Tech:</span>
+                        <select
+                          value={v.technicien}
+                          onChange={(e) => updateField(v.id, "technicien", e.target.value)}
+                          disabled={!isAdmin}
+                          className="w-full min-w-0 rounded bg-transparent px-1 py-0.5 text-[11px] text-foreground outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
+                        >
+                          <option value="">—</option>
+                          {techniciens.map((t) => (
+                            <option key={t} value={t}>{t}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                     {isAdmin && (
                       <button
