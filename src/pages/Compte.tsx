@@ -27,6 +27,33 @@ export default function Compte() {
   const [deleting, setDeleting] = useState(false);
   const [confirmText, setConfirmText] = useState("");
 
+  const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
+  const [colorTheme, setColorTheme] = useState(() => localStorage.getItem("color-theme") || "red");
+
+  const toggleDark = (d: boolean) => {
+    setDark(d);
+    document.documentElement.classList.toggle("dark", d);
+    localStorage.setItem("theme", d ? "dark" : "light");
+  };
+
+  const applyColorTheme = (theme: string) => {
+    setColorTheme(theme);
+    localStorage.setItem("color-theme", theme);
+    const root = document.documentElement;
+    root.classList.remove("theme-blue", "theme-green", "theme-orange");
+    if (theme !== "red") {
+      root.classList.add(`theme-${theme}`);
+    }
+    window.dispatchEvent(new Event("color-theme-changed"));
+  };
+
+  const colorThemes = [
+    { id: "red", label: t("compte.themeRed"), colorClass: "bg-[hsl(0,85%,50%)]" },
+    { id: "blue", label: t("compte.themeBlue"), colorClass: "bg-[hsl(210,90%,50%)]" },
+    { id: "green", label: t("compte.themeGreen"), colorClass: "bg-[hsl(145,70%,40%)]" },
+    { id: "orange", label: t("compte.themeOrange"), colorClass: "bg-[hsl(25,95%,53%)]" },
+  ];
+
   const handleSavePseudo = async () => {
     if (!newPseudo.trim() || newPseudo.trim() === pseudo) return;
     setSaving(true);
