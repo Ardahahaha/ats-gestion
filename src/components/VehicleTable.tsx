@@ -133,7 +133,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
     const newRow: Vehicle = { id: tempId, immatriculation: "", entree: "", client: "", travaux: "", pieces: "", sortie: "" };
     setRows((prev) => [...prev, newRow]);
     const { error } = await supabase.from("vehicules").insert({});
-    if (error) { toast.error("Erreur lors de l'ajout"); fetchRows(); }
+    if (error) { toast.error(t("insurance.errorAdd")); fetchRows(); }
   };
 
   const deleteRow = async (id: string) => {
