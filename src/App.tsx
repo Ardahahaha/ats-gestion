@@ -11,6 +11,7 @@ import Vehicules from "./pages/Vehicules";
 import Atelier from "./pages/Atelier";
 import GestionVehicules from "./pages/GestionVehicules";
 import GestionServices from "./pages/GestionServices";
+import Compte from "./pages/Compte";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
