@@ -166,7 +166,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-primary/10 px-4 py-2">
             <span className="font-display text-2xl font-bold text-primary">{rows.length}</span>
-            <span className="ml-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">véhicule{rows.length !== 1 ? "s" : ""}</span>
+            <span className="ml-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">{rows.length !== 1 ? t("vehicles.vehicles") : t("vehicles.vehicle")}</span>
           </div>
         </div>
         {!readOnly && (
