@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { User, Trash2, Save, AlertTriangle, Shield, Wrench } from "lucide-react";
+import { User, Trash2, Save, AlertTriangle, Shield, Wrench, Globe } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +20,7 @@ import {
 
 export default function Compte() {
   const { user, role, pseudo, logout } = useAuth();
+  const { t, lang, setLang, langs } = useI18n();
   const [newPseudo, setNewPseudo] = useState(pseudo || "");
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -28,7 +30,6 @@ export default function Compte() {
     if (!newPseudo.trim() || newPseudo.trim() === pseudo) return;
     setSaving(true);
 
-    // Check uniqueness
     const { data: existing } = await supabase
       .from("profiles")
       .select("id")
@@ -37,7 +38,7 @@ export default function Compte() {
       .maybeSingle();
 
     if (existing) {
-      toast.error("Ce pseudo est déjà pris");
+      toast.error(t("compte.pseudoTaken"));
       setSaving(false);
       return;
     }
@@ -49,21 +50,22 @@ export default function Compte() {
 
     setSaving(false);
     if (error) {
-      toast.error("Erreur lors de la mise à jour");
+      toast.error(t("compte.updateError"));
     } else {
-      toast.success("Pseudo mis à jour !");
-      // Force reload to update context
+      toast.success(t("compte.pseudoUpdated"));
       window.location.reload();
     }
   };
 
+  const confirmWord = t("compte.deleteConfirmWord");
+
   const handleDeleteAccount = async () => {
-    if (confirmText !== "SUPPRIMER") return;
+    if (confirmText !== confirmWord) return;
     setDeleting(true);
 
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      toast.error("Session expirée");
+      toast.error(t("compte.sessionExpired"));
       setDeleting(false);
       return;
     }
@@ -73,12 +75,12 @@ export default function Compte() {
     });
 
     if (res.error || res.data?.error) {
-      toast.error(res.data?.error || "Erreur lors de la suppression");
+      toast.error(res.data?.error || t("compte.deleteError"));
       setDeleting(false);
       return;
     }
 
-    toast.success("Compte supprimé");
+    toast.success(t("compte.deleted"));
     await logout();
   };
 
@@ -86,9 +88,10 @@ export default function Compte() {
     <div className="max-w-lg mx-auto space-y-8">
       <div>
         <h2 className="font-display text-2xl font-bold uppercase tracking-wider text-foreground">
-          Mon <span className="text-primary">Compte</span>
+          {t("compte.title").split(" ").slice(0, -1).join(" ")}{" "}
+          <span className="text-primary">{t("compte.title").split(" ").slice(-1)}</span>
         </h2>
-        <p className="text-sm text-muted-foreground mt-1">Gérez vos informations personnelles</p>
+        <p className="text-sm text-muted-foreground mt-1">{t("compte.subtitle")}</p>
       </div>
 
       {/* Info section */}
@@ -101,13 +104,13 @@ export default function Compte() {
           </div>
           <div>
             <p className="font-display text-lg font-bold uppercase tracking-wide text-foreground">
-              {pseudo || "Sans pseudo"}
+              {pseudo || t("compte.noPseudo")}
             </p>
             <p className="text-xs text-muted-foreground">{user?.email}</p>
             <span className={`inline-block mt-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
               role === "admin" ? "bg-primary/10 text-primary" : "bg-blue-500/10 text-blue-500"
             }`}>
-              {role === "admin" ? "Administrateur" : "Technicien"}
+              {role === "admin" ? t("compte.administrator") : t("compte.technician")}
             </span>
           </div>
         </div>
@@ -117,13 +120,13 @@ export default function Compte() {
       <div className="rounded-xl border-2 border-border bg-card p-6 space-y-4">
         <h3 className="font-display text-sm font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
           <User className="h-4 w-4 text-primary" />
-          Modifier le pseudo
+          {t("compte.changePseudo")}
         </h3>
         <div className="flex gap-2">
           <Input
             value={newPseudo}
             onChange={(e) => setNewPseudo(e.target.value)}
-            placeholder="Nouveau pseudo"
+            placeholder={t("compte.newPseudo")}
             className="flex-1"
           />
           <Button
@@ -132,8 +135,33 @@ export default function Compte() {
             className="gap-2"
           >
             <Save className="h-4 w-4" />
-            {saving ? "…" : "Enregistrer"}
+            {saving ? "…" : t("compte.save")}
           </Button>
+        </div>
+      </div>
+
+      {/* Language */}
+      <div className="rounded-xl border-2 border-border bg-card p-6 space-y-4">
+        <h3 className="font-display text-sm font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
+          <Globe className="h-4 w-4 text-primary" />
+          {t("compte.language")}
+        </h3>
+        <p className="text-xs text-muted-foreground">{t("compte.languageDesc")}</p>
+        <div className="flex gap-2">
+          {langs.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => setLang(l.code)}
+              className={`flex items-center gap-2 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-all ${
+                lang === l.code
+                  ? "border-primary bg-primary/10 text-primary shadow-lg shadow-primary/10"
+                  : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground"
+              }`}
+            >
+              <span className="text-lg">{l.flag}</span>
+              {l.label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -141,44 +169,44 @@ export default function Compte() {
       <div className="rounded-xl border-2 border-destructive/30 bg-card p-6 space-y-4">
         <h3 className="font-display text-sm font-bold uppercase tracking-wider text-destructive flex items-center gap-2">
           <AlertTriangle className="h-4 w-4" />
-          Zone dangereuse
+          {t("compte.dangerZone")}
         </h3>
         <p className="text-xs text-muted-foreground">
-          La suppression de votre compte est irréversible. Toutes vos données seront perdues.
+          {t("compte.deleteWarning")}
         </p>
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="destructive" className="gap-2">
               <Trash2 className="h-4 w-4" />
-              Supprimer mon compte
+              {t("compte.deleteAccount")}
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle className="flex items-center gap-2 text-destructive">
                 <AlertTriangle className="h-5 w-5" />
-                Supprimer le compte
+                {t("compte.deleteTitle")}
               </AlertDialogTitle>
               <AlertDialogDescription className="space-y-3">
-                <span className="block">Cette action est <strong>irréversible</strong>. Votre compte et toutes vos données seront définitivement supprimés.</span>
-                <span className="block text-sm">Tapez <strong>SUPPRIMER</strong> pour confirmer :</span>
+                <span className="block">{t("compte.deleteDesc")}</span>
+                <span className="block text-sm">{t("compte.deleteConfirmLabel")}</span>
                 <Input
                   value={confirmText}
                   onChange={(e) => setConfirmText(e.target.value)}
-                  placeholder="SUPPRIMER"
+                  placeholder={confirmWord}
                   className="mt-2"
                 />
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setConfirmText("")}>Annuler</AlertDialogCancel>
+              <AlertDialogCancel onClick={() => setConfirmText("")}>{t("compte.cancel")}</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDeleteAccount}
-                disabled={confirmText !== "SUPPRIMER" || deleting}
+                disabled={confirmText !== confirmWord || deleting}
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               >
-                {deleting ? "Suppression…" : "Confirmer la suppression"}
+                {deleting ? t("compte.deleting") : t("compte.confirmDelete")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

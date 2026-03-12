@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth, UserRole } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 import { Car, Shield, Wrench, Eye, EyeOff, Gauge, Mail, Lock, KeyRound, UserPlus, LogIn, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,7 @@ type Tab = "login" | "signup";
 
 export default function Login() {
   const { login, signup } = useAuth();
+  const { t } = useI18n();
   const [tab, setTab] = useState<Tab>("login");
 
   // Login state
@@ -33,25 +35,25 @@ export default function Login() {
     const result = await login(loginEmail, loginPassword);
     setLoginLoading(false);
     if (result.success) {
-      toast.success("Connecté avec succès");
+      toast.success(t("login.successLogin"));
     } else {
-      toast.error(result.error || "Identifiants incorrects");
+      toast.error(result.error || t("login.errorLogin"));
     }
   };
 
   const handleSignup = async () => {
     if (!selectedRole || !rolePassword || !signupPseudo.trim() || !signupEmail || !signupPassword) return;
     if (signupPassword.length < 6) {
-      toast.error("Le mot de passe doit contenir au moins 6 caractères");
+      toast.error(t("login.errorMinPassword"));
       return;
     }
     setSignupLoading(true);
     const result = await signup(signupEmail, signupPassword, selectedRole, rolePassword, signupPseudo.trim());
     setSignupLoading(false);
     if (result.success) {
-      toast.success("Compte créé et connecté avec succès !");
+      toast.success(t("login.successSignup"));
     } else {
-      toast.error(result.error || "Erreur lors de la création du compte");
+      toast.error(result.error || t("login.errorSignup"));
     }
   };
 
@@ -71,7 +73,7 @@ export default function Login() {
               </h1>
               <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground">
                 <Gauge className="h-3 w-3" />
-                Tableau de bord collaboratif
+                {t("layout.dashboard")}
               </p>
             </div>
           </div>
@@ -90,7 +92,7 @@ export default function Login() {
                   : "bg-card text-muted-foreground hover:text-foreground"
               }`}
             >
-              <LogIn className="h-4 w-4" /> Connexion
+              <LogIn className="h-4 w-4" /> {t("login.connection")}
             </button>
             <button
               onClick={() => setTab("signup")}
@@ -100,7 +102,7 @@ export default function Login() {
                   : "bg-card text-muted-foreground hover:text-foreground"
               }`}
             >
-              <UserPlus className="h-4 w-4" /> Créer un compte
+              <UserPlus className="h-4 w-4" /> {t("login.signup")}
             </button>
           </div>
 
@@ -109,9 +111,9 @@ export default function Login() {
             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="text-center">
                 <h2 className="font-display text-xl font-bold uppercase tracking-wider text-foreground">
-                  Se <span className="text-primary">connecter</span>
+                  {t("login.title")}
                 </h2>
-                <p className="mt-1 text-sm text-muted-foreground">Entrez vos identifiants</p>
+                <p className="mt-1 text-sm text-muted-foreground">{t("login.subtitle")}</p>
               </div>
 
               <div className="space-y-3">
@@ -119,7 +121,7 @@ export default function Login() {
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     type="email"
-                    placeholder="Adresse e-mail"
+                    placeholder={t("login.email")}
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
                     className="pl-10"
@@ -129,7 +131,7 @@ export default function Login() {
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     type={showLoginPw ? "text" : "password"}
-                    placeholder="Mot de passe"
+                    placeholder={t("login.password")}
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleLogin()}
@@ -144,7 +146,7 @@ export default function Login() {
                   </button>
                 </div>
                 <Button onClick={handleLogin} className="w-full gap-2" disabled={!loginEmail || !loginPassword || loginLoading}>
-                  {loginLoading ? "Connexion…" : "Se connecter"}
+                  {loginLoading ? t("login.loading") : t("login.submit")}
                 </Button>
               </div>
             </div>
@@ -155,9 +157,9 @@ export default function Login() {
             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="text-center">
                 <h2 className="font-display text-xl font-bold uppercase tracking-wider text-foreground">
-                  Créer un <span className="text-primary">compte</span>
+                  {t("login.signupTitle")}
                 </h2>
-                <p className="mt-1 text-sm text-muted-foreground">Choisissez votre type de compte</p>
+                <p className="mt-1 text-sm text-muted-foreground">{t("login.signupSubtitle")}</p>
               </div>
 
               {/* Role selection */}
@@ -177,7 +179,7 @@ export default function Login() {
                     }`}>
                       <Shield className={`h-6 w-6 ${selectedRole === "admin" ? "text-primary-foreground" : "text-muted-foreground"}`} />
                     </div>
-                    <p className="font-display text-sm font-bold uppercase tracking-wide text-foreground">Admin</p>
+                    <p className="font-display text-sm font-bold uppercase tracking-wide text-foreground">{t("login.admin")}</p>
                   </div>
                 </button>
 
@@ -196,7 +198,7 @@ export default function Login() {
                     }`}>
                       <Wrench className={`h-6 w-6 ${selectedRole === "technicien" ? "text-white" : "text-muted-foreground"}`} />
                     </div>
-                    <p className="font-display text-sm font-bold uppercase tracking-wide text-foreground">Technicien</p>
+                    <p className="font-display text-sm font-bold uppercase tracking-wide text-foreground">{t("login.technician")}</p>
                   </div>
                 </button>
               </div>
@@ -209,7 +211,7 @@ export default function Login() {
                     <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       type={showRolePw ? "text" : "password"}
-                      placeholder={`Mot de passe ${selectedRole === "admin" ? "Admin" : "Technicien"}…`}
+                      placeholder={`${t("login.rolePassword")} ${selectedRole === "admin" ? t("login.admin") : t("login.technician")}…`}
                       value={rolePassword}
                       onChange={(e) => setRolePassword(e.target.value)}
                       autoFocus
@@ -229,7 +231,7 @@ export default function Login() {
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       type="text"
-                      placeholder="Votre pseudo"
+                      placeholder={t("login.pseudo")}
                       value={signupPseudo}
                       onChange={(e) => setSignupPseudo(e.target.value)}
                       className="pl-10"
@@ -241,7 +243,7 @@ export default function Login() {
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       type="email"
-                      placeholder="Votre adresse e-mail"
+                      placeholder={t("login.yourEmail")}
                       value={signupEmail}
                       onChange={(e) => setSignupEmail(e.target.value)}
                       className="pl-10"
@@ -251,7 +253,7 @@ export default function Login() {
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       type={showSignupPw ? "text" : "password"}
-                      placeholder="Votre mot de passe (min. 6 caractères)"
+                      placeholder={t("login.yourPassword")}
                       value={signupPassword}
                       onChange={(e) => setSignupPassword(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && handleSignup()}
@@ -271,7 +273,7 @@ export default function Login() {
                     className="w-full gap-2"
                     disabled={!rolePassword || !signupPseudo.trim() || !signupEmail || !signupPassword || signupLoading}
                   >
-                    {signupLoading ? "Création…" : "Créer le compte"}
+                    {signupLoading ? t("login.creating") : t("login.createAccount")}
                   </Button>
                 </div>
               )}
