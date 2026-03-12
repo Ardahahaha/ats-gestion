@@ -7,6 +7,7 @@ import { useI18n } from "@/contexts/I18nContext";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { role, pseudo, logout } = useAuth();
+  const { t } = useI18n();
   const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("theme") === "dark" ||
