@@ -51,8 +51,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Use setTimeout to avoid potential deadlock with Supabase internals
         setTimeout(async () => {
           if (!mounted) return;
-          const r = await fetchRole(session.user.id);
+          const [r, p] = await Promise.all([fetchRole(session.user.id), fetchPseudo(session.user.id)]);
           setRole(r);
+          setPseudo(p);
           setLoading(false);
         }, 0);
       } else {
