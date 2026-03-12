@@ -758,7 +758,7 @@ export default function GestionServices() {
       has_carrosserie: hasCarro,
     };
     const { error } = await supabase.from("services").insert(insertData);
-    if (error) toast.error("Erreur ajout");
+    if (error) toast.error(t("services.errorAdd"));
     else fetchRows();
   };
 
