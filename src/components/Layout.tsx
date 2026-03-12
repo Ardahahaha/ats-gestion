@@ -36,7 +36,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <Link
                 to="/"
                 className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-secondary text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:text-primary hover:shadow-md"
-                title="Retour au menu"
+                title={t("layout.back")}
               >
                 <ArrowLeft className="h-5 w-5" />
               </Link>
