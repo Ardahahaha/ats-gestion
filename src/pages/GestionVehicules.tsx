@@ -94,7 +94,7 @@ const GestionVehicules = () => {
 
   const addVehicle = async (concession: string) => {
     const { error } = await supabase.from("gestion_vehicules").insert({ concession });
-    if (error) toast.error("Erreur lors de l'ajout");
+    if (error) toast.error(t("vehicles.errorAdd"));
   };
 
   const deleteVehicle = async (id: string) => {
