@@ -128,7 +128,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {/* Footer */}
       <footer className="border-t border-border bg-card/50 backdrop-blur-sm">
         <div className="container mx-auto flex items-center justify-center gap-2 px-6 py-4 text-xs text-muted-foreground">
-          <Car className="h-3 w-3" />
+          <img src={atsLogo} alt="ATS" className="h-4 w-4 object-contain" />
           <span className="font-display uppercase tracking-widest">A.T.S</span>
           <span>•</span>
           <span>{t("layout.synced")}</span>
