@@ -4,11 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Trash2, Maximize2, X, ChevronDown, Check, Camera, Image } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Plus, Trash2, Maximize2, X, ChevronDown, Check, Camera, Image, CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nContext";
+import { cn } from "@/lib/utils";
+import { format, parse } from "date-fns";
+import { fr } from "date-fns/locale";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
