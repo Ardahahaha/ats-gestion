@@ -175,7 +175,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
             className="gap-2 bg-primary font-display text-sm font-semibold uppercase tracking-wider shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02]"
           >
             <Plus className="h-4 w-4" />
-            Ajouter un véhicule
+            {t("insurance.addVehicle")}
           </Button>
         )}
       </div>
