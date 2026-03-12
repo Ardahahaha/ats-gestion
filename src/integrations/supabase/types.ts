@@ -135,6 +135,7 @@ export type Database = {
           immatriculation: string
           marque: string
           modele: string
+          technicien: string
         }
         Insert: {
           concession?: string
@@ -144,6 +145,7 @@ export type Database = {
           immatriculation?: string
           marque?: string
           modele?: string
+          technicien?: string
         }
         Update: {
           concession?: string
@@ -153,6 +155,7 @@ export type Database = {
           immatriculation?: string
           marque?: string
           modele?: string
+          technicien?: string
         }
         Relationships: []
       }
