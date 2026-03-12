@@ -273,7 +273,7 @@ export default function Login() {
                     className="w-full gap-2"
                     disabled={!rolePassword || !signupPseudo.trim() || !signupEmail || !signupPassword || signupLoading}
                   >
-                    {signupLoading ? "Création…" : "Créer le compte"}
+                    {signupLoading ? t("login.creating") : t("login.createAccount")}
                   </Button>
                 </div>
               )}
