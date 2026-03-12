@@ -37,6 +37,7 @@ function AppRoutes() {
         <Route path="/atelier" element={<Atelier />} />
         <Route path="/gestion-vehicules" element={<GestionVehicules />} />
         <Route path="/gestion-services" element={<GestionServices />} />
+        <Route path="/compte" element={<Compte />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
