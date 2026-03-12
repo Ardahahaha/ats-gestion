@@ -104,7 +104,7 @@ const GestionVehicules = () => {
 
   const updateField = async (id: string, field: string, value: string) => {
     const { error } = await supabase.from("gestion_vehicules").update({ [field]: value }).eq("id", id);
-    if (error) toast.error("Erreur lors de la mise à jour");
+    if (error) toast.error(t("vehicles.errorUpdate"));
   };
 
   const deleteConcession = async (concession: string) => {
