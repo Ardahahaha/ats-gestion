@@ -934,12 +934,10 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin, tec
           placeholder="km" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
       </td>
       <td className="p-1.5">
-        <Input type="date" value={row.date_entree} onChange={(e) => onUpdate(row.id, "date_entree", e.target.value)}
-          className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
+        <DatePickerButton value={row.date_entree} onChange={(v) => onUpdate(row.id, "date_entree", v)} readOnly={!isAdmin} label="Entrée" />
       </td>
       <td className="p-1.5">
-        <Input type="date" value={row.date_sortie} onChange={(e) => onUpdate(row.id, "date_sortie", e.target.value)}
-          className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
+        <DatePickerButton value={row.date_sortie} onChange={(v) => onUpdate(row.id, "date_sortie", v)} readOnly={!isAdmin} label="Sortie" />
       </td>
       <td className="p-1.5 min-w-[70px]">
         <ProgressBar row={row} />
