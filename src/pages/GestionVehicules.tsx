@@ -60,7 +60,7 @@ const GestionVehicules = () => {
       .select("*")
       .order("created_at", { ascending: true });
     if (error) {
-      toast.error("Erreur de chargement");
+      toast.error(t("vehicles.errorLoad"));
       return;
     }
     setVehicles((data as GestionVehicule[]) ?? []);
