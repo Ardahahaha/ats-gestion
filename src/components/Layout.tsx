@@ -77,7 +77,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <button
               onClick={() => setDark((d) => !d)}
               className="group relative rounded-full border border-border bg-secondary p-3 text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-foreground hover:shadow-lg hover:shadow-primary/10"
-              title={dark ? "Mode jour" : "Mode nuit"}
+              title={dark ? t("layout.lightMode") : t("layout.darkMode")}
             >
               <div className="transition-transform duration-300 group-hover:rotate-12">
                 {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
