@@ -61,7 +61,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               role === "admin" ? "bg-primary/10 text-primary" : "bg-blue-500/10 text-blue-500"
             }`}>
               {role === "admin" ? <Shield className="h-3 w-3" /> : <Wrench className="h-3 w-3" />}
-              {role === "admin" ? "Admin" : "Technicien"}
+              {pseudo || (role === "admin" ? "Admin" : "Technicien")}
             </div>
 
             <button
