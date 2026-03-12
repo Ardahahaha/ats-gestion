@@ -69,9 +69,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               </Link>
             )}
             <Link to="/" className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/25">
-                <Car className="h-6 w-6 text-primary-foreground" />
-              </div>
+              <img src={atsLogo} alt="ATS Logo" className="h-12 w-12 object-contain" />
               <div>
                 <h1 className="font-display text-2xl font-bold uppercase tracking-wider text-foreground">
                   A.T.S/<span className="text-primary">GESTION</span>
