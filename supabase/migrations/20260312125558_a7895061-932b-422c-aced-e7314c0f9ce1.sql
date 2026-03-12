@@ -1,0 +1,1 @@
+ALTER TABLE public.services ADD COLUMN sous_appret boolean NOT NULL DEFAULT false;

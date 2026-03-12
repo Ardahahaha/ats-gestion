@@ -203,6 +203,7 @@ export type Database = {
           mecanique_validees: Json
           modele: string
           prenom: string
+          sous_appret: boolean
         }
         Insert: {
           a_verifier?: boolean
@@ -226,6 +227,7 @@ export type Database = {
           mecanique_validees?: Json
           modele?: string
           prenom?: string
+          sous_appret?: boolean
         }
         Update: {
           a_verifier?: boolean
@@ -249,6 +251,7 @@ export type Database = {
           mecanique_validees?: Json
           modele?: string
           prenom?: string
+          sous_appret?: boolean
         }
         Relationships: []
       }
