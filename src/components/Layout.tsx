@@ -61,7 +61,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             {/* Role badge as link to account */}
             <Link to="/compte" className={`hidden sm:flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all hover:opacity-80 ${
               role === "admin" ? "bg-primary/10 text-primary" : "bg-blue-500/10 text-blue-500"
-            }`} title="Mon compte">
+            }`} title={t("layout.myAccount")}>
               {role === "admin" ? <Shield className="h-3 w-3" /> : <Wrench className="h-3 w-3" />}
               {pseudo || (role === "admin" ? "Admin" : "Technicien")}
             </Link>
