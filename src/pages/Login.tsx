@@ -198,7 +198,7 @@ export default function Login() {
                     }`}>
                       <Wrench className={`h-6 w-6 ${selectedRole === "technicien" ? "text-white" : "text-muted-foreground"}`} />
                     </div>
-                    <p className="font-display text-sm font-bold uppercase tracking-wide text-foreground">Technicien</p>
+                    <p className="font-display text-sm font-bold uppercase tracking-wide text-foreground">{t("login.technician")}</p>
                   </div>
                 </button>
               </div>
