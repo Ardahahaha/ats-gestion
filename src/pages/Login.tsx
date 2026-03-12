@@ -51,9 +51,9 @@ export default function Login() {
     const result = await signup(signupEmail, signupPassword, selectedRole, rolePassword, signupPseudo.trim());
     setSignupLoading(false);
     if (result.success) {
-      toast.success("Compte créé et connecté avec succès !");
+      toast.success(t("login.successSignup"));
     } else {
-      toast.error(result.error || "Erreur lors de la création du compte");
+      toast.error(result.error || t("login.errorSignup"));
     }
   };
 
