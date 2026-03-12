@@ -707,8 +707,18 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
 
       {row.has_carrosserie && (
         <div className="border-t">
-          <div className="px-3 py-1 bg-orange-500/10">
+          <div className="px-3 py-1 bg-orange-500/10 flex items-center justify-between">
             <p className="text-[10px] font-bold uppercase tracking-wider text-orange-600">🎨 Carrosserie</p>
+            <button
+              onClick={() => onUpdate(row.id, "sous_appret", !row.sous_appret)}
+              className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide border transition-all duration-300 ${
+                row.sous_appret
+                  ? "bg-white text-gray-900 border-white shadow-[0_0_10px_2px_rgba(255,255,255,0.7)] hover:shadow-[0_0_14px_3px_rgba(255,255,255,0.9)]"
+                  : "bg-transparent text-muted-foreground border-muted-foreground/30 hover:border-muted-foreground/60"
+              }`}
+            >
+              Sous apprêt
+            </button>
           </div>
           <div className="grid grid-cols-2 gap-px bg-border">
             <div className="bg-card p-1.5">
