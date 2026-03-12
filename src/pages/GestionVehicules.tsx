@@ -30,6 +30,27 @@ const GestionVehicules = () => {
   const [loading, setLoading] = useState(true);
   const [newConcession, setNewConcession] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [techniciens, setTechniciens] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchTechniciens = async () => {
+      const { data } = await supabase
+        .from("user_roles")
+        .select("user_id")
+        .eq("role", "technicien");
+      if (data && data.length > 0) {
+        const userIds = data.map((d) => d.user_id);
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("pseudo")
+          .in("user_id", userIds);
+        if (profiles) {
+          setTechniciens(profiles.map((p) => p.pseudo).filter(Boolean));
+        }
+      }
+    };
+    fetchTechniciens();
+  }, []);
 
   const fetchVehicles = useCallback(async () => {
     const { data, error } = await supabase
