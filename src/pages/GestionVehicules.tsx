@@ -213,7 +213,7 @@ const GestionVehicules = () => {
                           }
                         }}
                         className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
-                        title="Supprimer la concession"
+                        title={t("vehicles.deleteConcession")}
                       >
                         <X className="h-3.5 w-3.5" />
                       </Button>
