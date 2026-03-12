@@ -590,7 +590,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
           value={row.prenom}
           onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
           disabled={!isAdmin}
-          className={`h-7 text-[11px] flex-1 min-w-0 border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent px-1 ${!isAdmin ? "opacity-70 cursor-not-allowed" : ""}`}
+          className={`h-7 text-[11px] flex-1 min-w-0 border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-black text-white px-1 ${!isAdmin ? "opacity-70 cursor-not-allowed" : ""}`}
         >
           <option value="">—</option>
           {techniciens.map((tc) => (
