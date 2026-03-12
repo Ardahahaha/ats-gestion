@@ -131,7 +131,7 @@ const GestionVehicules = () => {
       {!isAdmin && (
         <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-4 py-2 text-xs text-muted-foreground">
           <Lock className="h-3.5 w-3.5" />
-          Mode lecture seule — accès technicien
+          {t("vehicles.readOnly")}
         </div>
       )}
       {/* Header */}
