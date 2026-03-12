@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { I18nProvider } from "@/contexts/I18nContext";
 import Login from "./pages/Login";
 import Menu from "./pages/Menu";
 import Vehicules from "./pages/Vehicules";
