@@ -712,7 +712,7 @@ export default function GestionServices() {
 
   const fetchRows = useCallback(async () => {
     const { data, error } = await supabase.from("services").select("*").order("created_at", { ascending: true });
-    if (error) { toast.error("Erreur chargement services"); return; }
+    if (error) { toast.error(t("services.errorLoad")); return; }
     setRows(
       (data || []).map((d) => ({
         ...d,
