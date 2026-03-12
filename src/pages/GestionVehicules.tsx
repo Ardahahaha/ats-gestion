@@ -20,6 +20,7 @@ type GestionVehicule = {
   immatriculation: string;
   etat: string;
   concession: string;
+  technicien: string;
 };
 
 const GestionVehicules = () => {
