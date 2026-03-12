@@ -201,7 +201,7 @@ const GestionVehicules = () => {
                 <div className="flex items-center gap-1">
                   {isAdmin && (
                     <>
-                      <Button size="sm" variant="ghost" onClick={() => addVehicle(concession)} className="h-7 w-7 p-0" title="Ajouter un véhicule">
+                      <Button size="sm" variant="ghost" onClick={() => addVehicle(concession)} className="h-7 w-7 p-0" title={t("vehicles.addVehicle")}>
                         <Plus className="h-4 w-4" />
                       </Button>
                       <Button
