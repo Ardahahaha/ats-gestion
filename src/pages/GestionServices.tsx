@@ -809,7 +809,10 @@ export default function GestionServices() {
         )}
       </div>
 
-      {rows.length === 0 ? (
+      {/* Filter: technicians only see services assigned to them */}
+      {(() => {
+        const displayRows = isAdmin ? rows : rows.filter((r) => r.prenom === currentPseudo);
+        return displayRows.length === 0 ? (
         <div className="rounded-xl border border-dashed p-12 text-center text-muted-foreground">
           {t("services.noServices")}{isAdmin ? t("services.noServicesAdmin") : ""}
         </div>
