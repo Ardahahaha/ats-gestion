@@ -211,7 +211,7 @@ export default function Login() {
                     <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       type={showRolePw ? "text" : "password"}
-                      placeholder={`Mot de passe ${selectedRole === "admin" ? "Admin" : "Technicien"}…`}
+                      placeholder={`${t("login.rolePassword")} ${selectedRole === "admin" ? t("login.admin") : t("login.technician")}…`}
                       value={rolePassword}
                       onChange={(e) => setRolePassword(e.target.value)}
                       autoFocus
