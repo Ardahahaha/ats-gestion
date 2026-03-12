@@ -168,7 +168,7 @@ function AddServiceDialog({ onAdd, onClose }: { onAdd: (meca: boolean, carro: bo
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
       <div className="relative w-full max-w-sm rounded-xl border bg-card p-6 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-foreground">Nouveau service</h3>
+          <h3 className="text-lg font-bold text-foreground">{onClose ? "" : ""}{/* title handled below */}Nouveau service</h3>
           <Button variant="ghost" size="icon" onClick={onClose}><X className="h-5 w-5" /></Button>
         </div>
         <p className="text-sm text-muted-foreground mb-4">Sections à inclure :</p>
