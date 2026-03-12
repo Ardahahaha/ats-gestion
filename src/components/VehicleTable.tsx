@@ -91,7 +91,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
       .select("*")
       .order("created_at", { ascending: true });
     if (error) {
-      toast.error("Erreur de chargement");
+      toast.error(t("insurance.errorLoad"));
       return;
     }
     setRows(
