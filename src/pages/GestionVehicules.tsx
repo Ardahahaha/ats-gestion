@@ -155,7 +155,7 @@ const GestionVehicules = () => {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Ajouter une concession</DialogTitle>
+                <DialogTitle>{t("vehicles.addConcession")}</DialogTitle>
               </DialogHeader>
               <div className="flex gap-2 pt-2">
                 <Input
