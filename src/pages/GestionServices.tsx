@@ -567,7 +567,7 @@ function TechSection({ tasks, validations, onSetStatus, notes, onNotesChange, on
 }
 
 /* ────────── Service Card (mobile) ────────── */
-function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceRow; onUpdate: (id: string, field: string, value: unknown) => void; onDelete: (id: string) => void; isAdmin: boolean }) {
+function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { row: ServiceRow; onUpdate: (id: string, field: string, value: unknown) => void; onDelete: (id: string) => void; isAdmin: boolean; techniciens: string[] }) {
   const toggleTask = (field: string, current: string[], item: string) => {
     const next = current.includes(item) ? current.filter((s) => s !== item) : [...current, item];
     onUpdate(row.id, field, next);
@@ -585,8 +585,16 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin }: { row: ServiceR
           placeholder="Modèle" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
         <Input value={row.immatriculation} onChange={(e) => onUpdate(row.id, "immatriculation", e.target.value)}
           placeholder="Immat" className="h-7 text-[11px] font-bold flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
-        <Input value={row.prenom} onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
-          placeholder="Prénom" className="h-7 text-[11px] flex-1 min-w-0 border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent" />
+        <select
+          value={row.prenom}
+          onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
+          className="h-7 text-[11px] flex-1 min-w-0 border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent px-1"
+        >
+          <option value="">Technicien…</option>
+          {techniciens.map((t) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
         {isAdmin && (
           <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0" onClick={() => onDelete(row.id)}>
             <Trash2 className="h-3.5 w-3.5 text-destructive" />
@@ -678,6 +686,27 @@ export default function GestionServices() {
   const [rows, setRows] = useState<ServiceRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [techniciens, setTechniciens] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchTechniciens = async () => {
+      const { data } = await supabase
+        .from("user_roles")
+        .select("user_id")
+        .eq("role", "technicien");
+      if (data && data.length > 0) {
+        const userIds = data.map((d) => d.user_id);
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("pseudo")
+          .in("user_id", userIds);
+        if (profiles) {
+          setTechniciens(profiles.map((p) => p.pseudo).filter(Boolean));
+        }
+      }
+    };
+    fetchTechniciens();
+  }, []);
 
   const fetchRows = useCallback(async () => {
     const { data, error } = await supabase.from("services").select("*").order("created_at", { ascending: true });
@@ -788,14 +817,14 @@ export default function GestionServices() {
           {/* Desktop - Grid of 4 cards */}
           <div className="hidden lg:grid lg:grid-cols-4 gap-3">
             {rows.map((row) => (
-              <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} />
+              <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
             ))}
           </div>
 
           {/* Mobile */}
           <div className="lg:hidden space-y-3">
             {rows.map((row) => (
-              <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} />
+              <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
             ))}
           </div>
         </>
@@ -805,9 +834,9 @@ export default function GestionServices() {
 }
 
 /* ────────── Desktop Row ────────── */
-function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
+function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin, techniciens }: {
   row: ServiceRow; onUpdate: (id: string, field: string, value: unknown) => void; onDelete: (id: string) => void;
-  showMeca: boolean; showCarro: boolean; isAdmin: boolean;
+  showMeca: boolean; showCarro: boolean; isAdmin: boolean; techniciens: string[];
 }) {
   const toggleTask = (field: string, current: string[], item: string) => {
     const next = current.includes(item) ? current.filter((s) => s !== item) : [...current, item];
@@ -830,8 +859,16 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin }: {
           placeholder="XX-000-XX" className="h-6 text-[11px] font-bold border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
       </td>
       <td className="p-1.5">
-        <Input value={row.prenom} onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
-          placeholder="Prénom" className="h-6 text-[11px] border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent p-0" />
+        <select
+          value={row.prenom}
+          onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
+          className="h-6 text-[11px] border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent p-0 w-full"
+        >
+          <option value="">Technicien…</option>
+          {techniciens.map((t) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
       </td>
       <td className="p-1.5">
         <Input value={row.kilometrage} onChange={(e) => onUpdate(row.id, "kilometrage", e.target.value)}

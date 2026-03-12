@@ -7,9 +7,10 @@ export type UserRole = "admin" | "technicien";
 type AuthContextType = {
   role: UserRole | null;
   user: User | null;
+  pseudo: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  signup: (email: string, password: string, role: UserRole, rolePassword: string) => Promise<{ success: boolean; error?: string }>;
+  signup: (email: string, password: string, role: UserRole, rolePassword: string, pseudo: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
 };
 
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<UserRole | null>(null);
+  const [pseudo, setPseudo] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchRole = async (userId: string) => {
@@ -27,6 +29,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .eq("user_id", userId)
       .single();
     return (data?.role as UserRole) ?? null;
+  };
+
+  const fetchPseudo = async (userId: string) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("pseudo")
+      .eq("user_id", userId)
+      .single();
+    return data?.pseudo ?? null;
   };
 
   useEffect(() => {
@@ -40,13 +51,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Use setTimeout to avoid potential deadlock with Supabase internals
         setTimeout(async () => {
           if (!mounted) return;
-          const r = await fetchRole(session.user.id);
+          const [r, p] = await Promise.all([fetchRole(session.user.id), fetchPseudo(session.user.id)]);
           setRole(r);
+          setPseudo(p);
           setLoading(false);
         }, 0);
       } else {
         setUser(null);
         setRole(null);
+        setPseudo(null);
         setLoading(false);
       }
     });
@@ -56,8 +69,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!mounted) return;
       if (session?.user) {
         setUser(session.user);
-        const r = await fetchRole(session.user.id);
+        const [r, p] = await Promise.all([fetchRole(session.user.id), fetchPseudo(session.user.id)]);
         setRole(r);
+        setPseudo(p);
       }
       setLoading(false);
     }).catch(() => {
@@ -82,9 +96,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { success: true };
   };
 
-  const signup = async (email: string, password: string, selectedRole: UserRole, rolePassword: string) => {
+  const signup = async (email: string, password: string, selectedRole: UserRole, rolePassword: string, pseudo: string) => {
     const res = await supabase.functions.invoke("signup-with-role", {
-      body: { email, password, role: selectedRole, rolePassword },
+      body: { email, password, role: selectedRole, rolePassword, pseudo },
     });
     if (res.error) {
       return { success: false, error: res.error.message || "Erreur lors de la création du compte" };
@@ -101,10 +115,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
     setUser(null);
     setRole(null);
+    setPseudo(null);
   };
 
   return (
-    <AuthContext.Provider value={{ role, user, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ role, user, pseudo, loading, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

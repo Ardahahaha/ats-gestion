@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth, UserRole } from "@/contexts/AuthContext";
-import { Car, Shield, Wrench, Eye, EyeOff, Gauge, Mail, Lock, KeyRound, UserPlus, LogIn } from "lucide-react";
+import { Car, Shield, Wrench, Eye, EyeOff, Gauge, Mail, Lock, KeyRound, UserPlus, LogIn, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -20,6 +20,7 @@ export default function Login() {
   // Signup state
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [rolePassword, setRolePassword] = useState("");
+  const [signupPseudo, setSignupPseudo] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [showRolePw, setShowRolePw] = useState(false);
@@ -39,13 +40,13 @@ export default function Login() {
   };
 
   const handleSignup = async () => {
-    if (!selectedRole || !rolePassword || !signupEmail || !signupPassword) return;
+    if (!selectedRole || !rolePassword || !signupPseudo.trim() || !signupEmail || !signupPassword) return;
     if (signupPassword.length < 6) {
       toast.error("Le mot de passe doit contenir au moins 6 caractères");
       return;
     }
     setSignupLoading(true);
-    const result = await signup(signupEmail, signupPassword, selectedRole, rolePassword);
+    const result = await signup(signupEmail, signupPassword, selectedRole, rolePassword, signupPseudo.trim());
     setSignupLoading(false);
     if (result.success) {
       toast.success("Compte créé et connecté avec succès !");
@@ -223,6 +224,18 @@ export default function Login() {
                     </button>
                   </div>
 
+                  {/* Pseudo */}
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="text"
+                      placeholder="Votre pseudo"
+                      value={signupPseudo}
+                      onChange={(e) => setSignupPseudo(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+
                   {/* Email + Password */}
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -256,7 +269,7 @@ export default function Login() {
                   <Button
                     onClick={handleSignup}
                     className="w-full gap-2"
-                    disabled={!rolePassword || !signupEmail || !signupPassword || signupLoading}
+                    disabled={!rolePassword || !signupPseudo.trim() || !signupEmail || !signupPassword || signupLoading}
                   >
                     {signupLoading ? "Création…" : "Créer le compte"}
                   </Button>

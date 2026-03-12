@@ -16,9 +16,9 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { email, password, role, rolePassword } = await req.json();
+    const { email, password, role, rolePassword, pseudo } = await req.json();
 
-    if (!email || !password || !role || !rolePassword) {
+    if (!email || !password || !role || !rolePassword || !pseudo) {
       return new Response(JSON.stringify({ error: "Champs manquants" }), {
         status: 400,
         headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
@@ -44,6 +44,20 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
+    // Check pseudo uniqueness
+    const { data: existingPseudo } = await supabaseAdmin
+      .from("profiles")
+      .select("id")
+      .eq("pseudo", pseudo.trim())
+      .maybeSingle();
+
+    if (existingPseudo) {
+      return new Response(JSON.stringify({ error: "Ce pseudo est déjà pris" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+      });
+    }
+
     // Create user
     const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email,
@@ -65,6 +79,18 @@ Deno.serve(async (req) => {
 
     if (roleError) {
       return new Response(JSON.stringify({ error: roleError.message }), {
+        status: 500,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+      });
+    }
+
+    // Create profile with pseudo
+    const { error: profileError } = await supabaseAdmin
+      .from("profiles")
+      .insert({ user_id: authData.user.id, pseudo: pseudo.trim() });
+
+    if (profileError) {
+      return new Response(JSON.stringify({ error: profileError.message }), {
         status: 500,
         headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
       });
