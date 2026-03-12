@@ -799,13 +799,13 @@ export default function GestionServices() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-display text-xl md:text-2xl font-bold uppercase tracking-wider text-foreground">
-            Gestion des <span className="text-primary">Services</span>
+            {t("services.title")} <span className="text-primary">{t("services.titleHighlight")}</span>
           </h2>
-          <p className="text-xs text-muted-foreground">{rows.length} véhicule(s)</p>
+          <p className="text-xs text-muted-foreground">{rows.length} {t("services.vehicleCount")}</p>
         </div>
         {isAdmin && (
           <Button onClick={() => setShowAddDialog(true)} size="sm" className="gap-1">
-            <Plus className="h-4 w-4" /> Ajouter
+            <Plus className="h-4 w-4" /> {t("services.add")}
           </Button>
         )}
       </div>
