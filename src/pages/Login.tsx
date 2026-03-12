@@ -224,6 +224,18 @@ export default function Login() {
                     </button>
                   </div>
 
+                  {/* Pseudo */}
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="text"
+                      placeholder="Votre pseudo"
+                      value={signupPseudo}
+                      onChange={(e) => setSignupPseudo(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+
                   {/* Email + Password */}
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -257,7 +269,7 @@ export default function Login() {
                   <Button
                     onClick={handleSignup}
                     className="w-full gap-2"
-                    disabled={!rolePassword || !signupEmail || !signupPassword || signupLoading}
+                    disabled={!rolePassword || !signupPseudo.trim() || !signupEmail || !signupPassword || signupLoading}
                   >
                     {signupLoading ? "Création…" : "Créer le compte"}
                   </Button>
