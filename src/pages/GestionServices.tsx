@@ -812,7 +812,7 @@ export default function GestionServices() {
 
       {rows.length === 0 ? (
         <div className="rounded-xl border border-dashed p-12 text-center text-muted-foreground">
-          Aucun véhicule en service.{isAdmin ? ' Cliquez sur "Ajouter" pour commencer.' : ""}
+          {t("services.noServices")}{isAdmin ? t("services.noServicesAdmin") : ""}
         </div>
       ) : (
         <>
