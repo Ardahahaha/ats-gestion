@@ -106,7 +106,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Car className="h-3 w-3" />
           <span className="font-display uppercase tracking-widest">A.T.S</span>
           <span>•</span>
-          <span>Synchronisé en temps réel</span>
+          <span>{t("layout.synced")}</span>
         </div>
       </footer>
     </div>
