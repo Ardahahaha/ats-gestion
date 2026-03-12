@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
-import { Moon, Sun, Car, Gauge, LogOut, Shield, Wrench, Settings } from "lucide-react";
+import { Moon, Sun, Gauge, LogOut, Shield, Wrench, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
+import atsLogo from "@/assets/logo-ats.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nContext";
 
