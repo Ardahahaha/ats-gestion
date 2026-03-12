@@ -51,7 +51,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </h1>
                 <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground">
                   <Gauge className="h-3 w-3" />
-                  Tableau de bord collaboratif
+                  {t("layout.dashboard")}
                 </p>
               </div>
             </Link>
