@@ -44,7 +44,7 @@ export default function Login() {
   const handleSignup = async () => {
     if (!selectedRole || !rolePassword || !signupPseudo.trim() || !signupEmail || !signupPassword) return;
     if (signupPassword.length < 6) {
-      toast.error("Le mot de passe doit contenir au moins 6 caractères");
+      toast.error(t("login.errorMinPassword"));
       return;
     }
     setSignupLoading(true);
