@@ -78,6 +78,11 @@ const translations: Record<Lang, Record<string, string>> = {
     "compte.deleteError": "Erreur lors de la suppression",
     "compte.language": "Langue",
     "compte.languageDesc": "Choisissez la langue de l'interface",
+    "compte.allAccounts": "Tous les comptes",
+    "compte.allAccountsDesc": "Liste de tous les comptes enregistrés",
+    "compte.role": "Rôle",
+    "compte.noAccounts": "Aucun compte trouvé",
+    "compte.loadingAccounts": "Chargement…",
 
     // Gestion Services
     "services.title": "Gestion des",
