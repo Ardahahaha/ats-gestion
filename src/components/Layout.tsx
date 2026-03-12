@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
-import { Moon, Sun, Car, Gauge, LogOut, Shield, Wrench, Settings } from "lucide-react";
+import { Moon, Sun, Car, Gauge, LogOut, Shield, Wrench, Settings, CarFront } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nContext";
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children }: {children: React.ReactNode;}) {
   const { role, pseudo, logout } = useAuth();
   const { t } = useI18n();
   const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("theme") === "dark" ||
-        (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      !localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
     return false;
   });
@@ -56,18 +56,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
         <div className="container mx-auto flex items-center justify-between px-6 py-5">
           <div className="flex items-center gap-4">
-            {!isHome && (
-              <Link
-                to="/"
-                className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-secondary text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:text-primary hover:shadow-md"
-                title={t("layout.back")}
-              >
+            {!isHome &&
+            <Link
+              to="/"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-secondary text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:text-primary hover:shadow-md"
+              title={t("layout.back")}>
+              
                 <ArrowLeft className="h-5 w-5" />
               </Link>
-            )}
+            }
             <Link to="/" className="flex items-center gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/25">
-                <Car className="h-6 w-6 text-primary-foreground" />
+                <CarFront className="h-6 w-6 text-primary-foreground" />
               </div>
               <div>
                 <h1 className="font-display text-2xl font-bold uppercase tracking-wider text-foreground">
@@ -84,8 +84,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2">
             {/* Role badge as link to account */}
             <Link to="/compte" className={`hidden sm:flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all hover:opacity-80 ${
-              role === "admin" ? "bg-primary/10 text-primary" : "bg-blue-500/10 text-blue-500"
-            }`} title={t("layout.myAccount")}>
+            role === "admin" ? "bg-primary/10 text-primary" : "bg-blue-500/10 text-blue-500"}`
+            } title={t("layout.myAccount")}>
               {role === "admin" ? <Shield className="h-3 w-3" /> : <Wrench className="h-3 w-3" />}
               {pseudo || (role === "admin" ? "Admin" : "Technicien")}
             </Link>
@@ -93,16 +93,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Link
               to="/compte"
               className="rounded-full border border-border bg-secondary p-3 text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-primary hover:shadow-lg"
-              title={t("layout.myAccount")}
-            >
+              title={t("layout.myAccount")}>
+              
               <Settings className="h-5 w-5" />
             </Link>
 
             <button
               onClick={() => setDark((d) => !d)}
               className="group relative rounded-full border border-border bg-secondary p-3 text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-foreground hover:shadow-lg hover:shadow-primary/10"
-              title={dark ? t("layout.lightMode") : t("layout.darkMode")}
-            >
+              title={dark ? t("layout.lightMode") : t("layout.darkMode")}>
+              
               <div className="transition-transform duration-300 group-hover:rotate-12">
                 {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
               </div>
@@ -111,8 +111,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <button
               onClick={logout}
               className="rounded-full border border-border bg-secondary p-3 text-muted-foreground transition-all duration-300 hover:border-destructive/50 hover:text-destructive hover:shadow-lg"
-              title={t("layout.logout")}
-            >
+              title={t("layout.logout")}>
+              
               <LogOut className="h-5 w-5" />
             </button>
           </div>
@@ -133,6 +133,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <span>{t("layout.synced")}</span>
         </div>
       </footer>
-    </div>
-  );
+    </div>);
+
 }
