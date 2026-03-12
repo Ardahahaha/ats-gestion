@@ -274,6 +274,11 @@ const translations: Record<Lang, Record<string, string>> = {
     "compte.deleteError": "Silme sırasında hata",
     "compte.language": "Dil",
     "compte.languageDesc": "Arayüz dilini seçin",
+    "compte.allAccounts": "Tüm hesaplar",
+    "compte.allAccountsDesc": "Kayıtlı tüm hesapların listesi",
+    "compte.role": "Rol",
+    "compte.noAccounts": "Hesap bulunamadı",
+    "compte.loadingAccounts": "Yükleniyor…",
 
     // Gestion Services
     "services.title": "Servis",

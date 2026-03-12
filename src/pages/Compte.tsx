@@ -166,6 +166,9 @@ export default function Compte() {
         </div>
       </div>
 
+      {/* Admin: all accounts */}
+      {role === "admin" && <AccountsList />}
+
       {/* Delete account */}
       <div className="rounded-xl border-2 border-destructive/30 bg-card p-6 space-y-4">
         <h3 className="font-display text-sm font-bold uppercase tracking-wider text-destructive flex items-center gap-2">
