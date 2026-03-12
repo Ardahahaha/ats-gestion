@@ -102,7 +102,7 @@ export default function Login() {
                   : "bg-card text-muted-foreground hover:text-foreground"
               }`}
             >
-              <UserPlus className="h-4 w-4" /> Créer un compte
+              <UserPlus className="h-4 w-4" /> {t("login.signup")}
             </button>
           </div>
 
