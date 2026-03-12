@@ -780,6 +780,7 @@ export default function GestionServices() {
         carrosserie_photos: toStringArray(d.carrosserie_photos as Json),
         has_mecanique: (d as Record<string, unknown>).has_mecanique !== false,
         has_carrosserie: (d as Record<string, unknown>).has_carrosserie !== false,
+        sous_appret: (d as Record<string, unknown>).sous_appret === true,
       }))
     );
     setLoading(false);
