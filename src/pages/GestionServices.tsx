@@ -4,11 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Trash2, Maximize2, X, ChevronDown, Check, Camera, Image } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Plus, Trash2, Maximize2, X, ChevronDown, Check, Camera, Image, CalendarIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nContext";
+import { cn } from "@/lib/utils";
+import { format, parse } from "date-fns";
+import { fr } from "date-fns/locale";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -32,6 +37,55 @@ const CARROSSERIE_PARTS = [
 ];
 
 const CARROSSERIE_WORK_TYPES = ["Peint.", "Tolerie", "MO", "DSP", "Lust."];
+
+function DatePickerButton({ value, onChange, readOnly, label }: { value: string; onChange: (v: string) => void; readOnly?: boolean; label?: string }) {
+  const dateObj = value ? parse(value, "yyyy-MM-dd", new Date()) : undefined;
+  const validDate = dateObj && !isNaN(dateObj.getTime()) ? dateObj : undefined;
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          disabled={readOnly}
+          className={cn(
+            "h-7 w-full justify-start gap-1.5 rounded-lg border-border/50 px-2 text-[11px] font-normal shadow-sm transition-all hover:shadow-md",
+            !validDate && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon className="h-3.5 w-3.5 text-primary" />
+          {validDate ? format(validDate, "dd MMM yyyy", { locale: fr }) : (label || "Choisir")}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0 rounded-xl shadow-xl border-border/50" align="start" sideOffset={4}>
+        <Calendar
+          mode="single"
+          selected={validDate}
+          onSelect={(d) => d && onChange(format(d, "yyyy-MM-dd"))}
+          locale={fr}
+          className={cn("p-3 pointer-events-auto rounded-xl")}
+          classNames={{
+            months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+            month: "space-y-4",
+            caption: "flex justify-center pt-1 relative items-center text-sm font-semibold text-foreground",
+            caption_label: "text-sm font-bold",
+            nav: "space-x-1 flex items-center",
+            nav_button: "h-7 w-7 bg-transparent p-0 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors",
+            head_row: "flex",
+            head_cell: "text-muted-foreground rounded-md w-9 font-medium text-[0.8rem]",
+            row: "flex w-full mt-1",
+            cell: "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
+            day: "h-9 w-9 p-0 font-normal rounded-lg transition-all hover:bg-accent hover:text-accent-foreground",
+            day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground shadow-md",
+            day_today: "bg-accent text-accent-foreground font-bold",
+            day_outside: "text-muted-foreground/40",
+            day_disabled: "text-muted-foreground/30",
+          }}
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 type ValidationMap = Record<string, "ok" | "nok">;
 
@@ -606,13 +660,11 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
       <div className="grid grid-cols-3 gap-px bg-border">
         <div className="bg-card p-1.5">
           <p className="text-[9px] text-muted-foreground uppercase mb-0.5">Entrée</p>
-          <Input type="date" value={row.date_entree} onChange={(e) => onUpdate(row.id, "date_entree", e.target.value)}
-            className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
+          <DatePickerButton value={row.date_entree} onChange={(v) => onUpdate(row.id, "date_entree", v)} readOnly={!isAdmin} label="Entrée" />
         </div>
         <div className="bg-card p-1.5">
           <p className="text-[9px] text-muted-foreground uppercase mb-0.5">Sortie</p>
-          <Input type="date" value={row.date_sortie} onChange={(e) => onUpdate(row.id, "date_sortie", e.target.value)}
-            className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
+          <DatePickerButton value={row.date_sortie} onChange={(v) => onUpdate(row.id, "date_sortie", v)} readOnly={!isAdmin} label="Sortie" />
         </div>
         <div className="bg-card p-1.5">
           <p className="text-[9px] text-muted-foreground uppercase mb-0.5">Km</p>
@@ -882,12 +934,10 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin, tec
           placeholder="km" className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
       </td>
       <td className="p-1.5">
-        <Input type="date" value={row.date_entree} onChange={(e) => onUpdate(row.id, "date_entree", e.target.value)}
-          className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
+        <DatePickerButton value={row.date_entree} onChange={(v) => onUpdate(row.id, "date_entree", v)} readOnly={!isAdmin} label="Entrée" />
       </td>
       <td className="p-1.5">
-        <Input type="date" value={row.date_sortie} onChange={(e) => onUpdate(row.id, "date_sortie", e.target.value)}
-          className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
+        <DatePickerButton value={row.date_sortie} onChange={(v) => onUpdate(row.id, "date_sortie", v)} readOnly={!isAdmin} label="Sortie" />
       </td>
       <td className="p-1.5 min-w-[70px]">
         <ProgressBar row={row} />
