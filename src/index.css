@@ -100,6 +100,75 @@
     --hero-gradient: linear-gradient(135deg, hsl(220 30% 5%) 0%, hsl(0 60% 8%) 100%);
     --glow-red: 0 85% 55%;
   }
+
+  /* ── Blue theme ── */
+  .theme-blue {
+    --primary: 210 90% 50%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 210 90% 50%;
+    --accent-foreground: 0 0% 100%;
+    --ring: 210 90% 50%;
+    --sidebar-primary: 210 90% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-ring: 210 90% 50%;
+    --glow-red: 210 90% 50%;
+  }
+  .theme-blue.dark {
+    --primary: 210 85% 58%;
+    --accent: 210 85% 58%;
+    --ring: 210 85% 58%;
+    --sidebar-primary: 210 85% 58%;
+    --sidebar-ring: 210 85% 58%;
+    --glow-red: 210 85% 58%;
+    --table-row-hover: 210 50% 12%;
+    --hero-gradient: linear-gradient(135deg, hsl(220 30% 5%) 0%, hsl(210 60% 8%) 100%);
+  }
+
+  /* ── Green theme ── */
+  .theme-green {
+    --primary: 145 70% 40%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 145 70% 40%;
+    --accent-foreground: 0 0% 100%;
+    --ring: 145 70% 40%;
+    --sidebar-primary: 145 70% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-ring: 145 70% 40%;
+    --glow-red: 145 70% 40%;
+  }
+  .theme-green.dark {
+    --primary: 145 65% 48%;
+    --accent: 145 65% 48%;
+    --ring: 145 65% 48%;
+    --sidebar-primary: 145 65% 48%;
+    --sidebar-ring: 145 65% 48%;
+    --glow-red: 145 65% 48%;
+    --table-row-hover: 145 40% 12%;
+    --hero-gradient: linear-gradient(135deg, hsl(220 30% 5%) 0%, hsl(145 50% 6%) 100%);
+  }
+
+  /* ── Orange theme ── */
+  .theme-orange {
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 25 95% 53%;
+    --accent-foreground: 0 0% 100%;
+    --ring: 25 95% 53%;
+    --sidebar-primary: 25 95% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-ring: 25 95% 53%;
+    --glow-red: 25 95% 53%;
+  }
+  .theme-orange.dark {
+    --primary: 25 90% 58%;
+    --accent: 25 90% 58%;
+    --ring: 25 90% 58%;
+    --sidebar-primary: 25 90% 58%;
+    --sidebar-ring: 25 90% 58%;
+    --glow-red: 25 90% 58%;
+    --table-row-hover: 25 50% 12%;
+    --hero-gradient: linear-gradient(135deg, hsl(220 30% 5%) 0%, hsl(25 60% 8%) 100%);
+  }
 }
 
 @layer base {

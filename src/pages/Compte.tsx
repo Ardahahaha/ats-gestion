@@ -168,6 +168,60 @@ export default function Compte() {
         </div>
       </div>
 
+      {/* Theme */}
+      <div className="rounded-xl border-2 border-border bg-card p-6 space-y-4">
+        <h3 className="font-display text-sm font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
+          <Palette className="h-4 w-4 text-primary" />
+          {t("compte.theme")}
+        </h3>
+        <p className="text-xs text-muted-foreground">{t("compte.themeDesc")}</p>
+
+        {/* Dark / Light */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => toggleDark(false)}
+            className={`flex items-center gap-2 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-all ${
+              !dark
+                ? "border-primary bg-primary/10 text-primary shadow-lg shadow-primary/10"
+                : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground"
+            }`}
+          >
+            <Sun className="h-4 w-4" />
+            {t("compte.themeLight")}
+          </button>
+          <button
+            onClick={() => toggleDark(true)}
+            className={`flex items-center gap-2 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-all ${
+              dark
+                ? "border-primary bg-primary/10 text-primary shadow-lg shadow-primary/10"
+                : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground"
+            }`}
+          >
+            <Moon className="h-4 w-4" />
+            {t("compte.themeDark")}
+          </button>
+        </div>
+
+        {/* Color themes */}
+        <p className="text-xs text-muted-foreground mt-2">{t("compte.colorTheme")}</p>
+        <div className="flex gap-2 flex-wrap">
+          {colorThemes.map((ct) => (
+            <button
+              key={ct.id}
+              onClick={() => applyColorTheme(ct.id)}
+              className={`flex items-center gap-2 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-all ${
+                colorTheme === ct.id
+                  ? "border-primary bg-primary/10 text-primary shadow-lg shadow-primary/10"
+                  : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground"
+              }`}
+            >
+              <span className={`h-4 w-4 rounded-full ${ct.colorClass}`} />
+              {ct.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Language */}
       <div className="rounded-xl border-2 border-border bg-card p-6 space-y-4">
         <h3 className="font-display text-sm font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
