@@ -660,13 +660,11 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
       <div className="grid grid-cols-3 gap-px bg-border">
         <div className="bg-card p-1.5">
           <p className="text-[9px] text-muted-foreground uppercase mb-0.5">Entrée</p>
-          <Input type="date" value={row.date_entree} onChange={(e) => onUpdate(row.id, "date_entree", e.target.value)}
-            className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
+          <DatePickerButton value={row.date_entree} onChange={(v) => onUpdate(row.id, "date_entree", v)} readOnly={!isAdmin} label="Entrée" />
         </div>
         <div className="bg-card p-1.5">
           <p className="text-[9px] text-muted-foreground uppercase mb-0.5">Sortie</p>
-          <Input type="date" value={row.date_sortie} onChange={(e) => onUpdate(row.id, "date_sortie", e.target.value)}
-            className="h-6 text-[11px] border-none shadow-none bg-transparent p-0" readOnly={!isAdmin} />
+          <DatePickerButton value={row.date_sortie} onChange={(v) => onUpdate(row.id, "date_sortie", v)} readOnly={!isAdmin} label="Sortie" />
         </div>
         <div className="bg-card p-1.5">
           <p className="text-[9px] text-muted-foreground uppercase mb-0.5">Km</p>
