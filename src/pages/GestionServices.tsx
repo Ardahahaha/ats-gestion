@@ -683,6 +683,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
 /* ────────── Main Page ────────── */
 export default function GestionServices() {
   const { role } = useAuth();
+  const { t } = useI18n();
   const isAdmin = role === "admin";
   const [rows, setRows] = useState<ServiceRow[]>([]);
   const [loading, setLoading] = useState(true);
