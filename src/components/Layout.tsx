@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Moon, Sun, Car, Gauge, LogOut, Shield, Wrench } from "lucide-react";
+import { Moon, Sun, Car, Gauge, LogOut, Shield, Wrench, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -56,13 +56,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Role badge */}
-            <div className={`hidden sm:flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium ${
+            {/* Role badge as link to account */}
+            <Link to="/compte" className={`hidden sm:flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all hover:opacity-80 ${
               role === "admin" ? "bg-primary/10 text-primary" : "bg-blue-500/10 text-blue-500"
-            }`}>
+            }`} title="Mon compte">
               {role === "admin" ? <Shield className="h-3 w-3" /> : <Wrench className="h-3 w-3" />}
               {pseudo || (role === "admin" ? "Admin" : "Technicien")}
-            </div>
+            </Link>
+
+            <Link
+              to="/compte"
+              className="sm:hidden rounded-full border border-border bg-secondary p-3 text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-primary hover:shadow-lg"
+              title="Mon compte"
+            >
+              <Settings className="h-5 w-5" />
+            </Link>
 
             <button
               onClick={() => setDark((d) => !d)}
