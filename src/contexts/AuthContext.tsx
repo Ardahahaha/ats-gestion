@@ -31,6 +31,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return (data?.role as UserRole) ?? null;
   };
 
+  const fetchPseudo = async (userId: string) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("pseudo")
+      .eq("user_id", userId)
+      .single();
+    return data?.pseudo ?? null;
+  };
+
   useEffect(() => {
     let mounted = true;
 
