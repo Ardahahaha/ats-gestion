@@ -868,7 +868,8 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin, tec
         <select
           value={row.prenom}
           onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
-          className="h-6 text-[11px] border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent p-0 w-full"
+          disabled={!isAdmin}
+          className={`h-6 text-[11px] border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent p-0 w-full ${!isAdmin ? "opacity-70 cursor-not-allowed" : ""}`}
         >
           <option value="">Technicien…</option>
           {techniciens.map((t) => (
