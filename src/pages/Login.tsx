@@ -179,7 +179,7 @@ export default function Login() {
                     }`}>
                       <Shield className={`h-6 w-6 ${selectedRole === "admin" ? "text-primary-foreground" : "text-muted-foreground"}`} />
                     </div>
-                    <p className="font-display text-sm font-bold uppercase tracking-wide text-foreground">Admin</p>
+                    <p className="font-display text-sm font-bold uppercase tracking-wide text-foreground">{t("login.admin")}</p>
                   </div>
                 </button>
 
