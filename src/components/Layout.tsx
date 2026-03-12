@@ -24,6 +24,30 @@ export function Layout({ children }: { children: React.ReactNode }) {
     localStorage.setItem("theme", dark ? "dark" : "light");
   }, [dark]);
 
+  // Apply color theme class
+  useEffect(() => {
+    const colorTheme = localStorage.getItem("color-theme") || "red";
+    const root = document.documentElement;
+    root.classList.remove("theme-blue", "theme-green", "theme-orange");
+    if (colorTheme !== "red") {
+      root.classList.add(`theme-${colorTheme}`);
+    }
+  }, []);
+
+  // Listen for color-theme changes from Compte
+  useEffect(() => {
+    const handler = () => {
+      const colorTheme = localStorage.getItem("color-theme") || "red";
+      const root = document.documentElement;
+      root.classList.remove("theme-blue", "theme-green", "theme-orange");
+      if (colorTheme !== "red") {
+        root.classList.add(`theme-${colorTheme}`);
+      }
+    };
+    window.addEventListener("color-theme-changed", handler);
+    return () => window.removeEventListener("color-theme-changed", handler);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-background carbon-pattern transition-colors duration-300">
       {/* Header */}

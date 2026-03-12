@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { User, Trash2, Save, AlertTriangle, Shield, Wrench, Globe } from "lucide-react";
+import { User, Trash2, Save, AlertTriangle, Shield, Wrench, Globe, Palette, Sun, Moon } from "lucide-react";
 import AccountsList from "@/components/AccountsList";
 import {
   AlertDialog,
@@ -26,6 +26,33 @@ export default function Compte() {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [confirmText, setConfirmText] = useState("");
+
+  const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
+  const [colorTheme, setColorTheme] = useState(() => localStorage.getItem("color-theme") || "red");
+
+  const toggleDark = (d: boolean) => {
+    setDark(d);
+    document.documentElement.classList.toggle("dark", d);
+    localStorage.setItem("theme", d ? "dark" : "light");
+  };
+
+  const applyColorTheme = (theme: string) => {
+    setColorTheme(theme);
+    localStorage.setItem("color-theme", theme);
+    const root = document.documentElement;
+    root.classList.remove("theme-blue", "theme-green", "theme-orange");
+    if (theme !== "red") {
+      root.classList.add(`theme-${theme}`);
+    }
+    window.dispatchEvent(new Event("color-theme-changed"));
+  };
+
+  const colorThemes = [
+    { id: "red", label: t("compte.themeRed"), colorClass: "bg-[hsl(0,85%,50%)]" },
+    { id: "blue", label: t("compte.themeBlue"), colorClass: "bg-[hsl(210,90%,50%)]" },
+    { id: "green", label: t("compte.themeGreen"), colorClass: "bg-[hsl(145,70%,40%)]" },
+    { id: "orange", label: t("compte.themeOrange"), colorClass: "bg-[hsl(25,95%,53%)]" },
+  ];
 
   const handleSavePseudo = async () => {
     if (!newPseudo.trim() || newPseudo.trim() === pseudo) return;
@@ -138,6 +165,60 @@ export default function Compte() {
             <Save className="h-4 w-4" />
             {saving ? "…" : t("compte.save")}
           </Button>
+        </div>
+      </div>
+
+      {/* Theme */}
+      <div className="rounded-xl border-2 border-border bg-card p-6 space-y-4">
+        <h3 className="font-display text-sm font-bold uppercase tracking-wider text-foreground flex items-center gap-2">
+          <Palette className="h-4 w-4 text-primary" />
+          {t("compte.theme")}
+        </h3>
+        <p className="text-xs text-muted-foreground">{t("compte.themeDesc")}</p>
+
+        {/* Dark / Light */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => toggleDark(false)}
+            className={`flex items-center gap-2 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-all ${
+              !dark
+                ? "border-primary bg-primary/10 text-primary shadow-lg shadow-primary/10"
+                : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground"
+            }`}
+          >
+            <Sun className="h-4 w-4" />
+            {t("compte.themeLight")}
+          </button>
+          <button
+            onClick={() => toggleDark(true)}
+            className={`flex items-center gap-2 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-all ${
+              dark
+                ? "border-primary bg-primary/10 text-primary shadow-lg shadow-primary/10"
+                : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground"
+            }`}
+          >
+            <Moon className="h-4 w-4" />
+            {t("compte.themeDark")}
+          </button>
+        </div>
+
+        {/* Color themes */}
+        <p className="text-xs text-muted-foreground mt-2">{t("compte.colorTheme")}</p>
+        <div className="flex gap-2 flex-wrap">
+          {colorThemes.map((ct) => (
+            <button
+              key={ct.id}
+              onClick={() => applyColorTheme(ct.id)}
+              className={`flex items-center gap-2 rounded-xl border-2 px-4 py-3 text-sm font-medium transition-all ${
+                colorTheme === ct.id
+                  ? "border-primary bg-primary/10 text-primary shadow-lg shadow-primary/10"
+                  : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-foreground"
+              }`}
+            >
+              <span className={`h-4 w-4 rounded-full ${ct.colorClass}`} />
+              {ct.label}
+            </button>
+          ))}
         </div>
       </div>
 
