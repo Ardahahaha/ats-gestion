@@ -3,6 +3,7 @@ import { Moon, Sun, Car, Gauge, LogOut, Shield, Wrench, Settings } from "lucide-
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { role, pseudo, logout } = useAuth();
