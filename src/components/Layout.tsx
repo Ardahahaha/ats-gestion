@@ -66,7 +66,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
             <Link
               to="/compte"
-              className="sm:hidden rounded-full border border-border bg-secondary p-3 text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-primary hover:shadow-lg"
+              className="rounded-full border border-border bg-secondary p-3 text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-primary hover:shadow-lg"
               title="Mon compte"
             >
               <Settings className="h-5 w-5" />
