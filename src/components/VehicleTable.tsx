@@ -140,7 +140,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
     if (readOnly) return;
     setRows((prev) => prev.filter((r) => r.id !== id));
     const { error } = await supabase.from("vehicules").delete().eq("id", id);
-    if (error) { toast.error("Erreur lors de la suppression"); fetchRows(); }
+    if (error) { toast.error(t("insurance.errorDelete")); fetchRows(); }
   };
 
   const updateCell = async (id: string, column: ColumnKey, value: string) => {
