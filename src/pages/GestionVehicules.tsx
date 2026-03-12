@@ -112,7 +112,7 @@ const GestionVehicules = () => {
       .from("gestion_vehicules")
       .delete()
       .eq("concession", concession);
-    if (error) toast.error("Erreur lors de la suppression");
+    if (error) toast.error(t("vehicles.errorDelete"));
     else await fetchVehicles();
   };
 
