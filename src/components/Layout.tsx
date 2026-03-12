@@ -69,7 +69,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Link
               to="/compte"
               className="rounded-full border border-border bg-secondary p-3 text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-primary hover:shadow-lg"
-              title="Mon compte"
+              title={t("layout.myAccount")}
             >
               <Settings className="h-5 w-5" />
             </Link>
