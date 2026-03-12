@@ -154,7 +154,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 py-20">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-        <span className="font-display text-sm uppercase tracking-widest text-muted-foreground">Chargement...</span>
+        <span className="font-display text-sm uppercase tracking-widest text-muted-foreground">{t("insurance.loading")}</span>
       </div>
     );
   }
