@@ -87,7 +87,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <button
               onClick={logout}
               className="rounded-full border border-border bg-secondary p-3 text-muted-foreground transition-all duration-300 hover:border-destructive/50 hover:text-destructive hover:shadow-lg"
-              title="Se déconnecter"
+              title={t("layout.logout")}
             >
               <LogOut className="h-5 w-5" />
             </button>
