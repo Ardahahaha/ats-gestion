@@ -40,13 +40,13 @@ export default function Login() {
   };
 
   const handleSignup = async () => {
-    if (!selectedRole || !rolePassword || !signupEmail || !signupPassword) return;
+    if (!selectedRole || !rolePassword || !signupPseudo.trim() || !signupEmail || !signupPassword) return;
     if (signupPassword.length < 6) {
       toast.error("Le mot de passe doit contenir au moins 6 caractères");
       return;
     }
     setSignupLoading(true);
-    const result = await signup(signupEmail, signupPassword, selectedRole, rolePassword);
+    const result = await signup(signupEmail, signupPassword, selectedRole, rolePassword, signupPseudo.trim());
     setSignupLoading(false);
     if (result.success) {
       toast.success("Compte créé et connecté avec succès !");
