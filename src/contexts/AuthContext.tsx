@@ -96,9 +96,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { success: true };
   };
 
-  const signup = async (email: string, password: string, selectedRole: UserRole, rolePassword: string) => {
+  const signup = async (email: string, password: string, selectedRole: UserRole, rolePassword: string, pseudo: string) => {
     const res = await supabase.functions.invoke("signup-with-role", {
-      body: { email, password, role: selectedRole, rolePassword },
+      body: { email, password, role: selectedRole, rolePassword, pseudo },
     });
     if (res.error) {
       return { success: false, error: res.error.message || "Erreur lors de la création du compte" };
