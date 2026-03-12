@@ -35,9 +35,9 @@ export default function Login() {
     const result = await login(loginEmail, loginPassword);
     setLoginLoading(false);
     if (result.success) {
-      toast.success("Connecté avec succès");
+      toast.success(t("login.successLogin"));
     } else {
-      toast.error(result.error || "Identifiants incorrects");
+      toast.error(result.error || t("login.errorLogin"));
     }
   };
 
