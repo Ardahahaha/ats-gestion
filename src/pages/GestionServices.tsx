@@ -820,19 +820,20 @@ export default function GestionServices() {
         <>
           {/* Desktop - Grid of 4 cards */}
           <div className="hidden lg:grid lg:grid-cols-4 gap-3">
-            {rows.map((row) => (
+            {displayRows.map((row) => (
               <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
             ))}
           </div>
 
           {/* Mobile */}
           <div className="lg:hidden space-y-3">
-            {rows.map((row) => (
+            {displayRows.map((row) => (
               <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
             ))}
           </div>
         </>
-      )}
+      );
+      })()}
     </div>
   );
 }
