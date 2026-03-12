@@ -146,7 +146,7 @@ export default function Login() {
                   </button>
                 </div>
                 <Button onClick={handleLogin} className="w-full gap-2" disabled={!loginEmail || !loginPassword || loginLoading}>
-                  {loginLoading ? "Connexion…" : "Se connecter"}
+                  {loginLoading ? t("login.loading") : t("login.submit")}
                 </Button>
               </div>
             </div>
