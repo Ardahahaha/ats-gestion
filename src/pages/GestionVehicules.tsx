@@ -99,7 +99,7 @@ const GestionVehicules = () => {
 
   const deleteVehicle = async (id: string) => {
     const { error } = await supabase.from("gestion_vehicules").delete().eq("id", id);
-    if (error) toast.error("Erreur lors de la suppression");
+    if (error) toast.error(t("vehicles.errorDelete"));
   };
 
   const updateField = async (id: string, field: string, value: string) => {
