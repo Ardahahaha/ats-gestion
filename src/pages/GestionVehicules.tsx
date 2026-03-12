@@ -233,7 +233,7 @@ const GestionVehicules = () => {
                       <EditableField label={t("vehicles.brand")} value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
                       <EditableField label={t("vehicles.model")} value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
                       <EditableField label={t("vehicles.plate")} value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
-                      <EditableField label={t("vehicles.state")} value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} />
+                      <StateDropdown value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} label={t("vehicles.state")} />
                       <div className="flex items-center gap-1 text-[11px] min-w-0">
                         <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{t("vehicles.tech")}:</span>
                         <select
@@ -264,6 +264,74 @@ const GestionVehicules = () => {
           );
         })}
       </div>
+    </div>
+  );
+};
+
+const ETAT_OPTIONS = [
+  "Contrôle mécanique",
+  "Devis accord",
+  "Travaux",
+  "Contrôle des travaux",
+];
+
+const StateDropdown = ({ value, onSave, readOnly, label }: { value: string; label: string; onSave: (v: string) => void; readOnly?: boolean }) => {
+  const [customMode, setCustomMode] = useState(false);
+  const [customVal, setCustomVal] = useState("");
+
+  const isCustom = value && !ETAT_OPTIONS.includes(value);
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const v = e.target.value;
+    if (v === "__custom__") {
+      setCustomMode(true);
+      setCustomVal("");
+    } else {
+      setCustomMode(false);
+      onSave(v);
+    }
+  };
+
+  const saveCustom = () => {
+    if (customVal.trim()) {
+      onSave(customVal.trim());
+    }
+    setCustomMode(false);
+  };
+
+  if (customMode) {
+    return (
+      <div className="flex items-center gap-1 text-[11px] min-w-0">
+        <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{label}:</span>
+        <input
+          value={customVal}
+          onChange={(e) => setCustomVal(e.target.value)}
+          onBlur={saveCustom}
+          onKeyDown={(e) => e.key === "Enter" && saveCustom()}
+          placeholder="Saisir..."
+          autoFocus
+          className="w-full min-w-0 rounded bg-background px-1 py-0.5 text-[11px] text-foreground outline-none ring-1 ring-ring"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1 text-[11px] min-w-0">
+      <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{label}:</span>
+      <select
+        value={isCustom ? "__custom_display__" : value}
+        onChange={handleChange}
+        disabled={readOnly}
+        className="w-full min-w-0 rounded bg-transparent px-1 py-0.5 text-[11px] text-foreground outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
+      >
+        <option value="">—</option>
+        {ETAT_OPTIONS.map((opt) => (
+          <option key={opt} value={opt}>{opt}</option>
+        ))}
+        {isCustom && <option value="__custom_display__">{value}</option>}
+        <option value="__custom__">✏️ Personnalisé...</option>
+      </select>
     </div>
   );
 };
