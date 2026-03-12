@@ -791,7 +791,7 @@ export default function GestionServices() {
     }, 500);
   }, [isAdmin]);
 
-  if (loading) return <div className="flex items-center justify-center py-20 text-muted-foreground">Chargement…</div>;
+  if (loading) return <div className="flex items-center justify-center py-20 text-muted-foreground">{t("services.loading")}</div>;
 
   return (
     <div className="space-y-3">
