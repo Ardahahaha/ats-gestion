@@ -225,7 +225,7 @@ const GestionVehicules = () => {
               {/* Véhicules */}
               <div className="flex-1 divide-y divide-border">
                 {items.length === 0 && (
-                  <p className="px-3 py-4 text-center text-xs text-muted-foreground italic">Aucun véhicule</p>
+                  <p className="px-3 py-4 text-center text-xs text-muted-foreground italic">{t("vehicles.noVehicles")}</p>
                 )}
               {items.map((v) => (
                   <div key={v.id} className="group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30">
