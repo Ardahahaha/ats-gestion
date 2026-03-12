@@ -8,6 +8,7 @@ import { Plus, Trash2, Maximize2, X, ChevronDown, Check, Camera, Image } from "l
 import { toast } from "sonner";
 import { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
