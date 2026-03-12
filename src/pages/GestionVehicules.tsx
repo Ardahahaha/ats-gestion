@@ -165,7 +165,7 @@ const GestionVehicules = () => {
                   onKeyDown={(e) => e.key === "Enter" && addConcession()}
                   autoFocus
                 />
-                <Button onClick={addConcession}>Ajouter</Button>
+                <Button onClick={addConcession}>{t("vehicles.add")}</Button>
               </div>
             </DialogContent>
           </Dialog>
