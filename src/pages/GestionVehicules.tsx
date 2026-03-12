@@ -176,8 +176,8 @@ const GestionVehicules = () => {
       {concessions.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center">
           <Building2 className="mb-3 h-10 w-10 text-muted-foreground/50" />
-          <p className="text-sm text-muted-foreground">Aucune concession pour le moment</p>
-          <p className="text-xs text-muted-foreground/70">Cliquez sur « Nouvelle concession » pour commencer</p>
+          <p className="text-sm text-muted-foreground">{t("vehicles.noConcessions")}</p>
+          <p className="text-xs text-muted-foreground/70">{t("vehicles.noConcessionsSub")}</p>
         </div>
       )}
 
