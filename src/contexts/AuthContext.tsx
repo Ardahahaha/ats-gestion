@@ -69,8 +69,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!mounted) return;
       if (session?.user) {
         setUser(session.user);
-        const r = await fetchRole(session.user.id);
+        const [r, p] = await Promise.all([fetchRole(session.user.id), fetchPseudo(session.user.id)]);
         setRole(r);
+        setPseudo(p);
       }
       setLoading(false);
     }).catch(() => {
