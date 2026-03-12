@@ -256,7 +256,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
                             const val = e.target.value.trim();
                             if (!val) { updateCell(row.id, col.key, ""); return; }
                             if (!IMMAT_REGEX.test(val)) {
-                              toast.error("Format invalide — utilisez : XX 123 XX");
+                              toast.error(t("insurance.formatError"));
                               e.target.focus();
                               return;
                             }
