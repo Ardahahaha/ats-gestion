@@ -235,7 +235,7 @@ const GestionVehicules = () => {
                       <EditableField label={t("vehicles.plate")} value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
                       <EditableField label={t("vehicles.state")} value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} />
                       <div className="flex items-center gap-1 text-[11px] min-w-0">
-                        <span className="shrink-0 text-[10px] font-medium text-muted-foreground">Tech:</span>
+                        <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{t("vehicles.tech")}:</span>
                         <select
                           value={v.technicien}
                           onChange={(e) => updateField(v.id, "technicien", e.target.value)}
