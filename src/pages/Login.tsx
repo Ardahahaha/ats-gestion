@@ -20,6 +20,7 @@ export default function Login() {
   // Signup state
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [rolePassword, setRolePassword] = useState("");
+  const [signupPseudo, setSignupPseudo] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [showRolePw, setShowRolePw] = useState(false);
