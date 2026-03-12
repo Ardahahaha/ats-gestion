@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Moon, Sun, Car, Gauge, LogOut, Shield, Wrench, Settings } from "lucide-react";
+import { Moon, Sun, Gauge, LogOut, Shield, Wrench, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nContext";
+import atsLogo from "@/assets/logo-ats.png";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { role, pseudo, logout } = useAuth();
@@ -66,9 +67,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               </Link>
             )}
             <Link to="/" className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/25">
-                <Car className="h-6 w-6 text-primary-foreground" />
-              </div>
+              <img src={atsLogo} alt="ATS Logo" className="h-12 w-12 object-contain" />
               <div>
                 <h1 className="font-display text-2xl font-bold uppercase tracking-wider text-foreground">
                   A.T.S/<span className="text-primary">GESTION</span>
@@ -127,7 +126,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {/* Footer */}
       <footer className="border-t border-border bg-card/50 backdrop-blur-sm">
         <div className="container mx-auto flex items-center justify-center gap-2 px-6 py-4 text-xs text-muted-foreground">
-          <Car className="h-3 w-3" />
+          <img src={atsLogo} alt="ATS" className="h-4 w-4 object-contain" />
           <span className="font-display uppercase tracking-widest">A.T.S</span>
           <span>•</span>
           <span>{t("layout.synced")}</span>
