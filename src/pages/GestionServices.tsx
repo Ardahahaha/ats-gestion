@@ -829,6 +829,7 @@ export default function GestionServices() {
     "mecanique_validees", "carrosserie_validees",
     "mecanique_notes_meca", "carrosserie_notes_meca",
     "mecanique_photos", "carrosserie_photos",
+    "sous_appret",
   ];
 
   const updateField = useCallback(async (id: string, field: string, value: unknown) => {
