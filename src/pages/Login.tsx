@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth, UserRole } from "@/contexts/AuthContext";
-import { Car, Shield, Wrench, Eye, EyeOff, Gauge, Mail, Lock, KeyRound, UserPlus, LogIn } from "lucide-react";
+import { Car, Shield, Wrench, Eye, EyeOff, Gauge, Mail, Lock, KeyRound, UserPlus, LogIn, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
