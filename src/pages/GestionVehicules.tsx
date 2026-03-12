@@ -138,10 +138,10 @@ const GestionVehicules = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-display text-2xl font-bold uppercase tracking-wider text-foreground">
-            Gestion des <span className="text-primary">Véhicules</span>
+            {t("vehicles.title")} <span className="text-primary">{t("vehicles.titleHighlight")}</span>
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {vehicles.length} véhicule{vehicles.length > 1 ? "s" : ""} · {concessions.length} concession{concessions.length > 1 ? "s" : ""}
+            {vehicles.length} {vehicles.length > 1 ? t("vehicles.vehicles") : t("vehicles.vehicle")} · {concessions.length} {concessions.length > 1 ? t("vehicles.concessions") : t("vehicles.concession")}
           </p>
         </div>
 
