@@ -150,7 +150,7 @@ const GestionVehicules = () => {
             <DialogTrigger asChild>
               <Button className="gap-2">
                 <Building2 className="h-4 w-4" />
-                Nouvelle concession
+                {t("vehicles.newConcession")}
               </Button>
             </DialogTrigger>
             <DialogContent>
