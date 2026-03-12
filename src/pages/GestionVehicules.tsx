@@ -208,7 +208,7 @@ const GestionVehicules = () => {
                         size="sm"
                         variant="ghost"
                         onClick={() => {
-                          if (confirm(`Supprimer la concession « ${concession} » et tous ses véhicules ?`)) {
+                          if (confirm(t("vehicles.deleteConcessionConfirm", { name: concession }))) {
                             deleteConcession(concession);
                           }
                         }}
