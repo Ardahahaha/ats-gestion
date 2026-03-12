@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { User, Trash2, Save, AlertTriangle, Shield, Wrench, Globe } from "lucide-react";
+import AccountsList from "@/components/AccountsList";
 import {
   AlertDialog,
   AlertDialogAction,
