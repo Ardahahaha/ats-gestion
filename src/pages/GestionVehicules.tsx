@@ -230,10 +230,10 @@ const GestionVehicules = () => {
               {items.map((v) => (
                   <div key={v.id} className="group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30">
                     <div className="grid flex-1 grid-cols-5 gap-x-2">
-                      <EditableField label="Marque" value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
-                      <EditableField label="Modèle" value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
-                      <EditableField label="Immat" value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
-                      <EditableField label="État" value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} />
+                      <EditableField label={t("vehicles.brand")} value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
+                      <EditableField label={t("vehicles.model")} value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
+                      <EditableField label={t("vehicles.plate")} value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
+                      <EditableField label={t("vehicles.state")} value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} />
                       <div className="flex items-center gap-1 text-[11px] min-w-0">
                         <span className="shrink-0 text-[10px] font-medium text-muted-foreground">Tech:</span>
                         <select
