@@ -1,45 +1,49 @@
 import { Link } from "react-router-dom";
 import { BookA, Brush, Car, ChevronRight, Wrench } from "lucide-react";
+import { useI18n } from "@/contexts/I18nContext";
 
-const SECTIONS = [
-  {
-    title: "Gestion des Services",
-    description: "Suivi mécanique et carrosserie des véhicules",
-    icon: Wrench,
-    path: "/gestion-services",
-    color: "from-amber-400 to-orange-500",
-  },
-  {
-    title: "GESTION DES ASSURANCES",
-    description: "Suivi des entrées, sorties, travaux et pièces",
-    icon: BookA,
-    path: "/vehicules",
-    color: "from-red-400 to-rose-300",
-  },
-  {
-    title: "Gestion des Véhicules",
-    description: "Suivi par marque : Peugeot, Automalin, Renault",
-    icon: Car,
-    path: "/gestion-vehicules",
-    color: "from-violet-500 to-blue-600",
-  },
-  {
-    title: "Créer",
-    description: "Créez vos propres tableaux personnalisés",
-    icon: Brush,
-    path: "/atelier",
-    color: "from-lime-400 to-green-400",
-  },
-];
 const Menu = () => {
+  const { t } = useI18n();
+
+  const SECTIONS = [
+    {
+      titleKey: "menu.services",
+      descKey: "menu.servicesDesc",
+      icon: Wrench,
+      path: "/gestion-services",
+      color: "from-amber-400 to-orange-500",
+    },
+    {
+      titleKey: "menu.insurance",
+      descKey: "menu.insuranceDesc",
+      icon: BookA,
+      path: "/vehicules",
+      color: "from-red-400 to-rose-300",
+    },
+    {
+      titleKey: "menu.vehicles",
+      descKey: "menu.vehiclesDesc",
+      icon: Car,
+      path: "/gestion-vehicules",
+      color: "from-violet-500 to-blue-600",
+    },
+    {
+      titleKey: "menu.create",
+      descKey: "menu.createDesc",
+      icon: Brush,
+      path: "/atelier",
+      color: "from-lime-400 to-green-400",
+    },
+  ];
+
   return (
     <div className="space-y-8">
       <div className="text-center">
         <h2 className="font-display text-3xl font-bold uppercase tracking-wider text-foreground">
-          Menu <span className="text-primary">Principal</span>
+          {t("menu.title")} <span className="text-primary">{t("menu.titleHighlight")}</span>
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Sélectionnez un module pour commencer
+          {t("menu.subtitle")}
         </p>
       </div>
 
@@ -47,7 +51,7 @@ const Menu = () => {
         {SECTIONS.map((section) => {
           const Icon = section.icon;
           return (
-            <Link key={section.title} to={section.path}>
+            <Link key={section.titleKey} to={section.path}>
               <div className="group relative overflow-hidden rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:border-primary/30 hover:shadow-automotive hover:scale-[1.02]">
                 <div className={`absolute left-0 right-0 top-0 h-1 bg-gradient-to-r ${section.color}`} />
                 <div className="flex items-start gap-4">
@@ -56,10 +60,10 @@ const Menu = () => {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-display text-lg font-bold uppercase tracking-wide text-foreground">
-                      {section.title}
+                      {t(section.titleKey)}
                     </h3>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {section.description}
+                      {t(section.descKey)}
                     </p>
                   </div>
                   <ChevronRight className="mt-1 h-5 w-5 text-muted-foreground transition-transform duration-300 group-hover:translate-x-1 group-hover:text-primary" />

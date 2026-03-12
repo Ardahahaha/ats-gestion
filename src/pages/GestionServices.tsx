@@ -8,6 +8,7 @@ import { Plus, Trash2, Maximize2, X, ChevronDown, Check, Camera, Image } from "l
 import { toast } from "sonner";
 import { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -92,7 +93,7 @@ function StatusPastille({ row, isAdmin, onUpdate }: { row: ServiceRow; isAdmin: 
     a_verifier: "bg-amber-400 border-amber-500 animate-pulse-glow-amber",
     fait: "bg-green-500 border-green-600 shadow-[0_0_8px_2px_rgba(34,197,94,0.5)]",
   };
-  const labels = { probleme: "Problème !", en_cours: "En cours", a_verifier: "À vérifier", fait: "Fait ✓" };
+  const labels = { probleme: "Problème !", en_cours: "En cours", a_verifier: "À vérifier", fait: "Fait ✓" } as Record<string, string>;
 
   const canToggle = isAdmin && (state === "a_verifier" || state === "fait");
 
@@ -167,7 +168,7 @@ function AddServiceDialog({ onAdd, onClose }: { onAdd: (meca: boolean, carro: bo
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
       <div className="relative w-full max-w-sm rounded-xl border bg-card p-6 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-bold text-foreground">Nouveau service</h3>
+          <h3 className="text-lg font-bold text-foreground">{onClose ? "" : ""}{/* title handled below */}Nouveau service</h3>
           <Button variant="ghost" size="icon" onClick={onClose}><X className="h-5 w-5" /></Button>
         </div>
         <p className="text-sm text-muted-foreground mb-4">Sections à inclure :</p>
@@ -582,7 +583,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
     <div className="rounded-lg border bg-card overflow-hidden">
       <div className="flex items-center gap-1 bg-muted/30 px-2 py-1.5">
         <Input value={row.modele} onChange={(e) => onUpdate(row.id, "modele", e.target.value)}
-          placeholder="Modèle" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
+          placeholder="Model" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
         <Input value={row.immatriculation} onChange={(e) => onUpdate(row.id, "immatriculation", e.target.value)}
           placeholder="Immat" className="h-7 text-[11px] font-bold flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
         <select
@@ -590,9 +591,9 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
           onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
           className="h-7 text-[11px] flex-1 min-w-0 border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent px-1"
         >
-          <option value="">Technicien…</option>
-          {techniciens.map((t) => (
-            <option key={t} value={t}>{t}</option>
+          <option value="">—</option>
+          {techniciens.map((tc) => (
+            <option key={tc} value={tc}>{tc}</option>
           ))}
         </select>
         {isAdmin && (
@@ -682,6 +683,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
 /* ────────── Main Page ────────── */
 export default function GestionServices() {
   const { role } = useAuth();
+  const { t } = useI18n();
   const isAdmin = role === "admin";
   const [rows, setRows] = useState<ServiceRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -710,7 +712,7 @@ export default function GestionServices() {
 
   const fetchRows = useCallback(async () => {
     const { data, error } = await supabase.from("services").select("*").order("created_at", { ascending: true });
-    if (error) { toast.error("Erreur chargement services"); return; }
+    if (error) { toast.error(t("services.errorLoad")); return; }
     setRows(
       (data || []).map((d) => ({
         ...d,
@@ -756,13 +758,13 @@ export default function GestionServices() {
       has_carrosserie: hasCarro,
     };
     const { error } = await supabase.from("services").insert(insertData);
-    if (error) toast.error("Erreur ajout");
+    if (error) toast.error(t("services.errorAdd"));
     else fetchRows();
   };
 
   const deleteRow = async (id: string) => {
     if (!isAdmin) return;
-    if (!confirm("Supprimer cette ligne ?")) return;
+    if (!confirm(t("services.deleteConfirm"))) return;
     await supabase.from("services").delete().eq("id", id);
     fetchRows();
   };
@@ -789,7 +791,7 @@ export default function GestionServices() {
     }, 500);
   }, [isAdmin]);
 
-  if (loading) return <div className="flex items-center justify-center py-20 text-muted-foreground">Chargement…</div>;
+  if (loading) return <div className="flex items-center justify-center py-20 text-muted-foreground">{t("services.loading")}</div>;
 
   return (
     <div className="space-y-3">
@@ -797,20 +799,20 @@ export default function GestionServices() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-display text-xl md:text-2xl font-bold uppercase tracking-wider text-foreground">
-            Gestion des <span className="text-primary">Services</span>
+            {t("services.title")} <span className="text-primary">{t("services.titleHighlight")}</span>
           </h2>
-          <p className="text-xs text-muted-foreground">{rows.length} véhicule(s)</p>
+          <p className="text-xs text-muted-foreground">{rows.length} {t("services.vehicleCount")}</p>
         </div>
         {isAdmin && (
           <Button onClick={() => setShowAddDialog(true)} size="sm" className="gap-1">
-            <Plus className="h-4 w-4" /> Ajouter
+            <Plus className="h-4 w-4" /> {t("services.add")}
           </Button>
         )}
       </div>
 
       {rows.length === 0 ? (
         <div className="rounded-xl border border-dashed p-12 text-center text-muted-foreground">
-          Aucun véhicule en service.{isAdmin ? ' Cliquez sur "Ajouter" pour commencer.' : ""}
+          {t("services.noServices")}{isAdmin ? t("services.noServicesAdmin") : ""}
         </div>
       ) : (
         <>

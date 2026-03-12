@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 
 type CustomTable = { id: string; name: string };
 type CustomColumn = { id: string; table_id: string; name: string; position: number };
@@ -31,7 +32,7 @@ function TableList({
       {!isAdmin && (
         <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-4 py-2 text-xs text-muted-foreground">
           <Lock className="h-3.5 w-3.5" />
-          Mode lecture seule — accès technicien
+          Mode lecture seule
         </div>
       )}
       <div className="flex items-center justify-between">

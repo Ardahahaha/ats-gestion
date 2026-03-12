@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Trash2, Car, Building2, X, Lock } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -25,6 +26,7 @@ type GestionVehicule = {
 
 const GestionVehicules = () => {
   const { role } = useAuth();
+  const { t } = useI18n();
   const isAdmin = role === "admin";
   const [vehicles, setVehicles] = useState<GestionVehicule[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,7 +60,7 @@ const GestionVehicules = () => {
       .select("*")
       .order("created_at", { ascending: true });
     if (error) {
-      toast.error("Erreur de chargement");
+      toast.error(t("vehicles.errorLoad"));
       return;
     }
     setVehicles((data as GestionVehicule[]) ?? []);
@@ -81,7 +83,7 @@ const GestionVehicules = () => {
     const name = newConcession.trim();
     if (!name) return;
     if (concessions.includes(name)) {
-      toast.error("Cette concession existe déjà");
+      toast.error(t("vehicles.alreadyExists"));
       return;
     }
     // On ajoute un véhicule vide pour créer la concession
@@ -92,17 +94,17 @@ const GestionVehicules = () => {
 
   const addVehicle = async (concession: string) => {
     const { error } = await supabase.from("gestion_vehicules").insert({ concession });
-    if (error) toast.error("Erreur lors de l'ajout");
+    if (error) toast.error(t("vehicles.errorAdd"));
   };
 
   const deleteVehicle = async (id: string) => {
     const { error } = await supabase.from("gestion_vehicules").delete().eq("id", id);
-    if (error) toast.error("Erreur lors de la suppression");
+    if (error) toast.error(t("vehicles.errorDelete"));
   };
 
   const updateField = async (id: string, field: string, value: string) => {
     const { error } = await supabase.from("gestion_vehicules").update({ [field]: value }).eq("id", id);
-    if (error) toast.error("Erreur lors de la mise à jour");
+    if (error) toast.error(t("vehicles.errorUpdate"));
   };
 
   const deleteConcession = async (concession: string) => {
@@ -110,7 +112,7 @@ const GestionVehicules = () => {
       .from("gestion_vehicules")
       .delete()
       .eq("concession", concession);
-    if (error) toast.error("Erreur lors de la suppression");
+    if (error) toast.error(t("vehicles.errorDelete"));
     else await fetchVehicles();
   };
 
@@ -129,17 +131,17 @@ const GestionVehicules = () => {
       {!isAdmin && (
         <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-4 py-2 text-xs text-muted-foreground">
           <Lock className="h-3.5 w-3.5" />
-          Mode lecture seule — accès technicien
+          {t("vehicles.readOnly")}
         </div>
       )}
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-display text-2xl font-bold uppercase tracking-wider text-foreground">
-            Gestion des <span className="text-primary">Véhicules</span>
+            {t("vehicles.title")} <span className="text-primary">{t("vehicles.titleHighlight")}</span>
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {vehicles.length} véhicule{vehicles.length > 1 ? "s" : ""} · {concessions.length} concession{concessions.length > 1 ? "s" : ""}
+            {vehicles.length} {vehicles.length > 1 ? t("vehicles.vehicles") : t("vehicles.vehicle")} · {concessions.length} {concessions.length > 1 ? t("vehicles.concessions") : t("vehicles.concession")}
           </p>
         </div>
 
@@ -148,22 +150,22 @@ const GestionVehicules = () => {
             <DialogTrigger asChild>
               <Button className="gap-2">
                 <Building2 className="h-4 w-4" />
-                Nouvelle concession
+                {t("vehicles.newConcession")}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Ajouter une concession</DialogTitle>
+                <DialogTitle>{t("vehicles.addConcession")}</DialogTitle>
               </DialogHeader>
               <div className="flex gap-2 pt-2">
                 <Input
-                  placeholder="Nom de la concession…"
+                  placeholder={t("vehicles.concessionName")}
                   value={newConcession}
                   onChange={(e) => setNewConcession(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addConcession()}
                   autoFocus
                 />
-                <Button onClick={addConcession}>Ajouter</Button>
+                <Button onClick={addConcession}>{t("vehicles.add")}</Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -174,8 +176,8 @@ const GestionVehicules = () => {
       {concessions.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center">
           <Building2 className="mb-3 h-10 w-10 text-muted-foreground/50" />
-          <p className="text-sm text-muted-foreground">Aucune concession pour le moment</p>
-          <p className="text-xs text-muted-foreground/70">Cliquez sur « Nouvelle concession » pour commencer</p>
+          <p className="text-sm text-muted-foreground">{t("vehicles.noConcessions")}</p>
+          <p className="text-xs text-muted-foreground/70">{t("vehicles.noConcessionsSub")}</p>
         </div>
       )}
 
@@ -199,19 +201,19 @@ const GestionVehicules = () => {
                 <div className="flex items-center gap-1">
                   {isAdmin && (
                     <>
-                      <Button size="sm" variant="ghost" onClick={() => addVehicle(concession)} className="h-7 w-7 p-0" title="Ajouter un véhicule">
+                      <Button size="sm" variant="ghost" onClick={() => addVehicle(concession)} className="h-7 w-7 p-0" title={t("vehicles.addVehicle")}>
                         <Plus className="h-4 w-4" />
                       </Button>
                       <Button
                         size="sm"
                         variant="ghost"
                         onClick={() => {
-                          if (confirm(`Supprimer la concession « ${concession} » et tous ses véhicules ?`)) {
+                          if (confirm(t("vehicles.deleteConcessionConfirm", { name: concession }))) {
                             deleteConcession(concession);
                           }
                         }}
                         className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
-                        title="Supprimer la concession"
+                        title={t("vehicles.deleteConcession")}
                       >
                         <X className="h-3.5 w-3.5" />
                       </Button>
@@ -223,17 +225,17 @@ const GestionVehicules = () => {
               {/* Véhicules */}
               <div className="flex-1 divide-y divide-border">
                 {items.length === 0 && (
-                  <p className="px-3 py-4 text-center text-xs text-muted-foreground italic">Aucun véhicule</p>
+                  <p className="px-3 py-4 text-center text-xs text-muted-foreground italic">{t("vehicles.noVehicles")}</p>
                 )}
               {items.map((v) => (
                   <div key={v.id} className="group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30">
                     <div className="grid flex-1 grid-cols-5 gap-x-2">
-                      <EditableField label="Marque" value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
-                      <EditableField label="Modèle" value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
-                      <EditableField label="Immat" value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
-                      <EditableField label="État" value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} />
+                      <EditableField label={t("vehicles.brand")} value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
+                      <EditableField label={t("vehicles.model")} value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
+                      <EditableField label={t("vehicles.plate")} value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
+                      <EditableField label={t("vehicles.state")} value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} />
                       <div className="flex items-center gap-1 text-[11px] min-w-0">
-                        <span className="shrink-0 text-[10px] font-medium text-muted-foreground">Tech:</span>
+                        <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{t("vehicles.tech")}:</span>
                         <select
                           value={v.technicien}
                           onChange={(e) => updateField(v.id, "technicien", e.target.value)}

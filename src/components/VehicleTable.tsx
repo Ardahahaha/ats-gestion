@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { format, parse, isValid } from "date-fns";
 import { fr } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/contexts/I18nContext";
 
 type Vehicle = {
   id: string;
@@ -80,6 +81,7 @@ function DateCell({ value, onChange, placeholder }: { value: string; onChange: (
 }
 
 export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
+  const { t } = useI18n();
   const [rows, setRows] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -89,7 +91,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
       .select("*")
       .order("created_at", { ascending: true });
     if (error) {
-      toast.error("Erreur de chargement");
+      toast.error(t("insurance.errorLoad"));
       return;
     }
     setRows(
@@ -131,28 +133,28 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
     const newRow: Vehicle = { id: tempId, immatriculation: "", entree: "", client: "", travaux: "", pieces: "", sortie: "" };
     setRows((prev) => [...prev, newRow]);
     const { error } = await supabase.from("vehicules").insert({});
-    if (error) { toast.error("Erreur lors de l'ajout"); fetchRows(); }
+    if (error) { toast.error(t("insurance.errorAdd")); fetchRows(); }
   };
 
   const deleteRow = async (id: string) => {
     if (readOnly) return;
     setRows((prev) => prev.filter((r) => r.id !== id));
     const { error } = await supabase.from("vehicules").delete().eq("id", id);
-    if (error) { toast.error("Erreur lors de la suppression"); fetchRows(); }
+    if (error) { toast.error(t("insurance.errorDelete")); fetchRows(); }
   };
 
   const updateCell = async (id: string, column: ColumnKey, value: string) => {
     if (readOnly) return;
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, [column]: value } : r)));
     const { error } = await supabase.from("vehicules").update({ [column]: value }).eq("id", id);
-    if (error) { toast.error("Erreur lors de la mise à jour"); fetchRows(); }
+    if (error) { toast.error(t("insurance.errorUpdate")); fetchRows(); }
   };
 
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center gap-3 py-20">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-        <span className="font-display text-sm uppercase tracking-widest text-muted-foreground">Chargement...</span>
+        <span className="font-display text-sm uppercase tracking-widest text-muted-foreground">{t("insurance.loading")}</span>
       </div>
     );
   }
@@ -164,7 +166,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-primary/10 px-4 py-2">
             <span className="font-display text-2xl font-bold text-primary">{rows.length}</span>
-            <span className="ml-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">véhicule{rows.length !== 1 ? "s" : ""}</span>
+            <span className="ml-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">{rows.length !== 1 ? t("vehicles.vehicles") : t("vehicles.vehicle")}</span>
           </div>
         </div>
         {!readOnly && (
@@ -173,7 +175,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
             className="gap-2 bg-primary font-display text-sm font-semibold uppercase tracking-wider shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02]"
           >
             <Plus className="h-4 w-4" />
-            Ajouter un véhicule
+            {t("insurance.addVehicle")}
           </Button>
         )}
       </div>
@@ -212,10 +214,10 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
                   <div className="flex flex-col items-center gap-3">
                     <Car className="h-10 w-10 text-muted-foreground/30" />
                     <p className="font-display text-sm uppercase tracking-widest text-muted-foreground">
-                      Aucun véhicule enregistré
+                      {t("insurance.noVehicles")}
                     </p>
                     <p className="text-xs text-muted-foreground/60">
-                      Cliquez sur "Ajouter un véhicule" pour commencer
+                      {t("insurance.noVehiclesSub")}
                     </p>
                   </div>
                 </td>
@@ -254,7 +256,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
                             const val = e.target.value.trim();
                             if (!val) { updateCell(row.id, col.key, ""); return; }
                             if (!IMMAT_REGEX.test(val)) {
-                              toast.error("Format invalide — utilisez : XX 123 XX");
+                              toast.error(t("insurance.formatError"));
                               e.target.focus();
                               return;
                             }
