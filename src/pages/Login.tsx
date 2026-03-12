@@ -111,9 +111,9 @@ export default function Login() {
             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="text-center">
                 <h2 className="font-display text-xl font-bold uppercase tracking-wider text-foreground">
-                  Se <span className="text-primary">connecter</span>
+                  {t("login.title")}
                 </h2>
-                <p className="mt-1 text-sm text-muted-foreground">Entrez vos identifiants</p>
+                <p className="mt-1 text-sm text-muted-foreground">{t("login.subtitle")}</p>
               </div>
 
               <div className="space-y-3">
