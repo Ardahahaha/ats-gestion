@@ -159,7 +159,7 @@ const GestionVehicules = () => {
               </DialogHeader>
               <div className="flex gap-2 pt-2">
                 <Input
-                  placeholder="Nom de la concession…"
+                  placeholder={t("vehicles.concessionName")}
                   value={newConcession}
                   onChange={(e) => setNewConcession(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addConcession()}
