@@ -147,7 +147,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
     if (readOnly) return;
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, [column]: value } : r)));
     const { error } = await supabase.from("vehicules").update({ [column]: value }).eq("id", id);
-    if (error) { toast.error("Erreur lors de la mise à jour"); fetchRows(); }
+    if (error) { toast.error(t("insurance.errorUpdate")); fetchRows(); }
   };
 
   if (loading) {
