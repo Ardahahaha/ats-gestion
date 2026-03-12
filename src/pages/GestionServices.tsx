@@ -764,7 +764,7 @@ export default function GestionServices() {
 
   const deleteRow = async (id: string) => {
     if (!isAdmin) return;
-    if (!confirm("Supprimer cette ligne ?")) return;
+    if (!confirm(t("services.deleteConfirm"))) return;
     await supabase.from("services").delete().eq("id", id);
     fetchRows();
   };
