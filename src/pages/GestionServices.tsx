@@ -589,7 +589,8 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
         <select
           value={row.prenom}
           onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
-          className="h-7 text-[11px] flex-1 min-w-0 border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent px-1"
+          disabled={!isAdmin}
+          className={`h-7 text-[11px] flex-1 min-w-0 border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent px-1 ${!isAdmin ? "opacity-70 cursor-not-allowed" : ""}`}
         >
           <option value="">—</option>
           {techniciens.map((tc) => (
@@ -682,7 +683,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
 
 /* ────────── Main Page ────────── */
 export default function GestionServices() {
-  const { role } = useAuth();
+  const { role, pseudo: currentPseudo } = useAuth();
   const { t } = useI18n();
   const isAdmin = role === "admin";
   const [rows, setRows] = useState<ServiceRow[]>([]);
@@ -771,7 +772,6 @@ export default function GestionServices() {
 
   // Technicien can only update: prenom, *_validees, *_notes_meca, *_photos
   const TECH_ALLOWED_FIELDS = [
-    "prenom",
     "mecanique_validees", "carrosserie_validees",
     "mecanique_notes_meca", "carrosserie_notes_meca",
     "mecanique_photos", "carrosserie_photos",
@@ -810,7 +810,10 @@ export default function GestionServices() {
         )}
       </div>
 
-      {rows.length === 0 ? (
+      {/* Filter: technicians only see services assigned to them */}
+      {(() => {
+        const displayRows = isAdmin ? rows : rows.filter((r) => r.prenom === currentPseudo);
+        return displayRows.length === 0 ? (
         <div className="rounded-xl border border-dashed p-12 text-center text-muted-foreground">
           {t("services.noServices")}{isAdmin ? t("services.noServicesAdmin") : ""}
         </div>
@@ -818,19 +821,20 @@ export default function GestionServices() {
         <>
           {/* Desktop - Grid of 4 cards */}
           <div className="hidden lg:grid lg:grid-cols-4 gap-3">
-            {rows.map((row) => (
+            {displayRows.map((row) => (
               <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
             ))}
           </div>
 
           {/* Mobile */}
           <div className="lg:hidden space-y-3">
-            {rows.map((row) => (
+            {displayRows.map((row) => (
               <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
             ))}
           </div>
         </>
-      )}
+      );
+      })()}
     </div>
   );
 }
@@ -864,7 +868,8 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin, tec
         <select
           value={row.prenom}
           onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
-          className="h-6 text-[11px] border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent p-0 w-full"
+          disabled={!isAdmin}
+          className={`h-6 text-[11px] border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent p-0 w-full ${!isAdmin ? "opacity-70 cursor-not-allowed" : ""}`}
         >
           <option value="">Technicien…</option>
           {techniciens.map((t) => (
