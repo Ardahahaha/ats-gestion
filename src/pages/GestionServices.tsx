@@ -771,7 +771,6 @@ export default function GestionServices() {
 
   // Technicien can only update: prenom, *_validees, *_notes_meca, *_photos
   const TECH_ALLOWED_FIELDS = [
-    "prenom",
     "mecanique_validees", "carrosserie_validees",
     "mecanique_notes_meca", "carrosserie_notes_meca",
     "mecanique_photos", "carrosserie_photos",
