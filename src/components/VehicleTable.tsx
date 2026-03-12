@@ -214,10 +214,10 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
                   <div className="flex flex-col items-center gap-3">
                     <Car className="h-10 w-10 text-muted-foreground/30" />
                     <p className="font-display text-sm uppercase tracking-widest text-muted-foreground">
-                      Aucun véhicule enregistré
+                      {t("insurance.noVehicles")}
                     </p>
                     <p className="text-xs text-muted-foreground/60">
-                      Cliquez sur "Ajouter un véhicule" pour commencer
+                      {t("insurance.noVehiclesSub")}
                     </p>
                   </div>
                 </td>
