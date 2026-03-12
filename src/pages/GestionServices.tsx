@@ -93,7 +93,7 @@ function StatusPastille({ row, isAdmin, onUpdate }: { row: ServiceRow; isAdmin: 
     a_verifier: "bg-amber-400 border-amber-500 animate-pulse-glow-amber",
     fait: "bg-green-500 border-green-600 shadow-[0_0_8px_2px_rgba(34,197,94,0.5)]",
   };
-  const labels = { probleme: "Problème !", en_cours: "En cours", a_verifier: "À vérifier", fait: "Fait ✓" };
+  const labels = { probleme: "Problème !", en_cours: "En cours", a_verifier: "À vérifier", fait: "Fait ✓" } as Record<string, string>;
 
   const canToggle = isAdmin && (state === "a_verifier" || state === "fait");
 
