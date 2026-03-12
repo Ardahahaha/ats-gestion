@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { format, parse, isValid } from "date-fns";
 import { fr } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/contexts/I18nContext";
 
 type Vehicle = {
   id: string;

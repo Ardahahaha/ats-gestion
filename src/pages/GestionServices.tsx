@@ -583,7 +583,7 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
     <div className="rounded-lg border bg-card overflow-hidden">
       <div className="flex items-center gap-1 bg-muted/30 px-2 py-1.5">
         <Input value={row.modele} onChange={(e) => onUpdate(row.id, "modele", e.target.value)}
-          placeholder="Modèle" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
+          placeholder="Model" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
         <Input value={row.immatriculation} onChange={(e) => onUpdate(row.id, "immatriculation", e.target.value)}
           placeholder="Immat" className="h-7 text-[11px] font-bold flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
         <select
@@ -591,9 +591,9 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
           onChange={(e) => onUpdate(row.id, "prenom", e.target.value)}
           className="h-7 text-[11px] flex-1 min-w-0 border-2 border-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)] rounded-md bg-transparent px-1"
         >
-          <option value="">Technicien…</option>
-          {techniciens.map((t) => (
-            <option key={t} value={t}>{t}</option>
+          <option value="">—</option>
+          {techniciens.map((tc) => (
+            <option key={tc} value={tc}>{tc}</option>
           ))}
         </select>
         {isAdmin && (
