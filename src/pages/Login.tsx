@@ -157,9 +157,9 @@ export default function Login() {
             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="text-center">
                 <h2 className="font-display text-xl font-bold uppercase tracking-wider text-foreground">
-                  Créer un <span className="text-primary">compte</span>
+                  {t("login.signupTitle")}
                 </h2>
-                <p className="mt-1 text-sm text-muted-foreground">Choisissez votre type de compte</p>
+                <p className="mt-1 text-sm text-muted-foreground">{t("login.signupSubtitle")}</p>
               </div>
 
               {/* Role selection */}
