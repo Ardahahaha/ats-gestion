@@ -934,17 +934,23 @@ export default function GestionServices() {
         <div className="flex items-center gap-2">
           {/* Layout selector - desktop only */}
           <div className="hidden md:flex items-center gap-1">
-            {[1, 2, 4, 6, 8].map((n) => (
+            {[
+              { label: "1x", cols: 1, scale: 1 },
+              { label: "2x", cols: 2, scale: 0.85 },
+              { label: "4x", cols: 4, scale: 0.7 },
+              { label: "6x", cols: 6, scale: 0.55 },
+              { label: "8x", cols: 8, scale: 0.45 },
+            ].map((opt) => (
               <button
-                key={n}
-                onClick={() => setGridCols(n)}
+                key={opt.cols}
+                onClick={() => setGridCols(opt.cols)}
                 className={`h-8 min-w-[28px] px-1.5 rounded text-[11px] font-medium border transition-all ${
-                  gridCols === n
+                  gridCols === opt.cols
                     ? "bg-primary text-primary-foreground border-primary shadow-sm"
                     : "bg-card text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
                 }`}
               >
-                {n}
+                {opt.label}
               </button>
             ))}
           </div>
