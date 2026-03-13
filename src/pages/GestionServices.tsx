@@ -938,6 +938,24 @@ export default function GestionServices() {
         )}
       </div>
 
+      {/* Desktop layout selector */}
+      <div className="hidden lg:flex items-center gap-1">
+        <span className="text-[10px] text-muted-foreground mr-1">Disposition :</span>
+        {[1, 2, 4, 6, 8].map((n) => (
+          <button
+            key={n}
+            onClick={() => setGridCols(n)}
+            className={`h-7 min-w-[32px] px-2 rounded text-[11px] font-medium border transition-all ${
+              gridCols === n
+                ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                : "bg-card text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
+            }`}
+          >
+            {n}
+          </button>
+        ))}
+      </div>
+
       {/* Filter: technicians only see services assigned to them */}
       {(() => {
         const displayRows = isAdmin ? rows : rows.filter((r) => r.prenom === currentPseudo);
@@ -947,8 +965,8 @@ export default function GestionServices() {
         </div>
       ) : (
         <>
-          {/* Desktop - Grid of 4 cards */}
-          <div className="hidden lg:grid lg:grid-cols-4 gap-3">
+          {/* Desktop - Dynamic grid */}
+          <div className="hidden lg:grid gap-3" style={{ gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))` }}>
             {displayRows.map((row) => (
               <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
             ))}
