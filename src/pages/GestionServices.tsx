@@ -414,9 +414,10 @@ function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, on
 }
 
 /* ────────── Carrosserie Chef Section (two-step: Part → Work Type) ────────── */
-function CarrosserieChefSection({ selected, onAddTask, onRemoveTask, notes, onNotesChange, onSave, readOnly }: {
+function CarrosserieChefSection({ selected, onAddTask, onRemoveTask, notes, onNotesChange, onSave, readOnly, photos, serviceId, photosField, onUpdate }: {
   selected: string[]; onAddTask: (task: string) => void; onRemoveTask: (task: string) => void;
   notes: string; onNotesChange: (v: string) => void; onSave: () => void; readOnly?: boolean;
+  photos?: string[]; serviceId?: string; photosField?: string; onUpdate?: (id: string, field: string, value: unknown) => void;
 }) {
   const [selectedPart, setSelectedPart] = useState<string | null>(null);
   const [customPart, setCustomPart] = useState("");
