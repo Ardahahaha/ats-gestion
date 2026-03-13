@@ -971,12 +971,21 @@ export default function GestionServices() {
         </div>
       ) : (
         <>
-          {/* Desktop - Dynamic grid */}
-          <div className="hidden md:grid gap-3" style={{ gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))` }}>
-            {displayRows.map((row) => (
-              <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
-            ))}
-          </div>
+          {/* Desktop - Dynamic grid with scaling */}
+          {(() => {
+            const scaleMap: Record<number, number> = { 1: 1, 2: 0.85, 4: 0.7, 6: 0.55, 8: 0.45 };
+            const s = scaleMap[gridCols] || 1;
+            const widthPercent = `${100 / gridCols}%`;
+            return (
+              <div className="hidden md:flex flex-wrap gap-0 origin-top-left" style={{ transform: `scale(${s})`, transformOrigin: "top left", width: `${100 / s}%` }}>
+                {displayRows.map((row) => (
+                  <div key={row.id} style={{ width: widthPercent, padding: "4px" }}>
+                    <ServiceCardMobile row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
 
           {/* Mobile */}
           <div className="md:hidden space-y-3">
