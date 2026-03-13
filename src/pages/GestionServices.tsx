@@ -1052,7 +1052,8 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin, tec
                 onAddTask={(task) => { const next = [...row.carrosserie_taches, task]; onUpdate(row.id, "carrosserie_taches", next); }}
                 onRemoveTask={(task) => { const next = row.carrosserie_taches.filter((t) => t !== task); onUpdate(row.id, "carrosserie_taches", next); }}
                 notes={row.carrosserie_notes_chef} onNotesChange={(v) => onUpdate(row.id, "carrosserie_notes_chef", v)}
-                onSave={() => {}} readOnly={!isAdmin} />
+                onSave={() => {}} readOnly={!isAdmin}
+                photos={row.carrosserie_photos_chef} serviceId={row.id} photosField="carrosserie_photos_chef" onUpdate={onUpdate} />
             ) : <span className="text-[10px] text-muted-foreground italic">—</span>}
           </td>
           <td className="p-1.5 bg-orange-500/[0.02] min-w-[140px]">
