@@ -745,7 +745,8 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
               <ChefSection allServices={MECANIQUE_SERVICES} selected={row.mecanique_taches}
                 onToggle={(s) => toggleTask("mecanique_taches", row.mecanique_taches, s)}
                 notes={row.mecanique_notes_chef} onNotesChange={(v) => onUpdate(row.id, "mecanique_notes_chef", v)}
-                onSave={() => {}} label="Mécanique" readOnly={!isAdmin} />
+                onSave={() => {}} label="Mécanique" readOnly={!isAdmin}
+                photos={row.mecanique_photos_chef} serviceId={row.id} photosField="mecanique_photos_chef" onUpdate={onUpdate} />
             </div>
             <div className="bg-card p-1.5">
               <p className="text-[8px] text-muted-foreground uppercase mb-0.5 font-semibold">Technicien</p>
