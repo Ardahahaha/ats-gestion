@@ -186,6 +186,7 @@ export type Database = {
           carrosserie_notes_chef: string
           carrosserie_notes_meca: string
           carrosserie_photos: Json
+          carrosserie_photos_chef: Json
           carrosserie_taches: Json
           carrosserie_validees: Json
           created_at: string
@@ -199,6 +200,7 @@ export type Database = {
           mecanique_notes_chef: string
           mecanique_notes_meca: string
           mecanique_photos: Json
+          mecanique_photos_chef: Json
           mecanique_taches: Json
           mecanique_validees: Json
           modele: string
@@ -210,6 +212,7 @@ export type Database = {
           carrosserie_notes_chef?: string
           carrosserie_notes_meca?: string
           carrosserie_photos?: Json
+          carrosserie_photos_chef?: Json
           carrosserie_taches?: Json
           carrosserie_validees?: Json
           created_at?: string
@@ -223,6 +226,7 @@ export type Database = {
           mecanique_notes_chef?: string
           mecanique_notes_meca?: string
           mecanique_photos?: Json
+          mecanique_photos_chef?: Json
           mecanique_taches?: Json
           mecanique_validees?: Json
           modele?: string
@@ -234,6 +238,7 @@ export type Database = {
           carrosserie_notes_chef?: string
           carrosserie_notes_meca?: string
           carrosserie_photos?: Json
+          carrosserie_photos_chef?: Json
           carrosserie_taches?: Json
           carrosserie_validees?: Json
           created_at?: string
@@ -247,6 +252,7 @@ export type Database = {
           mecanique_notes_chef?: string
           mecanique_notes_meca?: string
           mecanique_photos?: Json
+          mecanique_photos_chef?: Json
           mecanique_taches?: Json
           mecanique_validees?: Json
           modele?: string
