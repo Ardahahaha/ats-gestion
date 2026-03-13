@@ -386,9 +386,10 @@ function NotesField({ value, onChange, onSave, placeholder, fullscreenTitle, rea
 }
 
 /* ────────── Chef section (Mécanique) ────────── */
-function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, onSave, label, readOnly }: {
+function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, onSave, label, readOnly, photos, serviceId, photosField, onUpdate }: {
   allServices: string[]; selected: string[]; onToggle: (s: string) => void;
   notes: string; onNotesChange: (v: string) => void; onSave: () => void; label: string; readOnly?: boolean;
+  photos?: string[]; serviceId?: string; photosField?: string; onUpdate?: (id: string, field: string, value: unknown) => void;
 }) {
   return (
     <div className="space-y-1">
@@ -405,6 +406,9 @@ function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, on
         </div>
       )}
       <NotesField value={notes} onChange={onNotesChange} onSave={onSave} placeholder="Notes chef…" fullscreenTitle={`${label} – Notes Chef`} readOnly={readOnly} />
+      {photos !== undefined && serviceId && photosField && onUpdate && (
+        <PhotoUpload photos={photos} serviceId={serviceId} field={photosField} onUpdate={onUpdate} readOnly={readOnly} />
+      )}
     </div>
   );
 }
