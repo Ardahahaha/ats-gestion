@@ -189,6 +189,8 @@ type ServiceRow = {
   has_carrosserie: boolean;
   mecanique_photos: string[];
   carrosserie_photos: string[];
+  mecanique_photos_chef: string[];
+  carrosserie_photos_chef: string[];
   sous_appret: boolean;
 };
 
@@ -384,9 +386,10 @@ function NotesField({ value, onChange, onSave, placeholder, fullscreenTitle, rea
 }
 
 /* ────────── Chef section (Mécanique) ────────── */
-function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, onSave, label, readOnly }: {
+function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, onSave, label, readOnly, photos, serviceId, photosField, onUpdate }: {
   allServices: string[]; selected: string[]; onToggle: (s: string) => void;
   notes: string; onNotesChange: (v: string) => void; onSave: () => void; label: string; readOnly?: boolean;
+  photos?: string[]; serviceId?: string; photosField?: string; onUpdate?: (id: string, field: string, value: unknown) => void;
 }) {
   return (
     <div className="space-y-1">
@@ -403,14 +406,18 @@ function ChefSection({ allServices, selected, onToggle, notes, onNotesChange, on
         </div>
       )}
       <NotesField value={notes} onChange={onNotesChange} onSave={onSave} placeholder="Notes chef…" fullscreenTitle={`${label} – Notes Chef`} readOnly={readOnly} />
+      {photos !== undefined && serviceId && photosField && onUpdate && (
+        <PhotoUpload photos={photos} serviceId={serviceId} field={photosField} onUpdate={onUpdate} readOnly={readOnly} />
+      )}
     </div>
   );
 }
 
 /* ────────── Carrosserie Chef Section (two-step: Part → Work Type) ────────── */
-function CarrosserieChefSection({ selected, onAddTask, onRemoveTask, notes, onNotesChange, onSave, readOnly }: {
+function CarrosserieChefSection({ selected, onAddTask, onRemoveTask, notes, onNotesChange, onSave, readOnly, photos, serviceId, photosField, onUpdate }: {
   selected: string[]; onAddTask: (task: string) => void; onRemoveTask: (task: string) => void;
   notes: string; onNotesChange: (v: string) => void; onSave: () => void; readOnly?: boolean;
+  photos?: string[]; serviceId?: string; photosField?: string; onUpdate?: (id: string, field: string, value: unknown) => void;
 }) {
   const [selectedPart, setSelectedPart] = useState<string | null>(null);
   const [customPart, setCustomPart] = useState("");
@@ -557,6 +564,9 @@ function CarrosserieChefSection({ selected, onAddTask, onRemoveTask, notes, onNo
       )}
 
       <NotesField value={notes} onChange={onNotesChange} onSave={onSave} placeholder="Notes chef…" fullscreenTitle="Carrosserie – Notes Chef" readOnly={readOnly} />
+      {photos !== undefined && serviceId && photosField && onUpdate && (
+        <PhotoUpload photos={photos} serviceId={serviceId} field={photosField} onUpdate={onUpdate} readOnly={readOnly} />
+      )}
     </div>
   );
 }
@@ -739,7 +749,8 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
               <ChefSection allServices={MECANIQUE_SERVICES} selected={row.mecanique_taches}
                 onToggle={(s) => toggleTask("mecanique_taches", row.mecanique_taches, s)}
                 notes={row.mecanique_notes_chef} onNotesChange={(v) => onUpdate(row.id, "mecanique_notes_chef", v)}
-                onSave={() => {}} label="Mécanique" readOnly={!isAdmin} />
+                onSave={() => {}} label="Mécanique" readOnly={!isAdmin}
+                photos={row.mecanique_photos_chef} serviceId={row.id} photosField="mecanique_photos_chef" onUpdate={onUpdate} />
             </div>
             <div className="bg-card p-1.5">
               <p className="text-[8px] text-muted-foreground uppercase mb-0.5 font-semibold">Technicien</p>
@@ -775,7 +786,8 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
                 onAddTask={(task) => { const next = [...row.carrosserie_taches, task]; onUpdate(row.id, "carrosserie_taches", next); }}
                 onRemoveTask={(task) => { const next = row.carrosserie_taches.filter((t) => t !== task); onUpdate(row.id, "carrosserie_taches", next); }}
                 notes={row.carrosserie_notes_chef} onNotesChange={(v) => onUpdate(row.id, "carrosserie_notes_chef", v)}
-                onSave={() => {}} readOnly={!isAdmin} />
+                onSave={() => {}} readOnly={!isAdmin}
+                photos={row.carrosserie_photos_chef} serviceId={row.id} photosField="carrosserie_photos_chef" onUpdate={onUpdate} />
             </div>
             <div className="bg-card p-1.5">
               <p className="text-[8px] text-muted-foreground uppercase mb-0.5 font-semibold">Technicien</p>
@@ -836,6 +848,8 @@ export default function GestionServices() {
         carrosserie_validees: toValidationMap(d.carrosserie_validees as Json),
         mecanique_photos: toStringArray(d.mecanique_photos as Json),
         carrosserie_photos: toStringArray(d.carrosserie_photos as Json),
+        mecanique_photos_chef: toStringArray((d as Record<string, unknown>).mecanique_photos_chef as Json),
+        carrosserie_photos_chef: toStringArray((d as Record<string, unknown>).carrosserie_photos_chef as Json),
         has_mecanique: (d as Record<string, unknown>).has_mecanique !== false,
         has_carrosserie: (d as Record<string, unknown>).has_carrosserie !== false,
         sous_appret: (d as Record<string, unknown>).sous_appret === true,
@@ -1014,7 +1028,8 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin, tec
               <ChefSection allServices={MECANIQUE_SERVICES} selected={row.mecanique_taches}
                 onToggle={(s) => toggleTask("mecanique_taches", row.mecanique_taches, s)}
                 notes={row.mecanique_notes_chef} onNotesChange={(v) => onUpdate(row.id, "mecanique_notes_chef", v)}
-                onSave={() => {}} label="Mécanique" readOnly={!isAdmin} />
+                onSave={() => {}} label="Mécanique" readOnly={!isAdmin}
+                photos={row.mecanique_photos_chef} serviceId={row.id} photosField="mecanique_photos_chef" onUpdate={onUpdate} />
             ) : <span className="text-[10px] text-muted-foreground italic">—</span>}
           </td>
           <td className="p-1.5 bg-blue-500/[0.02] min-w-[140px]">
@@ -1037,7 +1052,8 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin, tec
                 onAddTask={(task) => { const next = [...row.carrosserie_taches, task]; onUpdate(row.id, "carrosserie_taches", next); }}
                 onRemoveTask={(task) => { const next = row.carrosserie_taches.filter((t) => t !== task); onUpdate(row.id, "carrosserie_taches", next); }}
                 notes={row.carrosserie_notes_chef} onNotesChange={(v) => onUpdate(row.id, "carrosserie_notes_chef", v)}
-                onSave={() => {}} readOnly={!isAdmin} />
+                onSave={() => {}} readOnly={!isAdmin}
+                photos={row.carrosserie_photos_chef} serviceId={row.id} photosField="carrosserie_photos_chef" onUpdate={onUpdate} />
             ) : <span className="text-[10px] text-muted-foreground italic">—</span>}
           </td>
           <td className="p-1.5 bg-orange-500/[0.02] min-w-[140px]">
