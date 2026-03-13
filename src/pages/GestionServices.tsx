@@ -1028,7 +1028,8 @@ function DesktopRow({ row, onUpdate, onDelete, showMeca, showCarro, isAdmin, tec
               <ChefSection allServices={MECANIQUE_SERVICES} selected={row.mecanique_taches}
                 onToggle={(s) => toggleTask("mecanique_taches", row.mecanique_taches, s)}
                 notes={row.mecanique_notes_chef} onNotesChange={(v) => onUpdate(row.id, "mecanique_notes_chef", v)}
-                onSave={() => {}} label="Mécanique" readOnly={!isAdmin} />
+                onSave={() => {}} label="Mécanique" readOnly={!isAdmin}
+                photos={row.mecanique_photos_chef} serviceId={row.id} photosField="mecanique_photos_chef" onUpdate={onUpdate} />
             ) : <span className="text-[10px] text-muted-foreground italic">—</span>}
           </td>
           <td className="p-1.5 bg-blue-500/[0.02] min-w-[140px]">
