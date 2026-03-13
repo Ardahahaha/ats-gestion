@@ -966,14 +966,14 @@ export default function GestionServices() {
       ) : (
         <>
           {/* Desktop - Dynamic grid */}
-          <div className="hidden lg:grid gap-3" style={{ gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))` }}>
+          <div className="hidden md:grid gap-3" style={{ gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))` }}>
             {displayRows.map((row) => (
               <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
             ))}
           </div>
 
           {/* Mobile */}
-          <div className="lg:hidden space-y-3">
+          <div className="md:hidden space-y-3">
             {displayRows.map((row) => (
               <ServiceCardMobile key={row.id} row={row} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
             ))}
