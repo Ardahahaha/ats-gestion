@@ -931,29 +931,29 @@ export default function GestionServices() {
           </h2>
           <p className="text-xs text-muted-foreground">{rows.length} {t("services.vehicleCount")}</p>
         </div>
-        {isAdmin && (
-          <Button onClick={() => setShowAddDialog(true)} size="sm" className="gap-1">
-            <Plus className="h-4 w-4" /> {t("services.add")}
-          </Button>
-        )}
-      </div>
-
-      {/* Desktop layout selector */}
-      <div className="hidden lg:flex items-center gap-1">
-        <span className="text-[10px] text-muted-foreground mr-1">Disposition :</span>
-        {[1, 2, 4, 6, 8].map((n) => (
-          <button
-            key={n}
-            onClick={() => setGridCols(n)}
-            className={`h-7 min-w-[32px] px-2 rounded text-[11px] font-medium border transition-all ${
-              gridCols === n
-                ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                : "bg-card text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
-            }`}
-          >
-            {n}
-          </button>
-        ))}
+        <div className="flex items-center gap-2">
+          {/* Layout selector - desktop only */}
+          <div className="hidden md:flex items-center gap-1">
+            {[1, 2, 4, 6, 8].map((n) => (
+              <button
+                key={n}
+                onClick={() => setGridCols(n)}
+                className={`h-8 min-w-[28px] px-1.5 rounded text-[11px] font-medium border transition-all ${
+                  gridCols === n
+                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                    : "bg-card text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
+                }`}
+              >
+                {n}
+              </button>
+            ))}
+          </div>
+          {isAdmin && (
+            <Button onClick={() => setShowAddDialog(true)} size="sm" className="gap-1">
+              <Plus className="h-4 w-4" /> {t("services.add")}
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Filter: technicians only see services assigned to them */}
