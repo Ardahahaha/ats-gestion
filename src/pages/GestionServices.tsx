@@ -786,7 +786,8 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
                 onAddTask={(task) => { const next = [...row.carrosserie_taches, task]; onUpdate(row.id, "carrosserie_taches", next); }}
                 onRemoveTask={(task) => { const next = row.carrosserie_taches.filter((t) => t !== task); onUpdate(row.id, "carrosserie_taches", next); }}
                 notes={row.carrosserie_notes_chef} onNotesChange={(v) => onUpdate(row.id, "carrosserie_notes_chef", v)}
-                onSave={() => {}} readOnly={!isAdmin} />
+                onSave={() => {}} readOnly={!isAdmin}
+                photos={row.carrosserie_photos_chef} serviceId={row.id} photosField="carrosserie_photos_chef" onUpdate={onUpdate} />
             </div>
             <div className="bg-card p-1.5">
               <p className="text-[8px] text-muted-foreground uppercase mb-0.5 font-semibold">Technicien</p>
