@@ -413,9 +413,19 @@ function CarrosserieChefSection({ selected, onAddTask, onRemoveTask, notes, onNo
   notes: string; onNotesChange: (v: string) => void; onSave: () => void; readOnly?: boolean;
 }) {
   const [selectedPart, setSelectedPart] = useState<string | null>(null);
+  const [customPart, setCustomPart] = useState("");
+  const [customWorkType, setCustomWorkType] = useState("");
 
   const handlePartSelect = (part: string) => {
     setSelectedPart(part);
+  };
+
+  const handleAddCustomPart = () => {
+    const trimmed = customPart.trim();
+    if (trimmed) {
+      setSelectedPart(trimmed);
+      setCustomPart("");
+    }
   };
 
   const handleWorkTypeSelect = (workType: string) => {
@@ -425,6 +435,18 @@ function CarrosserieChefSection({ selected, onAddTask, onRemoveTask, notes, onNo
       onAddTask(task);
     }
     setSelectedPart(null);
+  };
+
+  const handleAddCustomWorkType = () => {
+    const trimmed = customWorkType.trim();
+    if (trimmed && selectedPart) {
+      const task = `${selectedPart} – ${trimmed}`;
+      if (!selected.includes(task)) {
+        onAddTask(task);
+      }
+      setCustomWorkType("");
+      setSelectedPart(null);
+    }
   };
 
   return (
@@ -452,6 +474,19 @@ function CarrosserieChefSection({ selected, onAddTask, onRemoveTask, notes, onNo
                   {part}
                 </DropdownMenuCheckboxItem>
               ))}
+              <DropdownMenuSeparator />
+              <div className="px-2 py-1.5 flex gap-1" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                <Input
+                  value={customPart}
+                  onChange={(e) => setCustomPart(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleAddCustomPart(); } }}
+                  placeholder="Élément perso…"
+                  className="h-6 text-[10px] flex-1"
+                />
+                <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" onClick={handleAddCustomPart} disabled={!customPart.trim()}>
+                  <Plus className="h-3 w-3" />
+                </Button>
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -484,6 +519,19 @@ function CarrosserieChefSection({ selected, onAddTask, onRemoveTask, notes, onNo
                     </DropdownMenuCheckboxItem>
                   );
                 })}
+                <DropdownMenuSeparator />
+                <div className="px-2 py-1.5 flex gap-1" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                  <Input
+                    value={customWorkType}
+                    onChange={(e) => setCustomWorkType(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleAddCustomWorkType(); } }}
+                    placeholder="Tâche perso…"
+                    className="h-6 text-[10px] flex-1"
+                  />
+                  <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px]" onClick={handleAddCustomWorkType} disabled={!customWorkType.trim()}>
+                    <Plus className="h-3 w-3" />
+                  </Button>
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
