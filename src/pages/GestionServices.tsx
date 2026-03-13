@@ -564,6 +564,9 @@ function CarrosserieChefSection({ selected, onAddTask, onRemoveTask, notes, onNo
       )}
 
       <NotesField value={notes} onChange={onNotesChange} onSave={onSave} placeholder="Notes chef…" fullscreenTitle="Carrosserie – Notes Chef" readOnly={readOnly} />
+      {photos !== undefined && serviceId && photosField && onUpdate && (
+        <PhotoUpload photos={photos} serviceId={serviceId} field={photosField} onUpdate={onUpdate} readOnly={readOnly} />
+      )}
     </div>
   );
 }
