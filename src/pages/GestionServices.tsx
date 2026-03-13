@@ -189,6 +189,8 @@ type ServiceRow = {
   has_carrosserie: boolean;
   mecanique_photos: string[];
   carrosserie_photos: string[];
+  mecanique_photos_chef: string[];
+  carrosserie_photos_chef: string[];
   sous_appret: boolean;
 };
 
