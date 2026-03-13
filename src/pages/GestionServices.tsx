@@ -813,6 +813,8 @@ export default function GestionServices() {
   const [loading, setLoading] = useState(true);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [techniciens, setTechniciens] = useState<string[]>([]);
+  const [gridCols, setGridCols] = useState(4);
+  const [techniciens, setTechniciens] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchTechniciens = async () => {
