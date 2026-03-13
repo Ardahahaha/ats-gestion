@@ -842,6 +842,8 @@ export default function GestionServices() {
         carrosserie_validees: toValidationMap(d.carrosserie_validees as Json),
         mecanique_photos: toStringArray(d.mecanique_photos as Json),
         carrosserie_photos: toStringArray(d.carrosserie_photos as Json),
+        mecanique_photos_chef: toStringArray((d as Record<string, unknown>).mecanique_photos_chef as Json),
+        carrosserie_photos_chef: toStringArray((d as Record<string, unknown>).carrosserie_photos_chef as Json),
         has_mecanique: (d as Record<string, unknown>).has_mecanique !== false,
         has_carrosserie: (d as Record<string, unknown>).has_carrosserie !== false,
         sous_appret: (d as Record<string, unknown>).sous_appret === true,
