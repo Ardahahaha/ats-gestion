@@ -38,12 +38,12 @@ function parseDateEntree(value: string): Date | undefined {
 
 function getWeeksColor(dateStr: string): { bg: string; ring: string; dot: string; label: string } {
   const d = parseDateEntree(dateStr);
-  if (!d) return { bg: "bg-muted", ring: "ring-muted", dot: "bg-muted-foreground/30", label: "" };
+  if (!d) return { dot: "bg-muted-foreground/30", glow: "", label: "" };
   const weeks = differenceInWeeks(new Date(), d);
-  if (weeks < 1) return { bg: "bg-green-500/15", ring: "ring-green-500/40", dot: "bg-green-500", label: "< 1 sem" };
-  if (weeks < 2) return { bg: "bg-yellow-500/15", ring: "ring-yellow-500/40", dot: "bg-yellow-500", label: "1 sem" };
-  if (weeks < 3) return { bg: "bg-orange-500/15", ring: "ring-orange-500/40", dot: "bg-orange-500", label: "2 sem" };
-  return { bg: "bg-red-500/15", ring: "ring-red-500/40", dot: "bg-red-500", label: "3+ sem" };
+  if (weeks < 1) return { dot: "bg-green-500", glow: "shadow-[0_0_8px_2px_rgba(34,197,94,0.6)]", label: "< 1 sem" };
+  if (weeks < 2) return { dot: "bg-yellow-500", glow: "shadow-[0_0_8px_2px_rgba(234,179,8,0.6)]", label: "1 sem" };
+  if (weeks < 3) return { dot: "bg-orange-500", glow: "shadow-[0_0_8px_2px_rgba(249,115,22,0.6)]", label: "2 sem" };
+  return { dot: "bg-red-500", glow: "shadow-[0_0_8px_2px_rgba(239,68,68,0.6)]", label: "3+ sem" };
 }
 
 const DateEntreeCell = ({ value, onSave, readOnly }: { value: string; onSave: (v: string) => void; readOnly?: boolean }) => {
