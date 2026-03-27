@@ -36,7 +36,7 @@ function parseDateEntree(value: string): Date | undefined {
   return isValid(d) ? d : undefined;
 }
 
-function getWeeksColor(dateStr: string): { bg: string; ring: string; dot: string; label: string } {
+function getWeeksColor(dateStr: string): { dot: string; glow: string; label: string } {
   const d = parseDateEntree(dateStr);
   if (!d) return { dot: "bg-muted-foreground/30", glow: "", label: "" };
   const weeks = differenceInWeeks(new Date(), d);
