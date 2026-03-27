@@ -51,10 +51,9 @@ const DateEntreeCell = ({ value, onSave, readOnly }: { value: string; onSave: (v
   const colors = getWeeksColor(value);
 
   return (
-    <div className="flex items-center gap-1.5 text-[11px] min-w-0">
+    <div className="flex items-center gap-1 text-[11px] min-w-0">
       <span className="shrink-0 text-[10px] font-medium text-muted-foreground">Entrée:</span>
       <div className="flex items-center gap-1 min-w-0">
-        {value && <span className={cn("h-2.5 w-2.5 shrink-0 rounded-full shadow-sm", colors.dot)} title={colors.label} />}
         <Popover>
           <PopoverTrigger asChild>
             <button
