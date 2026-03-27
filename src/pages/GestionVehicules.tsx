@@ -380,38 +380,42 @@ const GestionVehicules = () => {
                 {items.length === 0 && (
                   <p className="px-3 py-4 text-center text-xs text-muted-foreground italic">{t("vehicles.noVehicles")}</p>
                 )}
-              {items.map((v) => (
-                  <div key={v.id} className="group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30">
-                    <div className="grid flex-1 grid-cols-5 gap-x-2">
-                      <EditableField label={t("vehicles.brand")} value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
-                      <EditableField label={t("vehicles.model")} value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
-                      <EditableField label={t("vehicles.plate")} value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
-                      <StateDropdown value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} label={t("vehicles.state")} />
-                      <div className="flex items-center gap-1 text-[11px] min-w-0">
-                        <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{t("vehicles.tech")}:</span>
-                        <select
-                          value={v.technicien}
-                          onChange={(e) => updateField(v.id, "technicien", e.target.value)}
-                          disabled={!isAdmin}
-                          className="w-full min-w-0 rounded bg-transparent px-1 py-0.5 text-[11px] text-foreground outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
-                        >
-                          <option value="">—</option>
-                          {techniciens.map((t) => (
-                            <option key={t} value={t}>{t}</option>
-                          ))}
-                        </select>
+              {items.map((v) => {
+                  const colors = getWeeksColor(v.date_entree);
+                  return (
+                    <div key={v.id} className={cn("group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30", v.date_entree && `${colors.bg}`)}>
+                      <div className="grid flex-1 grid-cols-6 gap-x-2">
+                        <EditableField label={t("vehicles.brand")} value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
+                        <EditableField label={t("vehicles.model")} value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
+                        <EditableField label={t("vehicles.plate")} value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
+                        <StateDropdown value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} label={t("vehicles.state")} />
+                        <div className="flex items-center gap-1 text-[11px] min-w-0">
+                          <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{t("vehicles.tech")}:</span>
+                          <select
+                            value={v.technicien}
+                            onChange={(e) => updateField(v.id, "technicien", e.target.value)}
+                            disabled={!isAdmin}
+                            className="w-full min-w-0 rounded bg-transparent px-1 py-0.5 text-[11px] text-foreground outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
+                          >
+                            <option value="">—</option>
+                            {techniciens.map((t) => (
+                              <option key={t} value={t}>{t}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <DateEntreeCell value={v.date_entree} onSave={(val) => updateField(v.id, "date_entree", val)} readOnly={!isAdmin} />
                       </div>
+                      {isAdmin && (
+                        <button
+                          onClick={() => deleteVehicle(v.id)}
+                          className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </button>
+                      )}
                     </div>
-                    {isAdmin && (
-                      <button
-                        onClick={() => deleteVehicle(v.id)}
-                        className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </button>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           );
