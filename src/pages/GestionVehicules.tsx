@@ -384,7 +384,10 @@ const GestionVehicules = () => {
                   const colors = getWeeksColor(v.date_entree);
                   return (
                     <div key={v.id} className={cn("group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30", v.date_entree && `${colors.bg}`)}>
+                      {/* Indicateur lumineux à gauche */}
+                      <span className={cn("h-3 w-3 shrink-0 rounded-full shadow-sm", v.date_entree ? colors.dot : "bg-muted-foreground/20")} title={colors.label} />
                       <div className="grid flex-1 grid-cols-6 gap-x-2">
+                        <DateEntreeCell value={v.date_entree} onSave={(val) => updateField(v.id, "date_entree", val)} readOnly={!isAdmin} />
                         <EditableField label={t("vehicles.brand")} value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
                         <EditableField label={t("vehicles.model")} value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
                         <EditableField label={t("vehicles.plate")} value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
@@ -403,7 +406,6 @@ const GestionVehicules = () => {
                             ))}
                           </select>
                         </div>
-                        <DateEntreeCell value={v.date_entree} onSave={(val) => updateField(v.id, "date_entree", val)} readOnly={!isAdmin} />
                       </div>
                       {isAdmin && (
                         <button
