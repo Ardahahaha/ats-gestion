@@ -1,11 +1,16 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Trash2, Car, Building2, X, Lock } from "lucide-react";
+import { Plus, Trash2, Car, Building2, X, Lock, CalendarIcon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
+import { format, parse, isValid, differenceInWeeks } from "date-fns";
+import { fr } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +27,60 @@ type GestionVehicule = {
   etat: string;
   concession: string;
   technicien: string;
+  date_entree: string;
+};
+
+function parseDateEntree(value: string): Date | undefined {
+  if (!value) return undefined;
+  const d = parse(value, "dd/MM/yyyy", new Date());
+  return isValid(d) ? d : undefined;
+}
+
+function getWeeksColor(dateStr: string): { bg: string; ring: string; dot: string; label: string } {
+  const d = parseDateEntree(dateStr);
+  if (!d) return { bg: "bg-muted", ring: "ring-muted", dot: "bg-muted-foreground/30", label: "" };
+  const weeks = differenceInWeeks(new Date(), d);
+  if (weeks < 1) return { bg: "bg-green-500/15", ring: "ring-green-500/40", dot: "bg-green-500", label: "< 1 sem" };
+  if (weeks < 2) return { bg: "bg-yellow-500/15", ring: "ring-yellow-500/40", dot: "bg-yellow-500", label: "1 sem" };
+  if (weeks < 3) return { bg: "bg-orange-500/15", ring: "ring-orange-500/40", dot: "bg-orange-500", label: "2 sem" };
+  return { bg: "bg-red-500/15", ring: "ring-red-500/40", dot: "bg-red-500", label: "3+ sem" };
+}
+
+const DateEntreeCell = ({ value, onSave, readOnly }: { value: string; onSave: (v: string) => void; readOnly?: boolean }) => {
+  const date = parseDateEntree(value);
+  const colors = getWeeksColor(value);
+
+  return (
+    <div className="flex items-center gap-1.5 text-[11px] min-w-0">
+      <span className="shrink-0 text-[10px] font-medium text-muted-foreground">Entrée:</span>
+      <div className="flex items-center gap-1 min-w-0">
+        {value && <span className={cn("h-2.5 w-2.5 shrink-0 rounded-full shadow-sm", colors.dot)} title={colors.label} />}
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              disabled={readOnly}
+              className={cn(
+                "flex items-center gap-1 rounded px-1 py-0.5 text-[11px] text-foreground outline-none transition-all hover:bg-muted/30 focus:ring-1 focus:ring-ring disabled:opacity-60",
+                !date && "italic text-muted-foreground/50"
+              )}
+            >
+              <CalendarIcon className="h-3 w-3 shrink-0 text-primary/60" />
+              {date ? format(date, "dd/MM/yyyy") : "Date"}
+            </button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 border-border shadow-lg" align="start">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={(d) => { if (d) onSave(format(d, "dd/MM/yyyy")); }}
+              locale={fr}
+              className={cn("p-3 pointer-events-auto")}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+    </div>
+  );
 };
 
 
@@ -321,38 +380,42 @@ const GestionVehicules = () => {
                 {items.length === 0 && (
                   <p className="px-3 py-4 text-center text-xs text-muted-foreground italic">{t("vehicles.noVehicles")}</p>
                 )}
-              {items.map((v) => (
-                  <div key={v.id} className="group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30">
-                    <div className="grid flex-1 grid-cols-5 gap-x-2">
-                      <EditableField label={t("vehicles.brand")} value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
-                      <EditableField label={t("vehicles.model")} value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
-                      <EditableField label={t("vehicles.plate")} value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
-                      <StateDropdown value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} label={t("vehicles.state")} />
-                      <div className="flex items-center gap-1 text-[11px] min-w-0">
-                        <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{t("vehicles.tech")}:</span>
-                        <select
-                          value={v.technicien}
-                          onChange={(e) => updateField(v.id, "technicien", e.target.value)}
-                          disabled={!isAdmin}
-                          className="w-full min-w-0 rounded bg-transparent px-1 py-0.5 text-[11px] text-foreground outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
-                        >
-                          <option value="">—</option>
-                          {techniciens.map((t) => (
-                            <option key={t} value={t}>{t}</option>
-                          ))}
-                        </select>
+              {items.map((v) => {
+                  const colors = getWeeksColor(v.date_entree);
+                  return (
+                    <div key={v.id} className={cn("group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30", v.date_entree && `${colors.bg}`)}>
+                      <div className="grid flex-1 grid-cols-6 gap-x-2">
+                        <EditableField label={t("vehicles.brand")} value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
+                        <EditableField label={t("vehicles.model")} value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
+                        <EditableField label={t("vehicles.plate")} value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
+                        <StateDropdown value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} label={t("vehicles.state")} />
+                        <div className="flex items-center gap-1 text-[11px] min-w-0">
+                          <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{t("vehicles.tech")}:</span>
+                          <select
+                            value={v.technicien}
+                            onChange={(e) => updateField(v.id, "technicien", e.target.value)}
+                            disabled={!isAdmin}
+                            className="w-full min-w-0 rounded bg-transparent px-1 py-0.5 text-[11px] text-foreground outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
+                          >
+                            <option value="">—</option>
+                            {techniciens.map((t) => (
+                              <option key={t} value={t}>{t}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <DateEntreeCell value={v.date_entree} onSave={(val) => updateField(v.id, "date_entree", val)} readOnly={!isAdmin} />
                       </div>
+                      {isAdmin && (
+                        <button
+                          onClick={() => deleteVehicle(v.id)}
+                          className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </button>
+                      )}
                     </div>
-                    {isAdmin && (
-                      <button
-                        onClick={() => deleteVehicle(v.id)}
-                        className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </button>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           );

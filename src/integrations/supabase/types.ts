@@ -130,6 +130,7 @@ export type Database = {
         Row: {
           concession: string
           created_at: string
+          date_entree: string
           etat: string
           id: string
           immatriculation: string
@@ -140,6 +141,7 @@ export type Database = {
         Insert: {
           concession?: string
           created_at?: string
+          date_entree?: string
           etat?: string
           id?: string
           immatriculation?: string
@@ -150,6 +152,7 @@ export type Database = {
         Update: {
           concession?: string
           created_at?: string
+          date_entree?: string
           etat?: string
           id?: string
           immatriculation?: string

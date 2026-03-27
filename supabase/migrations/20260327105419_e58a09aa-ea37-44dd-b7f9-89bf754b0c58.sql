@@ -1,0 +1,1 @@
+ALTER TABLE public.gestion_vehicules ADD COLUMN date_entree text NOT NULL DEFAULT '';
