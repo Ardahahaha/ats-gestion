@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Trash2, Car, Building2, X, Lock, CalendarIcon } from "lucide-react";
+import { Plus, Trash2, Car, Building2, X, Lock, CalendarIcon, Pencil } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nContext";
 import { Button } from "@/components/ui/button";
@@ -328,6 +328,20 @@ const GestionVehicules = () => {
     }
   };
 
+  const renameConcession = async (oldName: string, newName: string) => {
+    const trimmed = newName.trim();
+    if (!trimmed || trimmed === oldName) return;
+    const { error } = await supabase
+      .from("gestion_vehicules")
+      .update({ concession: trimmed })
+      .eq("concession", oldName);
+    if (error) toast.error("Erreur lors du renommage");
+    else {
+      toast.success(`Concession renommée en "${trimmed}"`);
+      await fetchVehicles();
+    }
+  };
+
   const deleteConcession = async (concession: string) => {
     const { error } = await supabase
       .from("gestion_vehicules")
@@ -422,6 +436,12 @@ const GestionVehicules = () => {
                 <div className="flex items-center gap-1">
                   {isAdmin && (
                     <>
+                      <Button size="sm" variant="ghost" onClick={() => {
+                        const newName = prompt("Nouveau nom de la concession :", concession);
+                        if (newName) renameConcession(concession, newName);
+                      }} className="h-7 w-7 p-0" title="Renommer la concession">
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Button>
                       <Button size="sm" variant="ghost" onClick={() => addVehicle(concession)} className="h-7 w-7 p-0" title={t("vehicles.addVehicle")}>
                         <Plus className="h-4 w-4" />
                       </Button>
