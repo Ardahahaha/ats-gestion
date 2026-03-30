@@ -700,10 +700,10 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
             const event = new CustomEvent("open-fullscreen-card", { detail: row.id });
             window.dispatchEvent(event);
           }}
-          className="md:hidden h-6 w-6 shrink-0 flex items-center justify-center rounded hover:bg-muted transition-colors"
+          className="md:hidden h-6 w-6 shrink-0 flex items-center justify-center rounded bg-primary text-primary-foreground hover:bg-primary/80 transition-colors"
           title="Plein écran"
         >
-          <Expand className="h-3.5 w-3.5 text-muted-foreground" />
+          <Expand className="h-3.5 w-3.5" />
         </button>
         <Input value={row.modele} onChange={(e) => onUpdate(row.id, "modele", e.target.value)}
           placeholder="Model" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
@@ -970,7 +970,7 @@ export default function GestionServices() {
             </div>
             {/* Card content - scrollable, scaled up */}
             <div className="flex-1 overflow-y-auto p-2">
-              <div style={{ transform: "scale(1.35)", transformOrigin: "top center", width: `${100 / 1.35}%`, margin: "0 auto" }}>
+              <div style={{ transform: "scale(1.6)", transformOrigin: "top center", width: `${100 / 1.6}%`, margin: "0 auto" }}>
                 <ServiceCardMobile row={currentRow} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
               </div>
             </div>
