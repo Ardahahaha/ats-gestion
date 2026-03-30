@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Plus, Trash2, Maximize2, X, ChevronDown, Check, Camera, Image, CalendarIcon } from "lucide-react";
+import { Plus, Trash2, Maximize2, X, ChevronDown, ChevronLeft, ChevronRight, Check, Camera, Image, CalendarIcon, Expand } from "lucide-react";
 import { toast } from "sonner";
 import { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/contexts/AuthContext";
