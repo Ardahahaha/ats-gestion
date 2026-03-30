@@ -436,6 +436,12 @@ const GestionVehicules = () => {
                 <div className="flex items-center gap-1">
                   {isAdmin && (
                     <>
+                      <Button size="sm" variant="ghost" onClick={() => {
+                        const newName = prompt("Nouveau nom de la concession :", concession);
+                        if (newName) renameConcession(concession, newName);
+                      }} className="h-7 w-7 p-0" title="Renommer la concession">
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Button>
                       <Button size="sm" variant="ghost" onClick={() => addVehicle(concession)} className="h-7 w-7 p-0" title={t("vehicles.addVehicle")}>
                         <Plus className="h-4 w-4" />
                       </Button>
