@@ -328,6 +328,20 @@ const GestionVehicules = () => {
     }
   };
 
+  const renameConcession = async (oldName: string, newName: string) => {
+    const trimmed = newName.trim();
+    if (!trimmed || trimmed === oldName) return;
+    const { error } = await supabase
+      .from("gestion_vehicules")
+      .update({ concession: trimmed })
+      .eq("concession", oldName);
+    if (error) toast.error("Erreur lors du renommage");
+    else {
+      toast.success(`Concession renommée en "${trimmed}"`);
+      await fetchVehicles();
+    }
+  };
+
   const deleteConcession = async (concession: string) => {
     const { error } = await supabase
       .from("gestion_vehicules")
