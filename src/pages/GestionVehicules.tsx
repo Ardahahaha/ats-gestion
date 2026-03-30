@@ -36,14 +36,14 @@ function parseDateEntree(value: string): Date | undefined {
   return isValid(d) ? d : undefined;
 }
 
-function getWeeksColor(dateStr: string): { dot: string; glow: string; label: string } {
+function getWeeksColor(dateStr: string): { dot: string; glow: string; bg: string; label: string } {
   const d = parseDateEntree(dateStr);
-  if (!d) return { dot: "bg-muted-foreground/30", glow: "", label: "" };
+  if (!d) return { dot: "bg-muted-foreground/30", glow: "", bg: "", label: "" };
   const weeks = differenceInWeeks(new Date(), d);
-  if (weeks < 1) return { dot: "bg-green-500", glow: "shadow-[0_0_8px_2px_rgba(34,197,94,0.6)]", label: "< 1 sem" };
-  if (weeks < 2) return { dot: "bg-yellow-500", glow: "shadow-[0_0_8px_2px_rgba(234,179,8,0.6)]", label: "1 sem" };
-  if (weeks < 3) return { dot: "bg-orange-500", glow: "shadow-[0_0_8px_2px_rgba(249,115,22,0.6)]", label: "2 sem" };
-  return { dot: "bg-red-500", glow: "shadow-[0_0_8px_2px_rgba(239,68,68,0.6)]", label: "3+ sem" };
+  if (weeks < 1) return { dot: "bg-green-500", glow: "shadow-[0_0_8px_2px_rgba(34,197,94,0.6)]", bg: "bg-green-500/5", label: "< 1 sem" };
+  if (weeks < 2) return { dot: "bg-yellow-500", glow: "shadow-[0_0_8px_2px_rgba(234,179,8,0.6)]", bg: "bg-yellow-500/5", label: "1 sem" };
+  if (weeks < 3) return { dot: "bg-orange-500", glow: "shadow-[0_0_8px_2px_rgba(249,115,22,0.6)]", bg: "bg-orange-500/5", label: "2 sem" };
+  return { dot: "bg-red-500", glow: "shadow-[0_0_8px_2px_rgba(239,68,68,0.6)]", bg: "bg-red-500/5", label: "3+ sem" };
 }
 
 const DateEntreeCell = ({ value, onSave, readOnly }: { value: string; onSave: (v: string) => void; readOnly?: boolean }) => {
@@ -382,7 +382,7 @@ const GestionVehicules = () => {
               {items.map((v) => {
                   const colors = getWeeksColor(v.date_entree);
                   return (
-                    <div key={v.id} className="group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30">
+                    <div key={v.id} className={cn("group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30", v.date_entree && colors.bg)}>
                       {/* Indicateur lumineux à gauche */}
                       <span className={cn("h-3 w-3 shrink-0 rounded-full", v.date_entree ? cn(colors.dot, colors.glow) : "bg-muted-foreground/20")} title={colors.label} />
                       <div className="grid flex-1 grid-cols-6 gap-x-2">
