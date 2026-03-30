@@ -824,6 +824,17 @@ export default function GestionServices() {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [techniciens, setTechniciens] = useState<string[]>([]);
   const [gridCols, setGridCols] = useState(4);
+  const [fullscreenCardId, setFullscreenCardId] = useState<string | null>(null);
+
+  // Listen for fullscreen open events from cards
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const id = (e as CustomEvent).detail;
+      setFullscreenCardId(id);
+    };
+    window.addEventListener("open-fullscreen-card", handler);
+    return () => window.removeEventListener("open-fullscreen-card", handler);
+  }, []);
 
   useEffect(() => {
     const fetchTechniciens = async () => {
