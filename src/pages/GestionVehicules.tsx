@@ -84,11 +84,21 @@ const DateEntreeCell = ({ value, onSave, readOnly }: { value: string; onSave: (v
 
 
 const ETAT_OPTIONS = [
+  "Carrosserie",
+  "Mécanique",
   "Contrôle mécanique",
   "Devis accord",
   "Travaux",
   "Contrôle des travaux",
 ];
+
+function getEtatColor(etat: string): string {
+  switch (etat) {
+    case "Carrosserie": return "bg-blue-500/10 text-blue-600 ring-blue-500/30";
+    case "Mécanique": return "bg-purple-500/10 text-purple-600 ring-purple-500/30";
+    default: return "";
+  }
+}
 
 const StateDropdown = ({ value, onSave, readOnly, label }: { value: string; label: string; onSave: (v: string) => void; readOnly?: boolean }) => {
   const [customMode, setCustomMode] = useState(false);
