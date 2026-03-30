@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Plus, Trash2, Maximize2, X, ChevronDown, Check, Camera, Image, CalendarIcon } from "lucide-react";
+import { Plus, Trash2, Maximize2, X, ChevronDown, ChevronLeft, ChevronRight, Check, Camera, Image, CalendarIcon, Expand } from "lucide-react";
 import { toast } from "sonner";
 import { Json } from "@/integrations/supabase/types";
 import { useAuth } from "@/contexts/AuthContext";
@@ -695,6 +695,16 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
   return (
     <div className="rounded-lg border bg-card overflow-hidden">
       <div className="flex items-center gap-1 bg-muted/30 px-2 py-1.5">
+        <button
+          onClick={() => {
+            const event = new CustomEvent("open-fullscreen-card", { detail: row.id });
+            window.dispatchEvent(event);
+          }}
+          className="md:hidden h-6 w-6 shrink-0 flex items-center justify-center rounded hover:bg-muted transition-colors"
+          title="Plein écran"
+        >
+          <Expand className="h-3.5 w-3.5 text-muted-foreground" />
+        </button>
         <Input value={row.modele} onChange={(e) => onUpdate(row.id, "modele", e.target.value)}
           placeholder="Model" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
         <Input value={row.immatriculation} onChange={(e) => onUpdate(row.id, "immatriculation", e.target.value)}
@@ -814,6 +824,17 @@ export default function GestionServices() {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [techniciens, setTechniciens] = useState<string[]>([]);
   const [gridCols, setGridCols] = useState(4);
+  const [fullscreenCardId, setFullscreenCardId] = useState<string | null>(null);
+
+  // Listen for fullscreen open events from cards
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const id = (e as CustomEvent).detail;
+      setFullscreenCardId(id);
+    };
+    window.addEventListener("open-fullscreen-card", handler);
+    return () => window.removeEventListener("open-fullscreen-card", handler);
+  }, []);
 
   useEffect(() => {
     const fetchTechniciens = async () => {
@@ -924,6 +945,57 @@ export default function GestionServices() {
   return (
     <div className="space-y-3">
       {showAddDialog && <AddServiceDialog onAdd={addRow} onClose={() => setShowAddDialog(false)} />}
+
+      {/* Fullscreen mobile card overlay */}
+      {fullscreenCardId && (() => {
+        const displayRows = isAdmin ? rows : rows.filter((r) => r.prenom === currentPseudo);
+        const currentIndex = displayRows.findIndex((r) => r.id === fullscreenCardId);
+        const currentRow = currentIndex >= 0 ? displayRows[currentIndex] : null;
+        if (!currentRow) return null;
+        const hasPrev = currentIndex > 0;
+        const hasNext = currentIndex < displayRows.length - 1;
+        return (
+          <div className="fixed inset-0 z-50 bg-background flex flex-col">
+            {/* Top bar */}
+            <div className="flex items-center justify-between px-3 py-2 border-b bg-muted/30">
+              <span className="text-xs font-medium text-muted-foreground">
+                {currentIndex + 1} / {displayRows.length}
+              </span>
+              <span className="text-sm font-bold text-foreground truncate mx-2">
+                {currentRow.modele || "Sans nom"} — {currentRow.immatriculation || "?"}
+              </span>
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setFullscreenCardId(null)}>
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            {/* Card content - scrollable */}
+            <div className="flex-1 overflow-y-auto p-3">
+              <ServiceCardMobile row={currentRow} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
+            </div>
+            {/* Bottom navigation */}
+            <div className="flex items-center justify-between px-3 py-2 border-t bg-muted/30">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!hasPrev}
+                onClick={() => hasPrev && setFullscreenCardId(displayRows[currentIndex - 1].id)}
+                className="gap-1"
+              >
+                <ChevronLeft className="h-4 w-4" /> Précédent
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!hasNext}
+                onClick={() => hasNext && setFullscreenCardId(displayRows[currentIndex + 1].id)}
+                className="gap-1"
+              >
+                Suivant <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        );
+      })()}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-display text-xl md:text-2xl font-bold uppercase tracking-wider text-foreground">
