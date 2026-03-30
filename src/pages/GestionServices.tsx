@@ -695,6 +695,16 @@ function ServiceCardMobile({ row, onUpdate, onDelete, isAdmin, techniciens }: { 
   return (
     <div className="rounded-lg border bg-card overflow-hidden">
       <div className="flex items-center gap-1 bg-muted/30 px-2 py-1.5">
+        <button
+          onClick={() => {
+            const event = new CustomEvent("open-fullscreen-card", { detail: row.id });
+            window.dispatchEvent(event);
+          }}
+          className="md:hidden h-6 w-6 shrink-0 flex items-center justify-center rounded hover:bg-muted transition-colors"
+          title="Plein écran"
+        >
+          <Expand className="h-3.5 w-3.5 text-muted-foreground" />
+        </button>
         <Input value={row.modele} onChange={(e) => onUpdate(row.id, "modele", e.target.value)}
           placeholder="Model" className="h-7 text-[11px] flex-1 bg-transparent border-none shadow-none min-w-0" readOnly={!isAdmin} />
         <Input value={row.immatriculation} onChange={(e) => onUpdate(row.id, "immatriculation", e.target.value)}
