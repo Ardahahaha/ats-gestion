@@ -141,6 +141,8 @@ const StateDropdown = ({ value, onSave, readOnly, label }: { value: string; labe
     );
   }
 
+  const etatColor = getEtatColor(value);
+
   return (
     <div className="flex items-center gap-1 text-[11px] min-w-0">
       <span className="shrink-0 text-[10px] font-medium text-muted-foreground">{label}:</span>
@@ -148,7 +150,10 @@ const StateDropdown = ({ value, onSave, readOnly, label }: { value: string; labe
         value={isCustom ? "__custom_display__" : value}
         onChange={handleChange}
         disabled={readOnly}
-        className="w-full min-w-0 rounded bg-transparent px-1 py-0.5 text-[11px] text-foreground outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
+        className={cn(
+          "w-full min-w-0 rounded px-1 py-0.5 text-[11px] font-medium outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60",
+          etatColor || "bg-transparent text-foreground"
+        )}
       >
         <option value="">—</option>
         {ETAT_OPTIONS.map((opt) => (
