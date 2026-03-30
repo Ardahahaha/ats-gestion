@@ -970,7 +970,7 @@ export default function GestionServices() {
             </div>
             {/* Card content - scrollable, scaled up */}
             <div className="flex-1 overflow-y-auto p-2">
-              <div style={{ transform: "scale(1.35)", transformOrigin: "top center", width: `${100 / 1.35}%`, margin: "0 auto" }}>
+              <div style={{ transform: "scale(1.6)", transformOrigin: "top center", width: `${100 / 1.6}%`, margin: "0 auto" }}>
                 <ServiceCardMobile row={currentRow} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
               </div>
             </div>
