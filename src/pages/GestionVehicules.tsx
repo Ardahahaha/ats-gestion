@@ -269,9 +269,63 @@ const GestionVehicules = () => {
     if (error) toast.error(t("vehicles.errorDelete"));
   };
 
+  const createServiceCard = async (vehicle: GestionVehicule, etat: string) => {
+    const technicien = vehicle.technicien;
+    if (!technicien) return; // pas de technicien = pas de carte
+
+    const isCarrosserie = etat === "Carrosserie";
+    const isMecanique = etat === "Mécanique";
+    if (!isCarrosserie && !isMecanique) return;
+
+    const dateEntree = vehicle.date_entree || "";
+    // Convert dd/MM/yyyy to yyyy-MM-dd for services table
+    let serviceDateEntree = "";
+    if (dateEntree) {
+      const parsed = parseDateEntree(dateEntree);
+      if (parsed) serviceDateEntree = format(parsed, "yyyy-MM-dd");
+    }
+
+    const { error } = await supabase.from("services").insert({
+      modele: [vehicle.marque, vehicle.modele].filter(Boolean).join(" ") || "",
+      immatriculation: vehicle.immatriculation || "",
+      prenom: technicien,
+      date_entree: serviceDateEntree,
+      has_carrosserie: isCarrosserie,
+      has_mecanique: isMecanique,
+    });
+
+    if (error) {
+      toast.error("Erreur lors de la création de la fiche service");
+    } else {
+      toast.success(
+        `📋 Fiche ${etat} créée dans Gestion des Services`,
+        { description: `${vehicle.marque} ${vehicle.modele} — ${technicien}` }
+      );
+    }
+  };
+
   const updateField = async (id: string, field: string, value: string) => {
     const { error } = await supabase.from("gestion_vehicules").update({ [field]: value }).eq("id", id);
-    if (error) toast.error(t("vehicles.errorUpdate"));
+    if (error) {
+      toast.error(t("vehicles.errorUpdate"));
+      return;
+    }
+
+    // Si on change l'état vers Carrosserie/Mécanique, créer une fiche service
+    if (field === "etat" && (value === "Carrosserie" || value === "Mécanique")) {
+      const vehicle = vehicles.find((v) => v.id === id);
+      if (vehicle) {
+        await createServiceCard({ ...vehicle, etat: value }, value);
+      }
+    }
+
+    // Si on assigne un technicien et que l'état est déjà Carrosserie/Mécanique
+    if (field === "technicien" && value) {
+      const vehicle = vehicles.find((v) => v.id === id);
+      if (vehicle && (vehicle.etat === "Carrosserie" || vehicle.etat === "Mécanique")) {
+        await createServiceCard({ ...vehicle, technicien: value }, vehicle.etat);
+      }
+    }
   };
 
   const deleteConcession = async (concession: string) => {
