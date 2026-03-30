@@ -968,9 +968,11 @@ export default function GestionServices() {
                 <X className="h-5 w-5" />
               </Button>
             </div>
-            {/* Card content - scrollable */}
-            <div className="flex-1 overflow-y-auto p-3">
-              <ServiceCardMobile row={currentRow} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
+            {/* Card content - scrollable, scaled up */}
+            <div className="flex-1 overflow-y-auto p-2">
+              <div style={{ transform: "scale(1.35)", transformOrigin: "top center", width: `${100 / 1.35}%`, margin: "0 auto" }}>
+                <ServiceCardMobile row={currentRow} onUpdate={updateField} onDelete={deleteRow} isAdmin={isAdmin} techniciens={techniciens} />
+              </div>
             </div>
             {/* Bottom navigation */}
             <div className="flex items-center justify-between px-3 py-2 border-t bg-muted/30">
