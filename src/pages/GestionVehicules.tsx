@@ -382,7 +382,7 @@ const GestionVehicules = () => {
               {items.map((v) => {
                   const colors = getWeeksColor(v.date_entree);
                   return (
-                    <div key={v.id} className="group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30">
+                    <div key={v.id} className={cn("group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30", v.date_entree && colors.bg)}>
                       {/* Indicateur lumineux à gauche */}
                       <span className={cn("h-3 w-3 shrink-0 rounded-full", v.date_entree ? cn(colors.dot, colors.glow) : "bg-muted-foreground/20")} title={colors.label} />
                       <div className="grid flex-1 grid-cols-6 gap-x-2">
