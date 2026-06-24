@@ -51,29 +51,30 @@ export function Layout({ children }: {children: React.ReactNode;}) {
   return (
     <div className="min-h-screen flex flex-col bg-background carbon-pattern transition-colors duration-300">
       {/* Header */}
-      <header className="relative overflow-hidden border-b border-border bg-card/80 backdrop-blur-sm">
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
+      <header className="sticky top-0 z-40 border-b border-border bg-card/70 backdrop-blur-xl supports-[backdrop-filter]:bg-card/60">
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-racing-stripe" />
 
-        <div className="container mx-auto flex items-center justify-between px-6 py-5">
-          <div className="flex items-center gap-4">
+        <div className="container mx-auto flex items-center justify-between px-4 py-4 sm:px-6 sm:py-5">
+          <div className="flex items-center gap-3 sm:gap-4">
             {!isHome &&
             <Link
               to="/"
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-secondary text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:text-primary hover:shadow-md"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-secondary text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:text-primary hover:shadow-glow-primary"
               title={t("layout.back")}>
-              
+
                 <ArrowLeft className="h-5 w-5" />
               </Link>
             }
-            <Link to="/" className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/25">
+            <Link to="/" className="group flex items-center gap-3 sm:gap-4">
+              <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-primary shadow-glow-primary transition-transform duration-300 group-hover:scale-105">
                 <CarFront className="h-6 w-6 text-primary-foreground" />
+                <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/20" />
               </div>
               <div>
-                <h1 className="font-display text-2xl font-bold uppercase tracking-wider text-foreground">
-                  A.T.S/<span className="text-primary">GESTION</span>
+                <h1 className="font-display text-xl uppercase tracking-tight text-foreground sm:text-2xl">
+                  A.T.S<span className="mx-1 text-muted-foreground/40">/</span><span className="text-gradient-primary">GESTION</span>
                 </h1>
-                <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                   <Gauge className="h-3 w-3" />
                   {t("layout.dashboard")}
                 </p>

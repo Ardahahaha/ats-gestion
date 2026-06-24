@@ -14,8 +14,17 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Rajdhani", "sans-serif"],
-        body: ["Barlow", "sans-serif"],
+        display: ['"Archivo Black"', "Rajdhani", "sans-serif"],
+        body: ["Hind", "Barlow", "sans-serif"],
+      },
+      backgroundImage: {
+        "hero-gradient": "var(--hero-gradient)",
+        "racing-stripe": "linear-gradient(90deg, transparent 0%, hsl(var(--primary) / 0.9) 50%, transparent 100%)",
+        "grid-fade": "radial-gradient(ellipse at top, hsl(var(--primary) / 0.12), transparent 60%)",
+      },
+      boxShadow: {
+        "glow-primary": "0 0 0 1px hsl(var(--primary) / 0.4), 0 8px 30px -8px hsl(var(--primary) / 0.5)",
+        "premium": "0 1px 0 0 hsl(var(--foreground) / 0.05) inset, 0 10px 40px -12px hsl(220 30% 5% / 0.4)",
       },
       colors: {
         border: "hsl(var(--border))",
