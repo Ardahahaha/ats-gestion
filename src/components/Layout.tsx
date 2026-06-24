@@ -135,6 +135,7 @@ export function Layout({ children }: {children: React.ReactNode;}) {
           <span>{t("layout.synced")}</span>
         </div>
       </footer>
+      <ChatWidget />
     </div>);
 
 }
