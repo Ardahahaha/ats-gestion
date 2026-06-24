@@ -57,7 +57,7 @@ function DateCell({ value, onChange, placeholder }: { value: string; onChange: (
       <PopoverTrigger asChild>
         <button
           className={cn(
-            "flex w-full items-center gap-2 rounded-md bg-transparent px-3 py-2.5 text-left text-sm font-medium text-foreground outline-none transition-all duration-200 hover:bg-primary/5 focus:ring-2 focus:ring-ring",
+            "flex w-full items-center gap-2 rounded-md bg-transparent px-4 py-3.5 text-left text-base font-medium text-foreground outline-none transition-all duration-200 hover:bg-primary/5 focus:ring-2 focus:ring-ring",
             !date && "text-muted-foreground"
           )}
         >
