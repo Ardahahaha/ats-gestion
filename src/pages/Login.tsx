@@ -1,27 +1,22 @@
 import { useState } from "react";
-import { useAuth, UserRole } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nContext";
-import { Car, Shield, Wrench, Eye, EyeOff, Gauge, Mail, Lock, KeyRound, UserPlus, LogIn, User } from "lucide-react";
+import { Car, Eye, EyeOff, Gauge, Mail, Lock, LogIn, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-type Tab = "login" | "signup";
-
 export default function Login() {
-  const { login, signup } = useAuth();
+  const { login } = useAuth();
   const { t } = useI18n();
-  const [tab, setTab] = useState<Tab>("login");
 
-  // Login state
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [showLoginPw, setShowLoginPw] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
 
-  // Forgot password
   const [forgotOpen, setForgotOpen] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
@@ -33,57 +28,23 @@ export default function Login() {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     setForgotLoading(false);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
+    if (error) { toast.error(error.message); return; }
     toast.success("Email envoyé ! Vérifiez votre boîte de réception.");
     setForgotOpen(false);
     setForgotEmail("");
   };
-
-
-  // Signup state
-  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
-  const [rolePassword, setRolePassword] = useState("");
-  const [signupPseudo, setSignupPseudo] = useState("");
-  const [signupEmail, setSignupEmail] = useState("");
-  const [signupPassword, setSignupPassword] = useState("");
-  const [showRolePw, setShowRolePw] = useState(false);
-  const [showSignupPw, setShowSignupPw] = useState(false);
-  const [signupLoading, setSignupLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!loginEmail || !loginPassword) return;
     setLoginLoading(true);
     const result = await login(loginEmail, loginPassword);
     setLoginLoading(false);
-    if (result.success) {
-      toast.success(t("login.successLogin"));
-    } else {
-      toast.error(result.error || t("login.errorLogin"));
-    }
-  };
-
-  const handleSignup = async () => {
-    if (!selectedRole || !rolePassword || !signupPseudo.trim() || !signupEmail || !signupPassword) return;
-    if (signupPassword.length < 6) {
-      toast.error(t("login.errorMinPassword"));
-      return;
-    }
-    setSignupLoading(true);
-    const result = await signup(signupEmail, signupPassword, selectedRole, rolePassword, signupPseudo.trim());
-    setSignupLoading(false);
-    if (result.success) {
-      toast.success(t("login.successSignup"));
-    } else {
-      toast.error(result.error || t("login.errorSignup"));
-    }
+    if (result.success) toast.success(t("login.successLogin"));
+    else toast.error(result.error || t("login.errorLogin"));
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-background carbon-pattern">
-      {/* Header */}
       <header className="relative overflow-hidden border-b border-border bg-card/80 backdrop-blur-sm">
         <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
         <div className="container mx-auto flex items-center justify-center px-6 py-5">
@@ -106,211 +67,52 @@ export default function Login() {
 
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md space-y-6">
-          {/* Tab selector */}
-          <div className="flex rounded-xl border-2 border-border overflow-hidden">
-            <button
-              onClick={() => setTab("login")}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold uppercase tracking-wide transition-all ${
-                tab === "login"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-card text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <LogIn className="h-4 w-4" /> {t("login.connection")}
-            </button>
-            <button
-              onClick={() => setTab("signup")}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-bold uppercase tracking-wide transition-all ${
-                tab === "signup"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-card text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <UserPlus className="h-4 w-4" /> {t("login.signup")}
-            </button>
+          <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="text-center">
+              <h2 className="font-display text-xl font-bold uppercase tracking-wider text-foreground flex items-center justify-center gap-2">
+                <LogIn className="h-5 w-5 text-primary" /> {t("login.title")}
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">{t("login.subtitle")}</p>
+            </div>
+
+            <div className="space-y-3">
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input type="email" placeholder={t("login.email")} value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)} className="pl-10" />
+              </div>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input type={showLoginPw ? "text" : "password"} placeholder={t("login.password")}
+                  value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleLogin()} className="pl-10 pr-10" />
+                <button type="button" onClick={() => setShowLoginPw(!showLoginPw)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  {showLoginPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              <Button onClick={handleLogin} className="w-full gap-2"
+                disabled={!loginEmail || !loginPassword || loginLoading}>
+                {loginLoading ? t("login.loading") : t("login.submit")}
+              </Button>
+              <button type="button"
+                onClick={() => { setForgotEmail(loginEmail); setForgotOpen(true); }}
+                className="w-full text-center text-xs font-medium text-muted-foreground hover:text-primary transition-colors">
+                Mot de passe oublié ?
+              </button>
+            </div>
+
+            <div className="rounded-xl border-2 border-border bg-card/60 p-4 flex gap-3">
+              <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="text-sm font-bold uppercase tracking-wide text-foreground">Accès sur invitation</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  La création de comptes est désormais réservée aux administrateurs.
+                  Contactez un admin de l'atelier pour obtenir un accès.
+                </p>
+              </div>
+            </div>
           </div>
-
-          {/* LOGIN TAB */}
-          {tab === "login" && (
-            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <div className="text-center">
-                <h2 className="font-display text-xl font-bold uppercase tracking-wider text-foreground">
-                  {t("login.title")}
-                </h2>
-                <p className="mt-1 text-sm text-muted-foreground">{t("login.subtitle")}</p>
-              </div>
-
-              <div className="space-y-3">
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="email"
-                    placeholder={t("login.email")}
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type={showLoginPw ? "text" : "password"}
-                    placeholder={t("login.password")}
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-                    className="pl-10 pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowLoginPw(!showLoginPw)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    {showLoginPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-                <Button onClick={handleLogin} className="w-full gap-2" disabled={!loginEmail || !loginPassword || loginLoading}>
-                  {loginLoading ? t("login.loading") : t("login.submit")}
-                </Button>
-                <button
-                  type="button"
-                  onClick={() => { setForgotEmail(loginEmail); setForgotOpen(true); }}
-                  className="w-full text-center text-xs font-medium text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Mot de passe oublié ?
-                </button>
-              </div>
-            </div>
-          )}
-
-
-          {/* SIGNUP TAB */}
-          {tab === "signup" && (
-            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <div className="text-center">
-                <h2 className="font-display text-xl font-bold uppercase tracking-wider text-foreground">
-                  {t("login.signupTitle")}
-                </h2>
-                <p className="mt-1 text-sm text-muted-foreground">{t("login.signupSubtitle")}</p>
-              </div>
-
-              {/* Role selection */}
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => { setSelectedRole("admin"); setRolePassword(""); }}
-                  className={`group relative overflow-hidden rounded-xl border-2 p-4 transition-all duration-300 ${
-                    selectedRole === "admin"
-                      ? "border-primary bg-primary/10 shadow-lg shadow-primary/20"
-                      : "border-border bg-card hover:border-primary/30 hover:shadow-md"
-                  }`}
-                >
-                  <div className={`absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-primary to-primary/70 transition-opacity ${selectedRole === "admin" ? "opacity-100" : "opacity-0"}`} />
-                  <div className="flex flex-col items-center gap-2">
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl transition-all ${
-                      selectedRole === "admin" ? "bg-primary shadow-lg shadow-primary/25" : "bg-secondary"
-                    }`}>
-                      <Shield className={`h-6 w-6 ${selectedRole === "admin" ? "text-primary-foreground" : "text-muted-foreground"}`} />
-                    </div>
-                    <p className="font-display text-sm font-bold uppercase tracking-wide text-foreground">{t("login.admin")}</p>
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => { setSelectedRole("technicien"); setRolePassword(""); }}
-                  className={`group relative overflow-hidden rounded-xl border-2 p-4 transition-all duration-300 ${
-                    selectedRole === "technicien"
-                      ? "border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/20"
-                      : "border-border bg-card hover:border-blue-500/30 hover:shadow-md"
-                  }`}
-                >
-                  <div className={`absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-blue-500 to-blue-400 transition-opacity ${selectedRole === "technicien" ? "opacity-100" : "opacity-0"}`} />
-                  <div className="flex flex-col items-center gap-2">
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl transition-all ${
-                      selectedRole === "technicien" ? "bg-blue-500 shadow-lg shadow-blue-500/25" : "bg-secondary"
-                    }`}>
-                      <Wrench className={`h-6 w-6 ${selectedRole === "technicien" ? "text-white" : "text-muted-foreground"}`} />
-                    </div>
-                    <p className="font-display text-sm font-bold uppercase tracking-wide text-foreground">{t("login.technician")}</p>
-                  </div>
-                </button>
-              </div>
-
-              {/* Role password + account details */}
-              {selectedRole && (
-                <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  {/* Role password */}
-                  <div className="relative">
-                    <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type={showRolePw ? "text" : "password"}
-                      placeholder={`${t("login.rolePassword")} ${selectedRole === "admin" ? t("login.admin") : t("login.technician")}…`}
-                      value={rolePassword}
-                      onChange={(e) => setRolePassword(e.target.value)}
-                      autoFocus
-                      className="pl-10 pr-10"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowRolePw(!showRolePw)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    >
-                      {showRolePw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-
-                  {/* Pseudo */}
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="text"
-                      placeholder={t("login.pseudo")}
-                      value={signupPseudo}
-                      onChange={(e) => setSignupPseudo(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-
-                  {/* Email + Password */}
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="email"
-                      placeholder={t("login.yourEmail")}
-                      value={signupEmail}
-                      onChange={(e) => setSignupEmail(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type={showSignupPw ? "text" : "password"}
-                      placeholder={t("login.yourPassword")}
-                      value={signupPassword}
-                      onChange={(e) => setSignupPassword(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && handleSignup()}
-                      className="pl-10 pr-10"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowSignupPw(!showSignupPw)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    >
-                      {showSignupPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-
-                  <Button
-                    onClick={handleSignup}
-                    className="w-full gap-2"
-                    disabled={!rolePassword || !signupPseudo.trim() || !signupEmail || !signupPassword || signupLoading}
-                  >
-                    {signupLoading ? t("login.creating") : t("login.createAccount")}
-                  </Button>
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </main>
 
@@ -324,14 +126,9 @@ export default function Login() {
           </DialogHeader>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="email"
-              placeholder="votre@email.com"
-              value={forgotEmail}
+            <Input type="email" placeholder="votre@email.com" value={forgotEmail}
               onChange={(e) => setForgotEmail(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleForgot()}
-              className="pl-10"
-            />
+              onKeyDown={(e) => e.key === "Enter" && handleForgot()} className="pl-10" />
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setForgotOpen(false)}>Annuler</Button>
@@ -343,5 +140,4 @@ export default function Login() {
       </Dialog>
     </div>
   );
-
 }

@@ -10,7 +10,6 @@ type AuthContextType = {
   pseudo: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  signup: (email: string, password: string, role: UserRole, rolePassword: string, pseudo: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
 };
 
@@ -96,21 +95,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { success: true };
   };
 
-  const signup = async (email: string, password: string, selectedRole: UserRole, rolePassword: string, pseudo: string) => {
-    const res = await supabase.functions.invoke("signup-with-role", {
-      body: { email, password, role: selectedRole, rolePassword, pseudo },
-    });
-    if (res.error) {
-      return { success: false, error: res.error.message || "Erreur lors de la création du compte" };
-    }
-    if (res.data?.error) {
-      return { success: false, error: res.data.error };
-    }
-    // Auto-login after signup
-    const loginResult = await login(email, password);
-    return loginResult;
-  };
-
   const logout = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -119,7 +103,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ role, user, pseudo, loading, login, signup, logout }}>
+    <AuthContext.Provider value={{ role, user, pseudo, loading, login, logout }}>
+
       {children}
     </AuthContext.Provider>
   );
