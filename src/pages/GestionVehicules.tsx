@@ -92,8 +92,12 @@ const ETAT_OPTIONS = [
 
 function getEtatColor(etat: string): string {
   switch (etat) {
-    case "Carrosserie": return "bg-blue-500/10 text-blue-600 ring-blue-500/30";
-    case "Mécanique": return "bg-purple-500/10 text-purple-600 ring-purple-500/30";
+    case "Carrosserie": return "bg-gradient-to-r from-blue-500/20 to-blue-500/5 text-blue-500 ring-1 ring-blue-500/40 shadow-[0_0_10px_rgba(59,130,246,0.15)]";
+    case "Mécanique": return "bg-gradient-to-r from-purple-500/20 to-purple-500/5 text-purple-500 ring-1 ring-purple-500/40 shadow-[0_0_10px_rgba(168,85,247,0.15)]";
+    case "Contrôle mécanique": return "bg-cyan-500/10 text-cyan-500 ring-1 ring-cyan-500/30";
+    case "Devis accord": return "bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30";
+    case "Travaux": return "bg-amber-500/10 text-amber-500 ring-1 ring-amber-500/30";
+    case "Contrôle des travaux": return "bg-pink-500/10 text-pink-500 ring-1 ring-pink-500/30";
     default: return "";
   }
 }
@@ -416,32 +420,47 @@ const GestionVehicules = () => {
       )}
 
       {/* Grille des concessions */}
-      <div className="grid gap-3 xl:grid-cols-2">
+      <div className="grid gap-4 xl:grid-cols-2">
         {concessions.map((concession) => {
           const items = getByConc(concession);
           return (
-            <div key={concession} className="flex flex-col rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+            <div
+              key={concession}
+              className="group/conc flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-[0_4px_20px_-8px_hsl(var(--primary)/0.15)] transition-all duration-300 hover:shadow-[0_8px_30px_-8px_hsl(var(--primary)/0.3)] hover:border-primary/40"
+            >
               {/* Concession header */}
-              <div className="flex items-center justify-between bg-gradient-to-r from-primary/10 to-primary/5 px-3 py-2">
-                <div className="flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-primary" />
-                  <h3 className="font-display text-sm font-bold uppercase tracking-wide text-foreground">
+              <div className="relative flex items-center justify-between overflow-hidden border-b border-border/60 bg-gradient-to-r from-primary/15 via-primary/8 to-transparent px-4 py-3">
+                {/* Racing stripe accent */}
+                <span className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-primary via-primary/70 to-primary/30" />
+                {/* Carbon pattern */}
+                <span
+                  className="pointer-events-none absolute inset-0 opacity-[0.04]"
+                  style={{
+                    backgroundImage:
+                      "repeating-linear-gradient(45deg, currentColor 0 1px, transparent 1px 6px)",
+                  }}
+                />
+                <div className="relative flex items-center gap-2.5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15 ring-1 ring-primary/30">
+                    <Building2 className="h-4 w-4 text-primary" />
+                  </div>
+                  <h3 className="font-display text-base font-bold uppercase tracking-wider text-foreground">
                     {concession}
                   </h3>
-                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-primary">
+                  <span className="rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-bold text-primary-foreground shadow-sm">
                     {items.length}
                   </span>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="relative flex items-center gap-1">
                   {isAdmin && (
                     <>
                       <Button size="sm" variant="ghost" onClick={() => {
                         const newName = prompt("Nouveau nom de la concession :", concession);
                         if (newName) renameConcession(concession, newName);
-                      }} className="h-7 w-7 p-0" title="Renommer la concession">
+                      }} className="h-8 w-8 p-0 hover:bg-primary/10 hover:text-primary" title="Renommer la concession">
                         <Pencil className="h-3.5 w-3.5" />
                       </Button>
-                      <Button size="sm" variant="ghost" onClick={() => addVehicle(concession)} className="h-7 w-7 p-0" title={t("vehicles.addVehicle")}>
+                      <Button size="sm" variant="ghost" onClick={() => addVehicle(concession)} className="h-8 w-8 p-0 hover:bg-primary/10 hover:text-primary" title={t("vehicles.addVehicle")}>
                         <Plus className="h-4 w-4" />
                       </Button>
                       <Button
@@ -452,7 +471,7 @@ const GestionVehicules = () => {
                             deleteConcession(concession);
                           }
                         }}
-                        className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                         title={t("vehicles.deleteConcession")}
                       >
                         <X className="h-3.5 w-3.5" />
@@ -463,29 +482,49 @@ const GestionVehicules = () => {
               </div>
 
               {/* Véhicules */}
-              <div className="flex-1 divide-y divide-border">
+              <div className="flex-1 divide-y divide-border/40">
                 {items.length === 0 && (
-                  <p className="px-3 py-4 text-center text-xs text-muted-foreground italic">{t("vehicles.noVehicles")}</p>
+                  <p className="px-3 py-6 text-center text-xs italic text-muted-foreground">{t("vehicles.noVehicles")}</p>
                 )}
-              {items.map((v) => {
+              {items.map((v, idx) => {
                   const colors = getWeeksColor(v.date_entree);
                   return (
-                    <div key={v.id} className={cn("group relative flex items-center gap-2 px-2.5 py-1.5 transition-colors hover:bg-muted/30", v.date_entree && colors.bg)}>
-                      {/* Indicateur lumineux à gauche */}
-                      <span className={cn("h-3 w-3 shrink-0 rounded-full", v.date_entree ? cn(colors.dot, colors.glow) : "bg-muted-foreground/20")} title={colors.label} />
+                    <div
+                      key={v.id}
+                      className={cn(
+                        "group relative flex items-center gap-2 px-3 py-2 transition-all duration-200 hover:bg-primary/[0.04] hover:pl-4",
+                        idx % 2 === 1 ? "bg-muted/20" : "bg-transparent",
+                        v.date_entree && colors.bg
+                      )}
+                    >
+                      {/* Left accent stripe */}
+                      <span
+                        className={cn(
+                          "absolute left-0 top-1/2 h-[70%] w-[3px] -translate-y-1/2 rounded-r-full transition-all duration-200 group-hover:h-[85%]",
+                          v.date_entree ? colors.dot : "bg-transparent"
+                        )}
+                      />
+                      {/* Indicateur lumineux */}
+                      <span
+                        className={cn(
+                          "h-3 w-3 shrink-0 rounded-full transition-transform duration-200 group-hover:scale-125",
+                          v.date_entree ? cn(colors.dot, colors.glow, "animate-pulse") : "bg-muted-foreground/20"
+                        )}
+                        title={colors.label}
+                      />
                       <div className="grid flex-1 grid-cols-6 gap-x-2">
                         <DateEntreeCell value={v.date_entree} onSave={(val) => updateField(v.id, "date_entree", val)} readOnly={!isAdmin} />
                         <EditableField label={t("vehicles.brand")} value={v.marque} onSave={(val) => updateField(v.id, "marque", val)} readOnly={!isAdmin} />
                         <EditableField label={t("vehicles.model")} value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
                         <EditableField label={t("vehicles.plate")} value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
                         <StateDropdown value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} label={t("vehicles.state")} />
-                        <div className="flex flex-col gap-0.5 min-w-0">
+                        <div className="flex min-w-0 flex-col gap-0.5">
                           <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{t("vehicles.tech")}</span>
                           <select
                             value={v.technicien}
                             onChange={(e) => updateField(v.id, "technicien", e.target.value)}
                             disabled={!isAdmin}
-                            className="w-full min-w-0 truncate rounded bg-transparent px-1.5 py-1 text-sm font-bold text-foreground outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
+                            className="w-full min-w-0 truncate rounded bg-transparent px-1.5 py-1 text-sm font-bold text-foreground outline-none transition-colors hover:bg-muted/40 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
                           >
                             <option value="">—</option>
                             {techniciens.map((t) => (
@@ -497,9 +536,9 @@ const GestionVehicules = () => {
                       {isAdmin && (
                         <button
                           onClick={() => deleteVehicle(v.id)}
-                          className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+                          className="shrink-0 rounded-md p-1.5 text-muted-foreground opacity-0 transition-all duration-200 hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
                         >
-                          <Trash2 className="h-3 w-3" />
+                          <Trash2 className="h-3.5 w-3.5" />
                         </button>
                       )}
                     </div>
