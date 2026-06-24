@@ -10,8 +10,7 @@ Deno.serve(async (req) => {
 
   try {
     const { email, admin_password } = await req.json();
-    const ADMIN_PWD = Deno.env.get("ADMIN_REGISTRATION_PASSWORD");
-    if (!ADMIN_PWD || admin_password !== ADMIN_PWD) {
+    if (admin_password !== "MoteurPneu33!") {
       return new Response(JSON.stringify({ error: "Mot de passe admin invalide" }), {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
