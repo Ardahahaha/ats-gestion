@@ -10,7 +10,6 @@ type AuthContextType = {
   pseudo: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  signup: (email: string, password: string, role: UserRole, rolePassword: string, pseudo: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
 };
 
