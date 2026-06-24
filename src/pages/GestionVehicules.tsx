@@ -51,33 +51,31 @@ const DateEntreeCell = ({ value, onSave, readOnly }: { value: string; onSave: (v
   const colors = getWeeksColor(value);
 
   return (
-    <div className="flex items-center gap-1 text-sm min-w-0">
-      <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground">Entrée:</span>
-      <div className="flex items-center gap-1 min-w-0">
-        <Popover>
-          <PopoverTrigger asChild>
-            <button
-              disabled={readOnly}
-              className={cn(
-                "flex items-center gap-1 rounded px-1.5 py-1 text-sm font-bold text-foreground outline-none transition-all hover:bg-muted/30 focus:ring-1 focus:ring-ring disabled:opacity-60",
-                !date && "italic font-medium text-muted-foreground/50"
-              )}
-            >
-              <CalendarIcon className="h-4 w-4 shrink-0 text-primary/60" />
-              {date ? format(date, "dd/MM/yyyy") : "Date"}
-            </button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 border-border shadow-lg" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(d) => { if (d) onSave(format(d, "dd/MM/yyyy")); }}
-              locale={fr}
-              className={cn("p-3 pointer-events-auto")}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
+    <div className="flex flex-col gap-0.5 min-w-0">
+      <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">Entrée</span>
+      <Popover>
+        <PopoverTrigger asChild>
+          <button
+            disabled={readOnly}
+            className={cn(
+              "flex w-full items-center gap-1 truncate rounded px-1.5 py-1 text-sm font-bold text-foreground outline-none transition-all hover:bg-muted/30 focus:ring-1 focus:ring-ring disabled:opacity-60",
+              !date && "italic font-medium text-muted-foreground/50"
+            )}
+          >
+            <CalendarIcon className="h-4 w-4 shrink-0 text-primary/60" />
+            <span className="truncate">{date ? format(date, "dd/MM/yyyy") : "Date"}</span>
+          </button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0 border-border shadow-lg" align="start">
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={(d) => { if (d) onSave(format(d, "dd/MM/yyyy")); }}
+            locale={fr}
+            className={cn("p-3 pointer-events-auto")}
+          />
+        </PopoverContent>
+      </Popover>
     </div>
   );
 };
@@ -126,8 +124,8 @@ const StateDropdown = ({ value, onSave, readOnly, label }: { value: string; labe
 
   if (customMode) {
     return (
-      <div className="flex items-center gap-1 text-sm min-w-0">
-        <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}:</span>
+      <div className="flex flex-col gap-0.5 min-w-0">
+        <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
         <input
           value={customVal}
           onChange={(e) => setCustomVal(e.target.value)}
@@ -144,14 +142,14 @@ const StateDropdown = ({ value, onSave, readOnly, label }: { value: string; labe
   const etatColor = getEtatColor(value);
 
   return (
-    <div className="flex items-center gap-1 text-sm min-w-0">
-      <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}:</span>
+    <div className="flex flex-col gap-0.5 min-w-0">
+      <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
       <select
         value={isCustom ? "__custom_display__" : value}
         onChange={handleChange}
         disabled={readOnly}
         className={cn(
-          "w-full min-w-0 rounded px-1.5 py-1 text-sm font-bold outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60",
+          "w-full min-w-0 truncate rounded px-1.5 py-1 text-sm font-bold outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60",
           etatColor || "bg-transparent text-foreground"
         )}
       >
@@ -176,8 +174,8 @@ const EditableField = ({ label, value, onSave, readOnly }: { label: string; valu
   };
 
   return (
-    <div className="flex items-center gap-1 text-sm min-w-0">
-      <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}:</span>
+    <div className="flex flex-col gap-0.5 min-w-0">
+      <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
       <input
         value={val}
         onChange={(e) => !readOnly && setVal(e.target.value)}
@@ -185,7 +183,8 @@ const EditableField = ({ label, value, onSave, readOnly }: { label: string; valu
         onKeyDown={(e) => e.key === "Enter" && save()}
         placeholder={label}
         readOnly={readOnly}
-        className="w-full min-w-0 rounded bg-transparent px-1.5 py-1 text-sm font-extrabold text-foreground outline-none placeholder:italic placeholder:font-medium placeholder:text-muted-foreground/50 hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring"
+        title={val}
+        className="w-full min-w-0 truncate rounded bg-transparent px-1.5 py-1 text-sm font-extrabold text-foreground outline-none placeholder:italic placeholder:font-medium placeholder:text-muted-foreground/50 hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring"
       />
     </div>
   );
@@ -480,13 +479,13 @@ const GestionVehicules = () => {
                         <EditableField label={t("vehicles.model")} value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
                         <EditableField label={t("vehicles.plate")} value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
                         <StateDropdown value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} label={t("vehicles.state")} />
-                        <div className="flex items-center gap-1 text-sm min-w-0">
-                          <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("vehicles.tech")}:</span>
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{t("vehicles.tech")}</span>
                           <select
                             value={v.technicien}
                             onChange={(e) => updateField(v.id, "technicien", e.target.value)}
                             disabled={!isAdmin}
-                            className="w-full min-w-0 rounded bg-transparent px-1.5 py-1 text-sm font-bold text-foreground outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
+                            className="w-full min-w-0 truncate rounded bg-transparent px-1.5 py-1 text-sm font-bold text-foreground outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
                           >
                             <option value="">—</option>
                             {techniciens.map((t) => (
