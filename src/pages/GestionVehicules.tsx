@@ -92,8 +92,12 @@ const ETAT_OPTIONS = [
 
 function getEtatColor(etat: string): string {
   switch (etat) {
-    case "Carrosserie": return "bg-blue-500/10 text-blue-600 ring-blue-500/30";
-    case "Mécanique": return "bg-purple-500/10 text-purple-600 ring-purple-500/30";
+    case "Carrosserie": return "bg-gradient-to-r from-blue-500/20 to-blue-500/5 text-blue-500 ring-1 ring-blue-500/40 shadow-[0_0_10px_rgba(59,130,246,0.15)]";
+    case "Mécanique": return "bg-gradient-to-r from-purple-500/20 to-purple-500/5 text-purple-500 ring-1 ring-purple-500/40 shadow-[0_0_10px_rgba(168,85,247,0.15)]";
+    case "Contrôle mécanique": return "bg-cyan-500/10 text-cyan-500 ring-1 ring-cyan-500/30";
+    case "Devis accord": return "bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30";
+    case "Travaux": return "bg-amber-500/10 text-amber-500 ring-1 ring-amber-500/30";
+    case "Contrôle des travaux": return "bg-pink-500/10 text-pink-500 ring-1 ring-pink-500/30";
     default: return "";
   }
 }
