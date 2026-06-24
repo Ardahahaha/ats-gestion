@@ -278,7 +278,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
                         />
                       ) : (
                         <input
-                          className="w-full rounded-md border-0 bg-transparent px-3 py-2.5 text-sm font-medium text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-primary/5 focus:bg-primary/5 focus:ring-2 focus:ring-ring"
+                          className="w-full rounded-md border-0 bg-transparent px-4 py-3.5 text-base font-medium text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-primary/5 focus:bg-primary/5 focus:ring-2 focus:ring-ring"
                           defaultValue={row[col.key]}
                           onBlur={(e) =>
                             updateCell(row.id, col.key, e.target.value)
