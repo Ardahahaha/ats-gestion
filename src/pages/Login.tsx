@@ -172,7 +172,16 @@ export default function Login() {
                 <Button onClick={handleLogin} className="w-full gap-2" disabled={!loginEmail || !loginPassword || loginLoading}>
                   {loginLoading ? t("login.loading") : t("login.submit")}
                 </Button>
+                <button
+                  type="button"
+                  onClick={() => { setForgotEmail(loginEmail); setForgotOpen(true); }}
+                  className="w-full text-center text-xs font-medium text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Mot de passe oublié ?
+                </button>
               </div>
+            </div>
+          )}
             </div>
           )}
 
