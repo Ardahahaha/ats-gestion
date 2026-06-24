@@ -1,28 +1,22 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+// Admin-only: delete a user by email (cascades profile + role).
+import { requireAdmin, corsHeaders } from "../_shared/admin-auth.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
+  const guard = await requireAdmin(req);
+  if (!guard.ok) return guard.res;
+  const { admin } = guard;
+
   try {
-    const { email, admin_password } = await req.json();
-    if (admin_password !== "MoteurPneu33!") {
-      return new Response(JSON.stringify({ error: "Mot de passe admin invalide" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    const { email } = await req.json();
+    if (!email) {
+      return new Response(JSON.stringify({ error: "Email manquant" }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
-
-    // Find user
-    const { data: list, error: listErr } = await supabase.auth.admin.listUsers({ page: 1, perPage: 1000 });
+    const { data: list, error: listErr } = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 });
     if (listErr) throw listErr;
     const user = list.users.find((u) => u.email?.toLowerCase() === String(email).toLowerCase());
     if (!user) {
@@ -31,16 +25,16 @@ Deno.serve(async (req) => {
       });
     }
 
-    await supabase.from("profiles").delete().eq("user_id", user.id);
-    await supabase.from("user_roles").delete().eq("user_id", user.id);
-    const { error: delErr } = await supabase.auth.admin.deleteUser(user.id);
+    await admin.from("profiles").delete().eq("user_id", user.id);
+    await admin.from("user_roles").delete().eq("user_id", user.id);
+    const { error: delErr } = await admin.auth.admin.deleteUser(user.id);
     if (delErr) throw delErr;
 
-    return new Response(JSON.stringify({ success: true, deleted: user.id, email: user.email }), {
+    return new Response(JSON.stringify({ success: true, deleted: user.id }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
-    return new Response(JSON.stringify({ error: String(e) }), {
+    return new Response(JSON.stringify({ error: String((e as Error).message || e) }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
