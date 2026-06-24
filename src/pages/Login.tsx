@@ -21,6 +21,28 @@ export default function Login() {
   const [showLoginPw, setShowLoginPw] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
 
+  // Forgot password
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
+
+  const handleForgot = async () => {
+    if (!forgotEmail) return;
+    setForgotLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setForgotLoading(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Email envoyé ! Vérifiez votre boîte de réception.");
+    setForgotOpen(false);
+    setForgotEmail("");
+  };
+
+
   // Signup state
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [rolePassword, setRolePassword] = useState("");
