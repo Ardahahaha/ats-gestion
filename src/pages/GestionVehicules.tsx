@@ -124,8 +124,8 @@ const StateDropdown = ({ value, onSave, readOnly, label }: { value: string; labe
 
   if (customMode) {
     return (
-      <div className="flex items-center gap-1 text-sm min-w-0">
-        <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}:</span>
+      <div className="flex flex-col gap-0.5 min-w-0">
+        <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
         <input
           value={customVal}
           onChange={(e) => setCustomVal(e.target.value)}
@@ -142,14 +142,14 @@ const StateDropdown = ({ value, onSave, readOnly, label }: { value: string; labe
   const etatColor = getEtatColor(value);
 
   return (
-    <div className="flex items-center gap-1 text-sm min-w-0">
-      <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}:</span>
+    <div className="flex flex-col gap-0.5 min-w-0">
+      <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
       <select
         value={isCustom ? "__custom_display__" : value}
         onChange={handleChange}
         disabled={readOnly}
         className={cn(
-          "w-full min-w-0 rounded px-1.5 py-1 text-sm font-bold outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60",
+          "w-full min-w-0 truncate rounded px-1.5 py-1 text-sm font-bold outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60",
           etatColor || "bg-transparent text-foreground"
         )}
       >
@@ -174,8 +174,8 @@ const EditableField = ({ label, value, onSave, readOnly }: { label: string; valu
   };
 
   return (
-    <div className="flex items-center gap-1 text-sm min-w-0">
-      <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground">{label}:</span>
+    <div className="flex flex-col gap-0.5 min-w-0">
+      <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{label}</span>
       <input
         value={val}
         onChange={(e) => !readOnly && setVal(e.target.value)}
@@ -183,7 +183,8 @@ const EditableField = ({ label, value, onSave, readOnly }: { label: string; valu
         onKeyDown={(e) => e.key === "Enter" && save()}
         placeholder={label}
         readOnly={readOnly}
-        className="w-full min-w-0 rounded bg-transparent px-1.5 py-1 text-sm font-extrabold text-foreground outline-none placeholder:italic placeholder:font-medium placeholder:text-muted-foreground/50 hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring"
+        title={val}
+        className="w-full min-w-0 truncate rounded bg-transparent px-1.5 py-1 text-sm font-extrabold text-foreground outline-none placeholder:italic placeholder:font-medium placeholder:text-muted-foreground/50 hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring"
       />
     </div>
   );
