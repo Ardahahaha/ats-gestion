@@ -508,7 +508,7 @@ const GestionVehicules = () => {
                       <span
                         className={cn(
                           "h-3 w-3 shrink-0 rounded-full transition-transform duration-200 group-hover:scale-125",
-                          v.date_entree ? cn(colors.dot, colors.glow, "animate-pulse") : "bg-muted-foreground/20"
+                          v.date_entree ? cn(colors.dot, colors.glow) : "bg-muted-foreground/20"
                         )}
                         title={colors.label}
                       />
