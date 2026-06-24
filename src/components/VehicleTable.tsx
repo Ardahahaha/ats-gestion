@@ -241,7 +241,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
                         />
                       ) : col.key === "immatriculation" ? (
                         <input
-                          className="w-full rounded-md border-0 bg-transparent px-3 py-2.5 text-sm font-bold uppercase tracking-wider text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 placeholder:font-normal placeholder:normal-case placeholder:tracking-normal hover:bg-primary/5 focus:bg-primary/5 focus:ring-2 focus:ring-ring"
+                          className="w-full rounded-md border-0 bg-transparent px-4 py-3.5 text-base font-bold uppercase tracking-wider text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 placeholder:font-normal placeholder:normal-case placeholder:tracking-normal hover:bg-primary/5 focus:bg-primary/5 focus:ring-2 focus:ring-ring"
                           defaultValue={row[col.key]}
                           maxLength={9}
                           onChange={(e) => {
