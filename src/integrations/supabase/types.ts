@@ -458,6 +458,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      current_user_pseudo: { Args: never; Returns: string }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
