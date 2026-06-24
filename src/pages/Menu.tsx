@@ -89,58 +89,19 @@ const Menu = () => {
             <Link key={section.titleKey} to={section.path} className="group">
               <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-automotive">
                 {/* Accent corner glow */}
-                <div
-                  className="absolute -right-16 -top-16 h-44 w-44 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-40"
-                  style={{ backgroundColor: section.accent }}
-                />
+                <div className={`absolute -right-12 -top-12 h-40 w-40 rounded-full bg-gradient-to-br ${section.accent} opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-30`} />
 
                 {/* Top racing stripe */}
-                <div
-                  className="absolute left-0 right-0 top-0 h-[2px] opacity-80 transition-opacity group-hover:opacity-100"
-                  style={{ backgroundColor: section.accent }}
-                />
+                <div className={`absolute left-0 right-0 top-0 h-[3px] bg-gradient-to-r ${section.accent} opacity-70 transition-opacity group-hover:opacity-100`} />
 
                 <div className="relative flex flex-col gap-5">
                   <div className="flex items-start justify-between">
-                    {/* Mechanical badge: octagon plate with carbon grain + accent edge */}
-                    <div className="relative">
-                      <div
-                        className="absolute -inset-[2px] opacity-90 transition-opacity group-hover:opacity-100"
-                        style={{
-                          clipPath:
-                            "polygon(22% 0, 78% 0, 100% 22%, 100% 78%, 78% 100%, 22% 100%, 0 78%, 0 22%)",
-                          backgroundColor: section.accent,
-                        }}
-                      />
-                      <div
-                        className="relative flex h-14 w-14 items-center justify-center transition-transform duration-500 group-hover:scale-[1.06]"
-                        style={{
-                          clipPath:
-                            "polygon(22% 0, 78% 0, 100% 22%, 100% 78%, 78% 100%, 22% 100%, 0 78%, 0 22%)",
-                          backgroundColor: "hsl(220 25% 10%)",
-                          backgroundImage:
-                            "repeating-linear-gradient(45deg, hsl(0 0% 100% / 0.04) 0 2px, transparent 2px 4px), repeating-linear-gradient(-45deg, hsl(0 0% 100% / 0.03) 0 2px, transparent 2px 4px)",
-                        }}
-                      >
-                        <Icon
-                          className="h-6 w-6"
-                          strokeWidth={1.75}
-                          style={{ color: section.accent }}
-                        />
-                      </div>
+                    <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${section.accent} shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}>
+                      <Icon className="h-6 w-6 text-white drop-shadow" />
                     </div>
-
-                    <div className="flex flex-col items-end gap-1.5">
-                      <span
-                        className="rounded-sm border px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em]"
-                        style={{ borderColor: section.accent, color: section.accent }}
-                      >
-                        {section.tag}
-                      </span>
-                      <span className="font-display text-2xl leading-none text-muted-foreground/25 transition-colors group-hover:text-foreground/40">
-                        {section.number}
-                      </span>
-                    </div>
+                    <span className="font-display text-2xl text-muted-foreground/30 transition-colors group-hover:text-primary/40">
+                      {section.number}
+                    </span>
                   </div>
 
                   <div>
