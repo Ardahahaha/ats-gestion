@@ -14,11 +14,29 @@ import GestionVehicules from "./pages/GestionVehicules";
 import GestionServices from "./pages/GestionServices";
 import Compte from "./pages/Compte";
 import NotFound from "./pages/NotFound";
+import ResetPassword from "./pages/ResetPassword";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
 
 function AppRoutes() {
   const { role, loading } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") navigate("/reset-password", { replace: true });
+    });
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  // Public route: reset-password (accessible via email recovery link)
+  if (location.pathname === "/reset-password") {
+    return <ResetPassword />;
+  }
 
   if (loading) {
     return (
@@ -29,6 +47,7 @@ function AppRoutes() {
   }
 
   if (!role) return <Login />;
+
 
   return (
     <Layout>

@@ -4,6 +4,8 @@ import { useI18n } from "@/contexts/I18nContext";
 import { Car, Shield, Wrench, Eye, EyeOff, Gauge, Mail, Lock, KeyRound, UserPlus, LogIn, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 type Tab = "login" | "signup";
@@ -18,6 +20,28 @@ export default function Login() {
   const [loginPassword, setLoginPassword] = useState("");
   const [showLoginPw, setShowLoginPw] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
+
+  // Forgot password
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
+
+  const handleForgot = async () => {
+    if (!forgotEmail) return;
+    setForgotLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setForgotLoading(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Email envoyé ! Vérifiez votre boîte de réception.");
+    setForgotOpen(false);
+    setForgotEmail("");
+  };
+
 
   // Signup state
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
@@ -148,9 +172,17 @@ export default function Login() {
                 <Button onClick={handleLogin} className="w-full gap-2" disabled={!loginEmail || !loginPassword || loginLoading}>
                   {loginLoading ? t("login.loading") : t("login.submit")}
                 </Button>
+                <button
+                  type="button"
+                  onClick={() => { setForgotEmail(loginEmail); setForgotOpen(true); }}
+                  className="w-full text-center text-xs font-medium text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Mot de passe oublié ?
+                </button>
               </div>
             </div>
           )}
+
 
           {/* SIGNUP TAB */}
           {tab === "signup" && (
@@ -281,6 +313,35 @@ export default function Login() {
           )}
         </div>
       </main>
+
+      <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Mot de passe oublié</DialogTitle>
+            <DialogDescription>
+              Entrez votre adresse email. Vous recevrez un lien pour réinitialiser votre mot de passe.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="email"
+              placeholder="votre@email.com"
+              value={forgotEmail}
+              onChange={(e) => setForgotEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleForgot()}
+              className="pl-10"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setForgotOpen(false)}>Annuler</Button>
+            <Button onClick={handleForgot} disabled={!forgotEmail || forgotLoading}>
+              {forgotLoading ? "Envoi…" : "Envoyer le lien"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
+
 }
