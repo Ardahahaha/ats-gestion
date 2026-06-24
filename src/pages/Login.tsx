@@ -313,6 +313,35 @@ export default function Login() {
           )}
         </div>
       </main>
+
+      <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Mot de passe oublié</DialogTitle>
+            <DialogDescription>
+              Entrez votre adresse email. Vous recevrez un lien pour réinitialiser votre mot de passe.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="email"
+              placeholder="votre@email.com"
+              value={forgotEmail}
+              onChange={(e) => setForgotEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleForgot()}
+              className="pl-10"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setForgotOpen(false)}>Annuler</Button>
+            <Button onClick={handleForgot} disabled={!forgotEmail || forgotLoading}>
+              {forgotLoading ? "Envoi…" : "Envoyer le lien"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
+
 }
