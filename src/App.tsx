@@ -14,6 +14,10 @@ import GestionVehicules from "./pages/GestionVehicules";
 import GestionServices from "./pages/GestionServices";
 import Compte from "./pages/Compte";
 import NotFound from "./pages/NotFound";
+import ResetPassword from "./pages/ResetPassword";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
 
