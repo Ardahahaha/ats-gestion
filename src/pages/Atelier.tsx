@@ -222,13 +222,13 @@ function TableView({ table, onBack, isAdmin }: { table: CustomTable; onBack: () 
         </div>
       ) : (
         <div className="overflow-hidden rounded-xl border border-border bg-card shadow-automotive">
-          <table className="w-full table-fixed text-sm">
+          <table className="w-full table-fixed text-base">
             <thead>
               <tr className="bg-table-header text-table-header-foreground">
                 {columns.map((col) => (
-                  <th key={col.id} className="border-r border-white/10 px-4 py-4 text-left last:border-r-0">
+                  <th key={col.id} className="border-r border-white/10 px-5 py-5 text-left last:border-r-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-display text-xs font-semibold uppercase tracking-widest truncate">{col.name}</span>
+                      <span className="font-display text-sm font-semibold uppercase tracking-widest truncate">{col.name}</span>
                       {isAdmin && (
                         <button onClick={() => deleteColumn(col.id)} className="ml-auto shrink-0 rounded p-1 text-white/40 hover:bg-white/10 hover:text-destructive transition-colors" title="Supprimer colonne">
                           <Trash2 className="h-3 w-3" />
@@ -237,7 +237,7 @@ function TableView({ table, onBack, isAdmin }: { table: CustomTable; onBack: () 
                     </div>
                   </th>
                 ))}
-                {isAdmin && <th className="w-14 px-2 py-4" />}
+                {isAdmin && <th className="w-14 px-2 py-5" />}
               </tr>
             </thead>
             <tbody>
@@ -253,7 +253,7 @@ function TableView({ table, onBack, isAdmin }: { table: CustomTable; onBack: () 
                     {columns.map((col) => (
                       <td key={col.id} className="border-r border-border/50 px-1 py-1 last:border-r-0">
                         <input
-                          className="w-full rounded-md border-0 bg-transparent px-3 py-2.5 text-sm font-medium text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-amber-500/5 focus:bg-amber-500/5 focus:ring-2 focus:ring-ring"
+                          className="w-full rounded-md border-0 bg-transparent px-4 py-3.5 text-base font-medium text-foreground outline-none transition-all duration-200 placeholder:text-muted-foreground/40 hover:bg-amber-500/5 focus:bg-amber-500/5 focus:ring-2 focus:ring-ring"
                           defaultValue={getCellValue(row.id, col.id)}
                           onBlur={(e) => updateCell(row.id, col.id, e.target.value)}
                           placeholder="..."
