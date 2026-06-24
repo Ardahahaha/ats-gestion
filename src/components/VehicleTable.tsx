@@ -182,7 +182,7 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
 
       {/* Table */}
       <div className="overflow-hidden rounded-xl border border-border bg-card shadow-automotive">
-        <table className="w-full table-fixed text-sm">
+        <table className="w-full table-fixed text-base">
           <thead>
             <tr className="bg-table-header text-table-header-foreground">
               {COLUMNS.map((col) => {
@@ -190,18 +190,18 @@ export function VehicleTable({ readOnly = false }: { readOnly?: boolean }) {
                 return (
                   <th
                     key={col.key}
-                    className="border-r border-white/10 px-4 py-4 text-left last:border-r-0"
+                    className="border-r border-white/10 px-5 py-5 text-left last:border-r-0"
                   >
                     <div className="flex items-center gap-2">
-                      <Icon className="h-4 w-4 text-primary" />
-                      <span className="font-display text-xs font-semibold uppercase tracking-widest">
+                      <Icon className="h-5 w-5 text-primary" />
+                      <span className="font-display text-sm font-semibold uppercase tracking-widest">
                         {col.label}
                       </span>
                     </div>
                   </th>
                 );
               })}
-              <th className="w-14 px-2 py-4" />
+              <th className="w-14 px-2 py-5" />
             </tr>
           </thead>
           <tbody>
