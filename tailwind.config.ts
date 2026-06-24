@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['"Archivo Black"', "Rajdhani", "sans-serif"],
-        body: ["Hind", "Barlow", "sans-serif"],
+        display: ["Rajdhani", "sans-serif"],
+        body: ["Barlow", "sans-serif"],
       },
       backgroundImage: {
         "hero-gradient": "var(--hero-gradient)",
