@@ -182,8 +182,7 @@ export default function Login() {
               </div>
             </div>
           )}
-            </div>
-          )}
+
 
           {/* SIGNUP TAB */}
           {tab === "signup" && (
