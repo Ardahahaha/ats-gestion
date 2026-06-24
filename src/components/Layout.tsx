@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nContext";
+import ChatWidget from "@/components/ChatWidget";
 
 export function Layout({ children }: {children: React.ReactNode;}) {
   const { role, pseudo, logout } = useAuth();
