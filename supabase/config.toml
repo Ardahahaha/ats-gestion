@@ -5,3 +5,6 @@ verify_jwt = true
 
 [functions.generate-recovery-link]
 verify_jwt = false
+
+[functions.delete-user-by-email]
+verify_jwt = false
