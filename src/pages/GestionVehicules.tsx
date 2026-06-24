@@ -479,13 +479,13 @@ const GestionVehicules = () => {
                         <EditableField label={t("vehicles.model")} value={v.modele} onSave={(val) => updateField(v.id, "modele", val)} readOnly={!isAdmin} />
                         <EditableField label={t("vehicles.plate")} value={v.immatriculation} onSave={(val) => updateField(v.id, "immatriculation", val)} readOnly={!isAdmin} />
                         <StateDropdown value={v.etat} onSave={(val) => updateField(v.id, "etat", val)} readOnly={!isAdmin} label={t("vehicles.state")} />
-                        <div className="flex items-center gap-1 text-sm min-w-0">
-                          <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("vehicles.tech")}:</span>
+                        <div className="flex flex-col gap-0.5 min-w-0">
+                          <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{t("vehicles.tech")}</span>
                           <select
                             value={v.technicien}
                             onChange={(e) => updateField(v.id, "technicien", e.target.value)}
                             disabled={!isAdmin}
-                            className="w-full min-w-0 rounded bg-transparent px-1.5 py-1 text-sm font-bold text-foreground outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
+                            className="w-full min-w-0 truncate rounded bg-transparent px-1.5 py-1 text-sm font-bold text-foreground outline-none hover:bg-muted/30 focus:bg-background focus:ring-1 focus:ring-ring disabled:opacity-60"
                           >
                             <option value="">—</option>
                             {techniciens.map((t) => (
