@@ -2,3 +2,6 @@ project_id = "lbjhvlfhyarjinemfkrg"
 
 [functions.process-email-queue]
 verify_jwt = true
+
+[functions.generate-recovery-link]
+verify_jwt = false
