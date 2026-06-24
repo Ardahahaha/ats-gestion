@@ -1,4 +1,4 @@
-/* Fonts loaded via @fontsource in src/main.tsx (Archivo Black + Hind) */
+/* Fonts: Rajdhani + Barlow (loaded in src/main.tsx) */
 
 @tailwind base;
 @tailwind components;
@@ -181,18 +181,18 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Archivo Black', 'Rajdhani', sans-serif;
+    font-family: 'Rajdhani', sans-serif;
     letter-spacing: -0.01em;
   }
 }
 
 @layer utilities {
   .font-display {
-    font-family: 'Archivo Black', 'Rajdhani', sans-serif;
+    font-family: 'Rajdhani', sans-serif;
     letter-spacing: -0.01em;
   }
   .font-body {
-    font-family: 'Hind', 'Barlow', sans-serif;
+    font-family: 'Barlow', sans-serif;
   }
   .text-glow {
     text-shadow: 0 0 24px hsl(var(--glow-red) / 0.55), 0 0 60px hsl(var(--glow-red) / 0.25);
